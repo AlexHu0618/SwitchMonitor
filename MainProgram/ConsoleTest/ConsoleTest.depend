@@ -1,0 +1,37 @@
+# depslib dependency file v1.0
+1487570633 source:e:\project\广州地铁\转辙机\software design\mainprogram\consoletest\main.cpp
+	<iostream>
+	<iomanip>
+	<stdio.h>
+	"UDPServer.h"
+
+1487240794 e:\project\广州地铁\转辙机\software design\mainprogram\consoletest\include\udpserver.h
+	<WINSOCK2.H>
+
+1487255558 source:e:\project\广州地铁\转辙机\software design\mainprogram\consoletest\src\udpserver.cpp
+	<stdio.h>
+	<iostream>
+	"UDPServer.h"
+
+1487767594 source:e:\project\gzmetro\switch\software design\mainprogram\consoletest\main.cpp
+	<iostream>
+	<iomanip>
+	<stdio.h>
+	"UDPServer.h"
+
+1487638131 e:\project\gzmetro\switch\software design\mainprogram\consoletest\include\udpserver.h
+	<WINSOCK2.H>
+
+1487638131 source:e:\project\gzmetro\switch\software design\mainprogram\consoletest\src\udpserver.cpp
+	<stdio.h>
+	<iostream>
+	"UDPServer.h"
+
+1488873113 source:e:\project\gzmetro\switch\software design\mainprogram\consoletest\src\cudpserver.cpp
+	<stdio.h>
+	<iostream>
+	"CUdpServer.h"
+
+1489465437 e:\project\gzmetro\switch\software design\mainprogram\consoletest\include\cudpserver.h
+	<WINSOCK2.H>
+
