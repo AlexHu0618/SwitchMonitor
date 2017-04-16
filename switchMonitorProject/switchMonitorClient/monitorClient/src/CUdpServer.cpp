@@ -7,7 +7,7 @@ using namespace std;
 
 CUdpServer::CUdpServer( const char* serverAddress, const char* clientAddress, int port, SWITCH_TYPE TypeofSwitch )
 {
-    m_emTypeofSwitch = S700K;
+    m_emTypeofSwitch = TypeofSwitch;
     //ctor
     m_nBufLen = 1500;//缓冲区大小
     //初始化Socket
@@ -158,88 +158,65 @@ void CUdpServer::__ExtractRawData( void )
 void CUdpServer::SavingRawData( void )
 {
     __ExtractRawData();
-    FILE *f00 = fopen("Data00.dat","wb");
-    if( f00==NULL )
-    {
-        printf("Can not open file Data00.dat.\n");
-    }
-    else
-    {
-        printf("has opened the file Data00.dat.\n");
-    }
-    for(int i=0;i<m_nFrameCounter/4;i++)
-    {
-        for(int j=0;j<365;j++)
-        {
-            fprintf(f00,"%d\n",m_ppnarrRawData[i][j]);
-        }
-    }
-    fclose(f00);
 
-    FILE *f01 = fopen("Data01.dat","wb");
-    if( f01==NULL )
+    int nTotalChannel = 4;
+    switch (m_emTypeofSwitch)
     {
-        printf("Can not open file Data01.dat.\n");
+    case S700K:
+        nTotalChannel = 6;
+        break;
+    case ZYJ7:
+        nTotalChannel = 9;
+        break;
+    case ZD6:
+    default:
+        nTotalChannel = 4;
+        break;
     }
-    else
-    {
-        printf("has opened the file Data01.dat.\n");
-    }
-    for(int i=m_nFrameCounter/4;i<m_nFrameCounter/2;i++)
-    {
-        for(int j=0;j<365;j++)
-        {
-            fprintf(f01,"%d\n",m_ppnarrRawData[i][j]);
-        }
-    }
-    fclose(f01);
 
-    FILE *f02 = fopen("Data02.dat","wb");
-    if( f02==NULL )
+    int nNumSavingFrameStart = 0;
+    int nNumSavingFrameEnd = 0;
+    for (int nChannelNum = 0; nChannelNum < nTotalChannel; ++nChannelNum)
     {
-        printf("Can not open file Data02.dat.\n");
-    }
-    else
-    {
-        printf("has opened the file Data02.dat.\n");
-    }
-    for(int i=m_nFrameCounter/2;i<(3*m_nFrameCounter/4);i++)
-    {
-        for(int j=0;j<365;j++)
+        char szFileName[] = {"DataCH"};
+        char szChNum[2];
+        snprintf( szChNum, sizeof(szChNum), "%d", nChannelNum );
+        strcat( szFileName, szChNum );
+        strcat( szFileName, ".dat");
+        //wxString strFileName = _("DataCH") + wxString::Format( wxT("%i"), nChannelNum) + _(".dat");
+        //FILE *pFile = fopen( strFileName.mb_str(), "wb" );
+        FILE *pFile = fopen( szFileName, "wb" );
+        if (pFile == NULL)
         {
-            fprintf(f02,"%d\n",m_ppnarrRawData[i][j]);
+            cout << "Can not open file " << szFileName << endl;
         }
-    }
-    fclose(f02);
-
-    FILE *f03 = fopen("Data03.dat","wb");
-    if( f03==NULL )
-    {
-        printf("Can not open file Data03.dat.\n");
-    }
-    else
-    {
-        printf("has opened the file Data03.dat.\n");
-    }
-    for(int i=(3*m_nFrameCounter/4);i<m_nFrameCounter;i++)
-    {
-        for(int j=0;j<365;j++)
+        else
         {
-            fprintf(f03,"%d\n",m_ppnarrRawData[i][j]);
+            cout << "has opened the file " << szFileName << endl;
         }
+        nNumSavingFrameEnd = (int)(m_nFrameCounter*(nChannelNum+1)/nTotalChannel);
+        for (int nFrameNum = nNumSavingFrameStart; nFrameNum < nNumSavingFrameEnd; ++nFrameNum)
+        {
+            for (int nDataNum = 0; nDataNum < 365; ++nDataNum)
+            {
+                fprintf( pFile, "%d\n", m_ppnarrRawData[nFrameNum][nDataNum] );
+            }
+        }
+        fclose( pFile );
+        nNumSavingFrameStart = nNumSavingFrameEnd;
     }
-    fclose(f03);
 
     cout << "saving data to the file successful!" << endl;
 
     //!< show data
     for(int k=0;k<1500;k++)
-            {
-                cout << hex << setfill('0') << setw(2) << (unsigned int)(unsigned char)m_ppszDataBuf[0][k] << " ";
-            }
-            cout << endl;
-            for(int j=0;j<365;j++)
-            {
-                cout << dec << m_ppnarrRawData[0][j] << " ";
-            }
+    {
+        cout << hex << setfill('0') << setw(2) << (unsigned int)(unsigned char)m_ppszDataBuf[0][k] << " ";
+    }
+    cout << endl;
+    for(int j=0;j<365;j++)
+    {
+        cout << dec << m_ppnarrRawData[0][j] << " ";
+    }
+    cout << endl;
 }

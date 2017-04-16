@@ -1690,7 +1690,7 @@
 1412609644 d:\wxwidgets-3.0.2\include\wx\univ\theme.h
 	"wx/string.h"
 
-1492066837 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\monitorclientmain.h
+1492313341 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\monitorclientmain.h
 	<wx/wx.h>
 	"monitorClientApp.h"
 
@@ -2930,7 +2930,7 @@
 1412609642 d:\wxwidgets-3.0.2\include\wx\cocoa\mdi.h
 	"wx/frame.h"
 
-1492271745 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\monitorclientmain.cpp
+1492313341 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\monitorclientmain.cpp
 	"wx_pch.h"
 	"monitorClientMain.h"
 	"CUdpServer.h"
@@ -2955,11 +2955,12 @@
 
 1412609644 d:\wxwidgets-3.0.2\include\wx\msw\rcdefs.h
 
-1492271520 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\src\cudpserver.cpp
+1492322646 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\src\cudpserver.cpp
 	<stdio.h>
 	<iostream>
+	<iomanip>
 	"CUdpServer.h"
 
-1492271117 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\include\cudpserver.h
+1492321755 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\include\cudpserver.h
 	<WINSOCK2.H>
 

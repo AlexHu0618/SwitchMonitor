@@ -8,7 +8,7 @@ enum SWITCH_TYPE { ZD6, S700K, ZYJ7 };
 class CUdpServer
 {
     public:
-        CUdpServer( const char *serverAddress, const char *clientAddress, int port, SWITCH_TYPE TypeofSwitch = S700K );
+        CUdpServer( const char *serverAddress, const char *clientAddress, int port, SWITCH_TYPE TypeofSwitch );
         //CUdpServer( const char *serverAddress, const char *clientAddress, int port );
         virtual ~CUdpServer();
         unsigned int GetrecvBufSize() { return m_unRecvBufSize; }
