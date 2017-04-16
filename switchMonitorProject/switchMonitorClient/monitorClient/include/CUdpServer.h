@@ -1,0 +1,39 @@
+#ifndef CUdpServer_H
+#define CUdpServer_H
+
+#include <WINSOCK2.H>
+
+enum SWITCH_TYPE { ZD6, S700K, ZYJ7 };
+
+class CUdpServer
+{
+    public:
+        CUdpServer( const char *serverAddress, const char *clientAddress, int port, SWITCH_TYPE TypeofSwitch = S700K );
+        //CUdpServer( const char *serverAddress, const char *clientAddress, int port );
+        virtual ~CUdpServer();
+        unsigned int GetrecvBufSize() { return m_unRecvBufSize; }
+        void SetrecvBufSize( unsigned int val ) { m_unRecvBufSize = val; }
+        int SendData( char *pszData );
+        int RecvData( void );
+        void SavingRawData( void );
+
+    private:
+        unsigned int m_unRecvBufSize;
+        SWITCH_TYPE m_emTypeofSwitch;
+        char (*m_ppszDataBuf)[1470];
+        int (*m_ppnarrRawData)[370];
+        int m_nFrameCounter;
+
+        WSADATA wsaData;
+        SOCKET RecvSocket;
+        sockaddr_in RecvAddr;//服务器地址
+        char RecvBuf[1500];//发送数据的缓冲区
+        int m_nBufLen;//缓冲区大小
+        sockaddr_in SenderAddr;//client addr
+
+        bool __FrameAnalysis( void );
+        void __ExtractRawData( void );
+
+};
+
+#endif // CUdpServer_H
