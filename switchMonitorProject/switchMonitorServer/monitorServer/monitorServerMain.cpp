@@ -17,6 +17,7 @@
 
 #include "monitorServerMain.h"
 #include "CFaultAnalyzer.hpp"
+#include <wx/dirdlg.h>
 
 //helper functions
 enum wxbuildinfoformat {
@@ -49,7 +50,9 @@ wxString wxbuildinfo(wxbuildinfoformat format)
 BEGIN_EVENT_TABLE(monitorServerFrame, wxFrame)
     EVT_CLOSE(monitorServerFrame::OnClose)
     EVT_MENU(idMenuQuit, monitorServerFrame::OnQuit)
-    EVT_MENU(idMenuAbout, monitorServerFrame::OnAbout)
+    EVT_MENU(idMenuZD6, monitorServerFrame::OnZD6)
+    EVT_MENU(idMenuS700K, monitorServerFrame::OnS700K)
+    EVT_MENU(idMenuZYJ7, monitorServerFrame::OnZYJ7)
 END_EVENT_TABLE()
 
 monitorServerFrame::monitorServerFrame(wxFrame *frame, const wxString& title)
@@ -62,9 +65,11 @@ monitorServerFrame::monitorServerFrame(wxFrame *frame, const wxString& title)
     fileMenu->Append(idMenuQuit, _("&Quit\tAlt-F4"), _("Quit the application"));
     mbar->Append(fileMenu, _("&File"));
 
-    wxMenu* helpMenu = new wxMenu(_T(""));
-    helpMenu->Append(idMenuAbout, _("&About\tF1"), _("Show info about this application"));
-    mbar->Append(helpMenu, _("&Help"));
+    wxMenu* analyzeMenu = new wxMenu(_T(""));
+    analyzeMenu->Append(idMenuZD6, _("&ZD6\tF1"), _("Analyze datas of ZD6"));
+    analyzeMenu->Append(idMenuS700K, _("&S700K\tF2"), _("Analyze datas of S700K"));
+    analyzeMenu->Append(idMenuZYJ7, _("&ZYJ7\tF3"), _("Analyze datas of ZYJ7"));
+    mbar->Append(analyzeMenu, _("&Analyze"));
 
     SetMenuBar(mbar);
 #endif // wxUSE_MENUS
@@ -75,7 +80,6 @@ monitorServerFrame::monitorServerFrame(wxFrame *frame, const wxString& title)
     SetStatusText(_("Hello Code::Blocks user!"),0);
     SetStatusText(wxbuildinfo(short_f), 1);
 #endif // wxUSE_STATUSBAR
-
 }
 
 
@@ -93,8 +97,39 @@ void monitorServerFrame::OnQuit(wxCommandEvent &event)
     Destroy();
 }
 
-void monitorServerFrame::OnAbout(wxCommandEvent &event)
+void monitorServerFrame::OnZD6(wxCommandEvent &event)
 {
-    wxString msg = wxbuildinfo(long_f);
-    wxMessageBox(msg, _("Welcome to..."));
+    wxString strDataDirPath = _("/");
+    wxDirDialog dialog( this );
+    if (dialog.ShowModal() == wxID_OK)
+    {
+        strDataDirPath = dialog.GetPath();
+    }
+    else
+    {
+        return;
+    }
+    SWITCH_TYPE typeofSwitch = ZD6;
+    CFaultAnalyzer faultAnalyzer( std::string(strDataDirPath.mb_str()), typeofSwitch );
+    double *parrdScore = faultAnalyzer.GetScore();
+
+    printf("ZD6 fault confidences for provided data:\n\n");
+	printf("Actuating fault: %.2f %%\n", parrdScore[0]);
+	printf("Engage difficult: %.2f %%\n", parrdScore[1]);
+	printf("Indicating fault: %.2f %%\n", parrdScore[2]);
+	printf("Jam: %.2f %%\n", parrdScore[3]);
+	printf("Motor fault: %.2f %%\n", parrdScore[4]);
+	printf("Movement resistance: %.2f %%\n", parrdScore[5]);
+	printf("Power fault: %.2f %%\n", parrdScore[6]);
+	printf("Unlock difficult: %.2f %%\n", parrdScore[7]);
+}
+
+void monitorServerFrame::OnS700K(wxCommandEvent &event)
+{
+
+}
+
+void monitorServerFrame::OnZYJ7(wxCommandEvent &event)
+{
+
 }

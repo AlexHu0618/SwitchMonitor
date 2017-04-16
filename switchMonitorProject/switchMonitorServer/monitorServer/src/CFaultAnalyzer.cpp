@@ -4,6 +4,9 @@
 #include <iostream>
 #include <math.h>
 
+#define NUM_SAMPLE 505000;   // for time 25s
+#define SAMPLE_INTERVAL 0.00005;
+
 //!< declear the external function lib
 extern "C" _declspec(dllexport) void GetScores_S700K( double *base_i1, double *base_i2, double *base_i3, double *base_v1, double *base_v2, double *base_v3, int base_length, double *data_i1, double *data_i2, double *data_i3, double *data_v1, double *data_v2, double *data_v3, int data_length, double sampleinterval, double* scores);
 extern "C" _declspec(dllexport) void GetScores_ZD6( double* base_i1, double* base_v1, int base_length, double* data_i1, double* data_v1, int data_length, double sampleinterval, double* scores);
@@ -19,8 +22,9 @@ int CFaultAnalyzer::__AnalyzeFault( void )
     if( __TransformRawData() == 0 )
     {
         //!< read base data
-        double* base_i = (double*)malloc(80000 * sizeof(double));
-        double* base_v = (double*)malloc(80000 * sizeof(double));
+        int nNumSample = NUM_SAMPLE;
+        double* base_i = (double*)malloc(nNumSample * sizeof(double));
+        double* base_v = (double*)malloc(nNumSample * sizeof(double));
         ifstream istmIBaseDataFileIn, istmVBaseDataFileIn;
         if( m_bisLtoR )
         {
@@ -55,7 +59,8 @@ int CFaultAnalyzer::__AnalyzeFault( void )
 
         //!< analyzing the fault result
         m_parrdScore = (double*)malloc( 10*sizeof(double) );
-        GetScores_ZD6( base_i, base_v, vBaseCounter, m_parrdI1RealData, m_parrdV1RealData, m_nsizeofRealData, m_dsampleInterval, m_parrdScore );
+        double dSampleInterval = SAMPLE_INTERVAL;
+        GetScores_ZD6( base_i, base_v, vBaseCounter, m_parrdI1RealData, m_parrdV1RealData, m_nsizeofRealData, dSampleInterval, m_parrdScore );
         istmIBaseDataFileIn.close();
         istmVBaseDataFileIn.close();
         free( base_i );
@@ -91,6 +96,7 @@ double* CFaultAnalyzer::GetScore(void)
     else
     {
         return NULL;
+        cout << "Get score failed!" << endl;
     }
 }
 
@@ -100,6 +106,7 @@ double* CFaultAnalyzer::GetScore(void)
   */
 int CFaultAnalyzer::__TransformRawData( void )
 {
+    int nNumSample = NUM_SAMPLE;
     string strV1FileName = "\\Data01.dat";
     string strI1FileName = "\\Data02.dat";
     if( m_strPath.back() == 'L' || m_strPath.back() == 'l' )
@@ -113,17 +120,18 @@ int CFaultAnalyzer::__TransformRawData( void )
     ifstream istmV1RawDataFileIn( strV1RawDataFile,ios_base::in );
     if( istmV1RawDataFileIn.is_open() )
     {
-        m_parrdV1RealData = (double*)malloc( 80000*sizeof(double) );
+        m_parrdV1RealData = (double*)malloc( nNumSample*sizeof(double) );
+        double *parrdV1RealData = m_parrdV1RealData;
         int nV1DataLength = 0;
         double temp = 0;
         while( istmV1RawDataFileIn.peek() != EOF )
         {
             istmV1RawDataFileIn >> temp;
-            *(m_parrdV1RealData++) = (double)(temp*3/pow(2,17));
+            *(parrdV1RealData++) = (double)(temp*3/pow(2,17));
             ++nV1DataLength;
-            if( nV1DataLength > 80000 )
+            if( nV1DataLength > nNumSample )
             {
-                cerr << "the total number of V1 raw data is morn than 80000, so it just read 80000 datas!" << endl;
+                cerr << "the total number of V1 raw data is morn than 505000, so it just read 505000 datas!" << endl;
                 break;
             }
         }
@@ -133,6 +141,7 @@ int CFaultAnalyzer::__TransformRawData( void )
     else
     {
         cerr << "the V1 raw data is nonexistent!" << endl;
+        cout << "the path is " << strV1RawDataFile << endl;
         return -1;
     }
 
@@ -141,17 +150,18 @@ int CFaultAnalyzer::__TransformRawData( void )
     ifstream istmI1RawDataFileIn( strI1RawDataFile,ios_base::in );
     if( istmI1RawDataFileIn.is_open() )
     {
-        m_parrdI1RealData = (double*)malloc( 80000*sizeof(double) );
+        m_parrdI1RealData = (double*)malloc( nNumSample*sizeof(double) );
+        double *parrdI1RealData = m_parrdI1RealData;
         int nI1DataLength = 0;
         double temp = 0;
         while( istmI1RawDataFileIn.peek() != EOF )
         {
             istmI1RawDataFileIn >> temp;
-            *(m_parrdI1RealData++) = (double)(temp*17.857/pow(2,17));
+            *(parrdI1RealData++) = (double)(temp*17.857/pow(2,17));
             ++nI1DataLength;
-            if( nI1DataLength > 80000 )
+            if( nI1DataLength > nNumSample )
             {
-                cerr << "the total number of I1 raw data is morn than 80000, so it just read 80000 datas!" << endl;
+                cerr << "the total number of I1 raw data is morn than 505000, so it just read 505000 datas!" << endl;
                 break;
             }
         }
@@ -184,12 +194,11 @@ int CFaultAnalyzer::__TransformRawData( void )
   *
   * (documentation goes here)
   */
- CFaultAnalyzer::CFaultAnalyzer( string strPath, SwitchType emSwitchType )
+ CFaultAnalyzer::CFaultAnalyzer( string strPath, SWITCH_TYPE TypeofSwitch )
 {
     m_strPath = strPath;
-    m_emSwitchType = emSwitchType;
+    m_emTypeofSwitch = TypeofSwitch;
     m_bisLtoR = true;
-    m_dsampleInterval = 0.00005;
 }
 
 

@@ -15,6 +15,7 @@
 				<Compiler>
 					<Add option="-g" />
 					<Add directory="D:/wxWidgets-3.0.2/lib/gcc_lib/mswu" />
+					<Add directory="E:/Project/GZMetro/Switch/softwareDesign/switchMonitorProject/switchMonitorServer/monitorServer/include" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="D:/wxWidgets-3.0.2/lib/gcc_lib/mswu" />
@@ -23,8 +24,6 @@
 					<Add library="libwxmsw30u_richtext.a" />
 					<Add library="libwxmsw30u_xrc.a" />
 					<Add library="libwxmsw30u_aui.a" />
-					<Add library="libwxmsw30u_dbgrid.a" />
-					<Add library="libwxbase30u_odbc.a" />
 					<Add library="libwxmsw30u_media.a" />
 					<Add library="libwxbase30u_net.a" />
 					<Add library="libwxmsw30u_gl.a" />
@@ -40,7 +39,9 @@
 					<Add library="libwxzlib.a" />
 					<Add library="libwxregexu.a" />
 					<Add library="libwxexpat.a" />
+					<Add library="lib\libmanageddll.a" />
 					<Add directory="D:/wxWidgets-3.0.2/lib/gcc_lib" />
+					<Add directory="E:/Project/GZMetro/Switch/softwareDesign/switchMonitorProject/switchMonitorServer/monitorServer/lib" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -77,7 +78,9 @@
 					<Add library="libwxzlib.a" />
 					<Add library="libwxregexu.a" />
 					<Add library="libwxexpat.a" />
+					<Add library="lib\libmanageddll.a" />
 					<Add directory="D:/wxWidgets-3.0.2/lib/gcc_lib" />
+					<Add directory="E:/Project/GZMetro/Switch/softwareDesign/switchMonitorProject/switchMonitorServer/monitorServer/lib" />
 				</Linker>
 			</Target>
 		</Build>

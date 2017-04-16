@@ -25,11 +25,15 @@ class monitorServerFrame: public wxFrame
         enum
         {
             idMenuQuit = 1000,
-            idMenuAbout
+            idMenuZD6,
+            idMenuS700K,
+            idMenuZYJ7
         };
         void OnClose(wxCloseEvent& event);
         void OnQuit(wxCommandEvent& event);
-        void OnAbout(wxCommandEvent& event);
+        void OnZD6(wxCommandEvent& event);
+        void OnS700K(wxCommandEvent& event);
+        void OnZYJ7(wxCommandEvent& event);
         DECLARE_EVENT_TABLE()
 };
 
