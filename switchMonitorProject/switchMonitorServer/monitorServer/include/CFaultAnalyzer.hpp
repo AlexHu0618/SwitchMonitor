@@ -21,9 +21,12 @@ public:
 
     double* GetScore( void );
     double* GetRealData( void );
+    int SaveRealData( double *arrdTransformRatio );
 
 private:
     string m_strPath;
+    double *m_pparrdAllRealData[12];
+    int m_nSizeofChRealData;
     double* m_parrdV1RealData;
     double* m_parrdI1RealData;
     SWITCH_TYPE m_emTypeofSwitch;
@@ -31,7 +34,7 @@ private:
     bool m_bisLtoR;
     int m_nsizeofRealData;
 
-    int __TransformRawData( void );
+    int __TransformRawData( double *parrdTranRatio );
     int __AnalyzeFault( void );
 };
 

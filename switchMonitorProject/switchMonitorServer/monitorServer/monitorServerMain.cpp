@@ -111,25 +111,68 @@ void monitorServerFrame::OnZD6(wxCommandEvent &event)
     }
     SWITCH_TYPE typeofSwitch = ZD6;
     CFaultAnalyzer faultAnalyzer( std::string(strDataDirPath.mb_str()), typeofSwitch );
-    double *parrdScore = faultAnalyzer.GetScore();
+//    double *parrdScore = faultAnalyzer.GetScore();
+//
+//    printf("ZD6 fault confidences for provided data:\n\n");
+//	printf("Actuating fault: %.2f %%\n", parrdScore[0]);
+//	printf("Engage difficult: %.2f %%\n", parrdScore[1]);
+//	printf("Indicating fault: %.2f %%\n", parrdScore[2]);
+//	printf("Jam: %.2f %%\n", parrdScore[3]);
+//	printf("Motor fault: %.2f %%\n", parrdScore[4]);
+//	printf("Movement resistance: %.2f %%\n", parrdScore[5]);
+//	printf("Power fault: %.2f %%\n", parrdScore[6]);
+//	printf("Unlock difficult: %.2f %%\n", parrdScore[7]);
+//
+//	faultAnalyzer.SaveRealData();
 
-    printf("ZD6 fault confidences for provided data:\n\n");
-	printf("Actuating fault: %.2f %%\n", parrdScore[0]);
-	printf("Engage difficult: %.2f %%\n", parrdScore[1]);
-	printf("Indicating fault: %.2f %%\n", parrdScore[2]);
-	printf("Jam: %.2f %%\n", parrdScore[3]);
-	printf("Motor fault: %.2f %%\n", parrdScore[4]);
-	printf("Movement resistance: %.2f %%\n", parrdScore[5]);
-	printf("Power fault: %.2f %%\n", parrdScore[6]);
-	printf("Unlock difficult: %.2f %%\n", parrdScore[7]);
+    double arrdTransformRatio[] = { 300, 300, 17.857 };    // {v,v,i} 3.0=300V, i=17.857A
+    if (faultAnalyzer.SaveRealData( arrdTransformRatio ) != 0)
+    {
+        cout << "fail to save data!" << endl;
+    }
+    cout << "saving real data is successful!" << endl;
 }
 
 void monitorServerFrame::OnS700K(wxCommandEvent &event)
 {
-
+    wxString strDataDirPath = _("/");
+    wxDirDialog dialog( this );
+    if (dialog.ShowModal() == wxID_OK)
+    {
+        strDataDirPath = dialog.GetPath();
+    }
+    else
+    {
+        return;
+    }
+    SWITCH_TYPE typeofSwitch = S700K;
+    CFaultAnalyzer faultAnalyzer( std::string(strDataDirPath.mb_str()), typeofSwitch );
+    double arrdTransformRatio[] = { 600, 600, 600, 40, 40, 40 };  //{v,v,v,i,i,i}
+    if (faultAnalyzer.SaveRealData( arrdTransformRatio ) != 0)
+    {
+        cout << "fail to save data!" << endl;
+    }
+    cout << "saving real data is successful!" << endl;
 }
 
 void monitorServerFrame::OnZYJ7(wxCommandEvent &event)
 {
-
+    wxString strDataDirPath = _("/");
+    wxDirDialog dialog( this );
+    if (dialog.ShowModal() == wxID_OK)
+    {
+        strDataDirPath = dialog.GetPath();
+    }
+    else
+    {
+        return;
+    }
+    SWITCH_TYPE typeofSwitch = ZYJ7;
+    CFaultAnalyzer faultAnalyzer( std::string(strDataDirPath.mb_str()), typeofSwitch );
+    double arrdTransformRatio[] = { 600, 600, 600, 600, 40, 40, 40, 3000, 3000 };   // {v,v,v,v,i,i,i,p,p}
+    if (faultAnalyzer.SaveRealData( arrdTransformRatio ) != 0)
+    {
+        cout << "fail to save data!" << endl;
+    }
+    cout << "saving real data is successful!" << endl;
 }

@@ -3,7 +3,10 @@
 #include <windows.h>
 #include <iostream>
 #include <math.h>
+#include <sstream>
 
+#define BASE_LENGTH 80000;
+#define DATA_LENGTH 505000;
 #define NUM_SAMPLE 505000;   // for time 25s
 #define SAMPLE_INTERVAL 0.00005;
 
@@ -19,10 +22,11 @@ extern "C" _declspec(dllexport) void GetScores_ZYJ7( double *base_i1, double *ba
   */
 int CFaultAnalyzer::__AnalyzeFault( void )
 {
-    if( __TransformRawData() == 0 )
+    double arrdTransformRatio[] = { 3.0, 17.857 };
+    if( __TransformRawData( arrdTransformRatio ) == 0 )
     {
         //!< read base data
-        int nNumSample = NUM_SAMPLE;
+        int nNumSample = BASE_LENGTH;
         double* base_i = (double*)malloc(nNumSample * sizeof(double));
         double* base_v = (double*)malloc(nNumSample * sizeof(double));
         ifstream istmIBaseDataFileIn, istmVBaseDataFileIn;
@@ -104,76 +108,57 @@ double* CFaultAnalyzer::GetScore(void)
   *
   * (documentation goes here)
   */
-int CFaultAnalyzer::__TransformRawData( void )
+int CFaultAnalyzer::__TransformRawData( double *parrdTranRatio )
 {
-    int nNumSample = NUM_SAMPLE;
-    string strV1FileName = "\\Data01.dat";
-    string strI1FileName = "\\Data02.dat";
-    if( m_strPath.back() == 'L' || m_strPath.back() == 'l' )
+    int nNumChannel = 3;
+    switch (m_emTypeofSwitch)
     {
-        m_bisLtoR = false;
-        strV1FileName = "\\Data00.dat";
+    case S700K:
+        nNumChannel = 6;
+        break;
+    case ZYJ7:
+        nNumChannel = 9;
+        break;
+    case ZD6:
+        nNumChannel = 3;
+        break;
     }
-
-    //!< read V1 raw data and transform to real data
-    string strV1RawDataFile = m_strPath + strV1FileName;
-    ifstream istmV1RawDataFileIn( strV1RawDataFile,ios_base::in );
-    if( istmV1RawDataFileIn.is_open() )
+    int nNumSample = DATA_LENGTH;
+    for (int nCH = 0; nCH < nNumChannel; ++nCH)
     {
-        m_parrdV1RealData = (double*)malloc( nNumSample*sizeof(double) );
-        double *parrdV1RealData = m_parrdV1RealData;
-        int nV1DataLength = 0;
-        double temp = 0;
-        while( istmV1RawDataFileIn.peek() != EOF )
+        stringstream stream;
+        stream << nCH;
+        string strChNum = stream.str();
+        string strDataFilePath = m_strPath + "\\DataCH" + strChNum + ".dat";
+
+        ifstream stmRawDataFileIn( strDataFilePath, ios_base::in );
+        if( !stmRawDataFileIn.is_open() )
         {
-            istmV1RawDataFileIn >> temp;
-            *(parrdV1RealData++) = (double)(temp*3/pow(2,17));
-            ++nV1DataLength;
-            if( nV1DataLength > nNumSample )
+            cerr << "Fail to open the " << strDataFilePath << " raw data file!" << endl;
+            return -1;
+        }
+        cout << "open file " << strDataFilePath << endl;
+        m_pparrdAllRealData[nCH] = (double*)malloc( nNumSample*sizeof(double) );
+        double *pdChRealData = m_pparrdAllRealData[nCH];
+        int nChDataLength = 0;
+        double temp = 0;
+        double Ratio = parrdTranRatio[nCH];
+        while( stmRawDataFileIn.peek() != EOF )
+        {
+            stmRawDataFileIn >> temp;
+            *(pdChRealData++) = (double)( temp*Ratio/pow(2,17) );
+            ++nChDataLength;
+            if( nChDataLength > nNumSample )
             {
                 cerr << "the total number of V1 raw data is morn than 505000, so it just read 505000 datas!" << endl;
                 break;
             }
         }
-        m_nsizeofRealData = nV1DataLength--;
-        istmV1RawDataFileIn.close();
+        m_nSizeofChRealData = nChDataLength--;
+        stmRawDataFileIn.close();
     }
-    else
-    {
-        cerr << "the V1 raw data is nonexistent!" << endl;
-        cout << "the path is " << strV1RawDataFile << endl;
-        return -1;
-    }
-
-    //!< read I1 raw data and transform to real data
-    string strI1RawDataFile = m_strPath + strI1FileName;
-    ifstream istmI1RawDataFileIn( strI1RawDataFile,ios_base::in );
-    if( istmI1RawDataFileIn.is_open() )
-    {
-        m_parrdI1RealData = (double*)malloc( nNumSample*sizeof(double) );
-        double *parrdI1RealData = m_parrdI1RealData;
-        int nI1DataLength = 0;
-        double temp = 0;
-        while( istmI1RawDataFileIn.peek() != EOF )
-        {
-            istmI1RawDataFileIn >> temp;
-            *(parrdI1RealData++) = (double)(temp*17.857/pow(2,17));
-            ++nI1DataLength;
-            if( nI1DataLength > nNumSample )
-            {
-                cerr << "the total number of I1 raw data is morn than 505000, so it just read 505000 datas!" << endl;
-                break;
-            }
-        }
-        nI1DataLength--;
-        istmI1RawDataFileIn.close();
-        return 0;
-    }
-    else
-    {
-        cerr << "the I1 raw data is nonexistent!" << endl;
-        return -1;
-    }
+    cout << "Transfrom raw data is OK!" << endl;
+    return 0;
 }
 
 /** @brief (one liner)
@@ -201,4 +186,51 @@ int CFaultAnalyzer::__TransformRawData( void )
     m_bisLtoR = true;
 }
 
+/** @brief (one liner)
+  *
+  * (documentation goes here)
+  */
+int CFaultAnalyzer::SaveRealData( double *arrdTransformRatio )
+{
+    if( __TransformRawData( arrdTransformRatio ) == 0 )
+    {
+        cout << "transformation is ok" << endl;
+    }
 
+    int nNumChannel = 3;
+    switch (m_emTypeofSwitch)
+    {
+    case S700K:
+        nNumChannel = 6;
+        break;
+    case ZYJ7:
+        nNumChannel = 9;
+        break;
+    case ZD6:
+        nNumChannel = 3;
+        break;
+    }
+
+    for (int nCH = 0; nCH < nNumChannel; ++nCH)
+    {
+        stringstream stream;
+        stream << nCH;
+        string strChNum = stream.str();
+        string strDataFilePath = m_strPath + "\\DataCH" + strChNum + ".txt";
+        ofstream stmRawDataFileOut( strDataFilePath, ios_base::out );
+        if( !stmRawDataFileOut.is_open() )
+        {
+            cerr << "Fail to open the DataCH" << nCH << ".dat raw data file!" << endl;
+            return -1;
+        }
+
+        double *parrdChRealData = m_pparrdAllRealData[nCH];
+        for (int nNum = 0; nNum < m_nSizeofChRealData; ++nNum)
+        {
+            stmRawDataFileOut << parrdChRealData[nNum] << "\n";
+        }
+        stmRawDataFileOut.close();
+        cout << "save to file: " << strDataFilePath << endl;
+    }
+    return 0;
+}

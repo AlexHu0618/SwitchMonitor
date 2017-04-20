@@ -2966,7 +2966,7 @@
 	<wx/wx.h>
 	"monitorServerApp.h"
 
-1492344357 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorserver\monitorserver\monitorservermain.cpp
+1492661869 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorserver\monitorserver\monitorservermain.cpp
 	"wx_pch.h"
 	"monitorServerMain.h"
 	"CFaultAnalyzer.hpp"
@@ -2975,13 +2975,14 @@
 1385316876 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorserver\monitorserver\resource.rc
 	"wx/msw/wx.rc"
 
-1492343756 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorserver\monitorserver\src\cfaultanalyzer.cpp
+1492669704 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorserver\monitorserver\src\cfaultanalyzer.cpp
 	"CFaultAnalyzer.hpp"
 	<fstream>
 	<windows.h>
 	<iostream>
 	<math.h>
+	<sstream>
 
-1492346008 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorserver\monitorserver\include\cfaultanalyzer.hpp
+1492655945 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorserver\monitorserver\include\cfaultanalyzer.hpp
 	<string>
 
