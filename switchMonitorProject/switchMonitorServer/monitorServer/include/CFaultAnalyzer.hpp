@@ -19,13 +19,15 @@ public:
     CFaultAnalyzer( string strPath, SWITCH_TYPE emTypeofSwitch );
     ~CFaultAnalyzer();
 
-    double* GetScore( void );
+    double* GetScore( double *arrdTransformRatio );
     double* GetRealData( void );
     int SaveRealData( double *arrdTransformRatio );
 
 private:
     string m_strPath;
     double *m_pparrdAllRealData[12];
+    double *m_pparrdAllBaseData[12];
+    int m_arrnAllChDataLen[12];
     int m_nSizeofChRealData;
     double* m_parrdV1RealData;
     double* m_parrdI1RealData;
@@ -35,7 +37,7 @@ private:
     int m_nsizeofRealData;
 
     int __TransformRawData( double *parrdTranRatio );
-    int __AnalyzeFault( void );
+    int __AnalyzeFault( double *parrdTranRatio );
 };
 
 #endif // CFAULTANALYZER_HPP
