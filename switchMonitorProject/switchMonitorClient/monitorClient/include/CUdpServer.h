@@ -14,8 +14,8 @@ class CUdpServer
         unsigned int GetrecvBufSize() { return m_unRecvBufSize; }
         void SetrecvBufSize( unsigned int val ) { m_unRecvBufSize = val; }
         int SendData( char *pszData );
-        int RecvData( void );
-        void SavingRawData( void );
+        int RecvData( int nTimeUpSec );
+        void SavingRawData( char* szDirPath );
 
     private:
         unsigned int m_unRecvBufSize;

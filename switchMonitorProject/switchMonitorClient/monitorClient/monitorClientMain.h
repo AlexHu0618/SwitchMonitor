@@ -15,12 +15,18 @@
 #endif
 
 #include "monitorClientApp.h"
+#include "CNetController.h"
+#include "CSqlController.h"
 
 class monitorClientFrame: public wxFrame
 {
     public:
         monitorClientFrame(wxFrame *frame, const wxString& title);
         ~monitorClientFrame();
+
+        int MakeDir( wxString* pstr4dataDir );
+        int InsertDB();
+
     private:
         enum
         {
@@ -29,6 +35,9 @@ class monitorClientFrame: public wxFrame
             idMenuS700K,
             idMenuZYJ7
         };
+        CNetController* m_pTcpClient;
+        CSqlController* m_pDBCtrler;
+
         void OnClose(wxCloseEvent& event);
         void OnQuit(wxCommandEvent& event);
         void OnZD6(wxCommandEvent& event);

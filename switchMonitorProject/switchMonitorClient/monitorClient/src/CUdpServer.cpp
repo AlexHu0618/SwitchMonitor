@@ -51,7 +51,7 @@ int CUdpServer::SendData( char *pszData )
     }
 }
 
-int CUdpServer::RecvData( void )
+int CUdpServer::RecvData( int nTimeUpSec )
 {
     switch (m_emTypeofSwitch)
     {
@@ -74,7 +74,7 @@ int CUdpServer::RecvData( void )
     struct timeval tv;
     FD_ZERO(&readfds);
     FD_SET(RecvSocket,&readfds);
-    tv.tv_sec=3;
+    tv.tv_sec= nTimeUpSec;
     tv.tv_usec=0;
     int SenderAddrSize=sizeof(SenderAddr);
     int result;
@@ -85,7 +85,7 @@ int CUdpServer::RecvData( void )
     {
         testfds = readfds;
         result = select( FD_SETSIZE,&testfds,NULL,NULL,&tv );  // polling every 3sec for checking the RecvSocket whether can be read
-        if(!(result>0) && haveReceived)
+        if(!(result>0) && haveReceived)   //finished receving
         {
             break;
         }
@@ -96,7 +96,8 @@ int CUdpServer::RecvData( void )
             perror("function select() error.\n");
             break;
         case 0:
-            break;
+            cout << "error!time up: " << tv.tv_sec << "s" << endl;
+            return 0;
         default:
             if(FD_ISSET(RecvSocket,&testfds))   // check the filedescriptor set whether can be read, it means whether there are some datas in the receive buffer
             {
@@ -119,12 +120,36 @@ int CUdpServer::RecvData( void )
 
     cout << endl;
     cout << "recived " << total <<" Bytes data" << endl;
+
+    //!<  analyzing frame
+    cout << "start to analyze frame..." << endl;
+    bool bAnalyzeIsOK = __FrameAnalysis();
+
     return m_nFrameCounter;
 }
 
 bool CUdpServer::__FrameAnalysis( void )
 {
-
+    int nAreaNum = m_ppszDataBuf[0][0]&0xFF;
+    int nAreaFrameNum = 0;
+    int nAreaFrameCounter = 0;
+    for (int nFrameNum = 0; nFrameNum < m_nFrameCounter; nFrameNum++)
+    {
+        if (m_ppszDataBuf[nFrameNum][0]&0xFF == nAreaNum)
+        {
+            nAreaFrameNum = m_ppszDataBuf[0][2]&0xFF | m_ppszDataBuf[0][3]<<8&0xFF00;
+            if (nAreaFrameNum != nAreaFrameCounter)
+            {
+                cout << "miss frame in the air(frmaNum): " << nAreaNum  << "(" << nAreaFrameNum << ")" << endl;
+            }
+        }
+        else
+        {
+            nAreaNum = m_ppszDataBuf[nFrameNum][0]&0xFF;
+            nAreaFrameCounter = 0;
+        }
+    }
+    return true;
 }
 
 void CUdpServer::__ExtractRawData( void )
@@ -155,7 +180,7 @@ void CUdpServer::__ExtractRawData( void )
     cout << "extracting raw data successful!" << endl;
 }
 
-void CUdpServer::SavingRawData( void )
+void CUdpServer::SavingRawData( char* szDirPath )
 {
     __ExtractRawData();
 

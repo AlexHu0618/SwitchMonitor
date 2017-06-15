@@ -38,6 +38,7 @@
 					<Add option="-O2" />
 					<Add directory="D:/wxWidgets-3.0.2/lib/gcc_lib/mswu" />
 					<Add directory="E:/Project/GZMetro/Switch/softwareDesign/switchMonitorProject/switchMonitorClient/monitorClient/include" />
+					<Add directory="../../../../../../../mysql conncetor/mysql-connector-c-6.1.10-win32/mysql-connector-c-6.1.10-win32/include" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="D:/wxWidgets-3.0.2/lib/gcc_lib/mswu" />
@@ -48,7 +49,9 @@
 					<Add library="libwxbase30u.a" />
 					<Add library="libwxpng.a" />
 					<Add library="libwxzlib.a" />
+					<Add library="..\..\..\..\..\..\..\mysql conncetor\mysql-connector-c-6.1.10-win32\mysql-connector-c-6.1.10-win32\lib\libmysql.lib" />
 					<Add directory="D:/wxWidgets-3.0.2/lib/gcc_lib" />
+					<Add directory="../../../../../../../mysql conncetor/mysql-connector-c-6.1.10-win32/mysql-connector-c-6.1.10-win32/lib" />
 				</Linker>
 			</Target>
 		</Build>
@@ -80,6 +83,9 @@
 			<Add library="libwsock32.a" />
 			<Add library="libodbc32.a" />
 		</Linker>
+		<Unit filename="include/CNetController.h" />
+		<Unit filename="include/CPreprocessor.h" />
+		<Unit filename="include/CSqlController.h" />
 		<Unit filename="include/CUdpServer.h" />
 		<Unit filename="monitorClientApp.cpp" />
 		<Unit filename="monitorClientApp.h" />
@@ -88,6 +94,9 @@
 		<Unit filename="resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
+		<Unit filename="src/CNetController.cpp" />
+		<Unit filename="src/CPreprocessor.cpp" />
+		<Unit filename="src/CSqlController.cpp" />
 		<Unit filename="src/CUdpServer.cpp" />
 		<Extensions>
 			<code_completion />

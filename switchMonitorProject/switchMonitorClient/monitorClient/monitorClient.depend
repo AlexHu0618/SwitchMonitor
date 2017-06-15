@@ -1690,9 +1690,11 @@
 1412609644 d:\wxwidgets-3.0.2\include\wx\univ\theme.h
 	"wx/string.h"
 
-1492313341 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\monitorclientmain.h
+1497320170 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\monitorclientmain.h
 	<wx/wx.h>
 	"monitorClientApp.h"
+	"CNetController.h"
+	"CSqlController.h"
 
 1412609644 d:\wxwidgets-3.0.2\include\wx\wx.h
 	"wx/defs.h"
@@ -2930,10 +2932,13 @@
 1412609642 d:\wxwidgets-3.0.2\include\wx\cocoa\mdi.h
 	"wx/frame.h"
 
-1492313341 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\monitorclientmain.cpp
+1497522886 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\monitorclientmain.cpp
 	"wx_pch.h"
 	"monitorClientMain.h"
 	"CUdpServer.h"
+	<wx/timer.h>
+	<wx/filename.h>
+	<wx/string.h>
 
 1385316876 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\resource.rc
 	"wx/msw/wx.rc"
@@ -2955,12 +2960,89 @@
 
 1412609644 d:\wxwidgets-3.0.2\include\wx\msw\rcdefs.h
 
-1492322646 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\src\cudpserver.cpp
+1497511571 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\src\cudpserver.cpp
 	<stdio.h>
 	<iostream>
 	<iomanip>
 	"CUdpServer.h"
 
-1492321755 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\include\cudpserver.h
+1497511524 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\include\cudpserver.h
 	<WINSOCK2.H>
+
+1497234391 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\include\cnetcontroller.h
+	<string>
+	<winsock2.h>
+
+1496916992 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\include\csqlcontroller.h
+	<string>
+	<mysql.h>
+	<errmsg.h>
+	<mysql_version.h>
+
+1497341063 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\src\cnetcontroller.cpp
+	"CNetController.h"
+	<iostream>
+
+1496829932 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\src\cpreprocessor.cpp
+	"CPreprocessor.h"
+	<iostream>
+	<malloc.h>
+	<math.h>
+
+1496829932 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\include\cpreprocessor.h
+	<string>
+	<vector>
+
+1492761152 e:\mysql conncetor\mysql-connector-c-6.1.10-win32\mysql-connector-c-6.1.10-win32\include\mysql.h
+	<sys/types.h>
+	<windows.h>
+	<winsock2.h>
+	"mysql_version.h"
+	"mysql_com.h"
+	"mysql_time.h"
+	"my_list.h"
+	"mysql/client_plugin.h"
+	"typelib.h"
+	"my_alloc.h"
+
+1492775286 e:\mysql conncetor\mysql-connector-c-6.1.10-win32\mysql-connector-c-6.1.10-win32\include\mysql_version.h
+	<custom_conf.h>
+
+1492761152 e:\mysql conncetor\mysql-connector-c-6.1.10-win32\mysql-connector-c-6.1.10-win32\include\mysql_com.h
+	"binary_log_types.h"
+	"my_command.h"
+
+1492761154 e:\mysql conncetor\mysql-connector-c-6.1.10-win32\mysql-connector-c-6.1.10-win32\include\binary_log_types.h
+
+1492761152 e:\mysql conncetor\mysql-connector-c-6.1.10-win32\mysql-connector-c-6.1.10-win32\include\my_command.h
+
+1492761152 e:\mysql conncetor\mysql-connector-c-6.1.10-win32\mysql-connector-c-6.1.10-win32\include\mysql_time.h
+
+1492761152 e:\mysql conncetor\mysql-connector-c-6.1.10-win32\mysql-connector-c-6.1.10-win32\include\my_list.h
+
+1492761152 e:\mysql conncetor\mysql-connector-c-6.1.10-win32\mysql-connector-c-6.1.10-win32\include\mysql\client_plugin.h
+	<stdarg.h>
+	<stdlib.h>
+	"plugin_auth_common.h"
+
+1492761152 e:\mysql conncetor\mysql-connector-c-6.1.10-win32\mysql-connector-c-6.1.10-win32\include\mysql\plugin_auth_common.h
+	<windows.h>
+
+1492761152 e:\mysql conncetor\mysql-connector-c-6.1.10-win32\mysql-connector-c-6.1.10-win32\include\typelib.h
+	"my_alloc.h"
+
+1492761152 e:\mysql conncetor\mysql-connector-c-6.1.10-win32\mysql-connector-c-6.1.10-win32\include\my_alloc.h
+	"mysql/psi/psi_memory.h"
+
+1492761152 e:\mysql conncetor\mysql-connector-c-6.1.10-win32\mysql-connector-c-6.1.10-win32\include\mysql\psi\psi_memory.h
+	"psi_base.h"
+
+1492761152 e:\mysql conncetor\mysql-connector-c-6.1.10-win32\mysql-connector-c-6.1.10-win32\include\mysql\psi\psi_base.h
+
+1492761152 e:\mysql conncetor\mysql-connector-c-6.1.10-win32\mysql-connector-c-6.1.10-win32\include\errmsg.h
+
+1497324032 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\src\csqlcontroller.cpp
+	"CSqlController.h"
+	<stdio.h>
+	<iostream>
 
