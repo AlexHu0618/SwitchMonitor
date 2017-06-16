@@ -33,6 +33,7 @@ class CUdpServer
 
         bool __FrameAnalysis( void );
         void __ExtractRawData( void );
+        bool __IsOKCmdBack( SOCKET sockFd, char* pszSentCmd, int nTimeOutMs );
 
 };
 

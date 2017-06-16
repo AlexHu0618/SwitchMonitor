@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <iomanip>
+#include <time.h>
 #include "CUdpServer.h"
 
 using namespace std;
@@ -42,12 +43,57 @@ int CUdpServer::SendData( char *pszData )
     if(sendBytes != SOCKET_ERROR)
     {
         cout << "send " << sendBytes << "bytes." << endl;
-        return 0;
     }
     else
     {
         cout << "send command error." << endl;
         return -1;
+    }
+    if( pszData[0] != 0x01 )
+    {
+        if( !__IsOKCmdBack( RecvSocket, pszData, 1000 ) )
+        {
+            cout << "the equitment has not reback the cmd!" << endl;
+            return -1;
+        }
+    }
+
+    return 0;
+}
+
+bool CUdpServer::__IsOKCmdBack( SOCKET sockFd, char* pszSentCmd, int nTimeOutMs )
+{
+    int nResult = setsockopt( sockFd, SOL_SOCKET, SO_RCVTIMEO, (char*)&nTimeOutMs, sizeof(int) );
+    if( nResult != 0 )
+    {
+        cout << "IsOKCmdBack() error" << endl;
+        return false;
+    }
+    char* pBuf = new char[1470];
+    nResult = recv( sockFd, pBuf, 1470, 0 );
+    if( nResult > 0 )
+    {
+        if( pBuf[0] == pszSentCmd[0] && pBuf[2] == pszSentCmd[3] )
+        {
+            delete [] pBuf;
+            pBuf = NULL;
+            return true;
+        }
+        else
+        {
+            cout << "reback cmd is error" << endl;
+            delete [] pBuf;
+            pBuf = NULL;
+            return false;
+        }
+
+    }
+    else
+    {
+        cout << "recv() error " << nResult << endl;
+        delete [] pBuf;
+        pBuf = NULL;
+        return false;
     }
 }
 
@@ -77,49 +123,53 @@ int CUdpServer::RecvData( int nTimeUpSec )
     tv.tv_sec= nTimeUpSec;
     tv.tv_usec=0;
     int SenderAddrSize=sizeof(SenderAddr);
-    int result;
+    int result = -1;
     int total=0;
     m_nFrameCounter=0;
     bool haveReceived=false;
+    int recvBytes = 0;
+    clock_t startTime, endTime;
+    startTime = clock();
     while (true)
     {
-        testfds = readfds;
-        result = select( FD_SETSIZE,&testfds,NULL,NULL,&tv );  // polling every 3sec for checking the RecvSocket whether can be read
-        if(!(result>0) && haveReceived)   //finished receving
+        if( haveReceived )  //finished receving
         {
             break;
         }
-        else{
+        testfds = readfds;
+        result = select( FD_SETSIZE, &testfds, NULL, NULL, &tv );  // polling every 3sec for checking the RecvSocket whether can be read
+
         switch(result)
         {
         case -1:
             perror("function select() error.\n");
-            break;
+            return 0;
         case 0:
             cout << "error!time up: " << tv.tv_sec << "s" << endl;
             return 0;
         default:
             if(FD_ISSET(RecvSocket,&testfds))   // check the filedescriptor set whether can be read, it means whether there are some datas in the receive buffer
             {
-                int recvBytes = recvfrom( RecvSocket, *ppszMovePtr, m_nBufLen, 0, (SOCKADDR *)&SenderAddr, &SenderAddrSize );
-                if(recvBytes>0)
+                do
                 {
-                    total += recvBytes;
-                    m_nFrameCounter++;
-                    ppszMovePtr++;
-                }
-                else
-                {
-                    printf("no data\n");
-                }
+                    recvBytes = recvfrom( RecvSocket, *ppszMovePtr, m_nBufLen, 0, (SOCKADDR *)&SenderAddr, &SenderAddrSize );
+                    if(recvBytes>0)
+                    {
+                        total += recvBytes;
+                        m_nFrameCounter++;
+                        ppszMovePtr++;
+                    }
+                }while( recvBytes > 0 );
                 haveReceived=true;
             }
             break;
-        }}
+        }
     }
 
     cout << endl;
     cout << "recived " << total <<" Bytes data" << endl;
+    endTime = clock();
+    cout << "Total acquire Time : " <<(double)(endTime - startTime) / CLOCKS_PER_SEC << "s" << endl;
 
     //!<  analyzing frame
     cout << "start to analyze frame..." << endl;

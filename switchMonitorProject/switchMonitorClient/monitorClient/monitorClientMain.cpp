@@ -90,7 +90,7 @@ monitorClientFrame::monitorClientFrame(wxFrame *frame, const wxString& title)
     m_pTcpClient->Initial();
 
     //!< initial DB
-    m_pDBCtrler = new CSqlController( "10.3.3.115", 3306, "yfzx", "yfzx3305" );
+    m_pDBCtrler = new CSqlController( "10.3.3.144", 3306, "yfzx", "yfzx3305" );
     m_pDBCtrler->Initial( "switchmonitordb", "tab4alldata" );
 }
 
@@ -136,7 +136,7 @@ void monitorClientFrame::OnZD6(wxCommandEvent &event)
     cout << "have send command 0X03" << endl;
 
     int frameCout = 0;
-    int nTimeUpSec = 60;
+    int nTimeUpSec = NULL;
     if (answer == wxYES)
     {//!< directly acquire
         cout << "start to directly acquire 25S" << endl;
@@ -186,8 +186,8 @@ void monitorClientFrame::OnZD6(wxCommandEvent &event)
         pZD6Server->SavingRawData( szDirPath );
 
         //!< send to TCP server for analyzing
+        str4dataDir = "F:\\ZD6\\new_voltage_sensor\\default\\1_LR";    //just for debug test
         m_pTcpClient->Send((const char*)str4dataDir.mb_str(), str4dataDir.size());
-        cout << str4dataDir.size() << endl;
 
         //!< insert to DB
         str4dataDir.Replace("\\", "\\\\");
