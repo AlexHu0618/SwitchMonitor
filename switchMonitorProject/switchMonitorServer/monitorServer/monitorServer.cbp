@@ -113,6 +113,7 @@
 			<Add library="libodbc32.a" />
 		</Linker>
 		<Unit filename="include/CFaultAnalyzer.hpp" />
+		<Unit filename="include/CNetController.h" />
 		<Unit filename="monitorServerApp.cpp" />
 		<Unit filename="monitorServerApp.h" />
 		<Unit filename="monitorServerMain.cpp" />
@@ -121,6 +122,7 @@
 			<Option compilerVar="WINDRES" />
 		</Unit>
 		<Unit filename="src/CFaultAnalyzer.cpp" />
+		<Unit filename="src/CNetController.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

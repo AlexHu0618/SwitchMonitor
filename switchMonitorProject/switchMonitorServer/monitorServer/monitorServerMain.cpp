@@ -19,6 +19,8 @@
 #include "CFaultAnalyzer.hpp"
 #include <wx/dirdlg.h>
 
+extern "C" _declspec(dllexport) void GetStaticScores_ZD6(double base_v1, double base_v2, double data_v1, double data_v2, double* scores);
+
 //helper functions
 enum wxbuildinfoformat {
     short_f, long_f };
@@ -80,11 +82,16 @@ monitorServerFrame::monitorServerFrame(wxFrame *frame, const wxString& title)
     SetStatusText(_("Hello Code::Blocks user!"),0);
     SetStatusText(wxbuildinfo(short_f), 1);
 #endif // wxUSE_STATUSBAR
+
+//    m_pTcpServer = new CNetController( "localhost", 1024, server );
+//    m_pTcpServer->Initial();
 }
 
 
 monitorServerFrame::~monitorServerFrame()
 {
+//    delete m_pTcpServer;
+//    m_pTcpServer = NULL;
 }
 
 void monitorServerFrame::OnClose(wxCloseEvent &event)
@@ -99,11 +106,52 @@ void monitorServerFrame::OnQuit(wxCommandEvent &event)
 
 void monitorServerFrame::OnZD6(wxCommandEvent &event)
 {
+//    while( true )
+//    {
+//        //!< wait for TCP
+//        char szRecvBuf[1024]={0};
+//        m_pTcpServer->Recv( szRecvBuf, 1024 );
+//        cout << szRecvBuf << endl;
+//        string strDataDirPath = szRecvBuf;
+////        string strDataDirPath = "F:\\ZD6\\new_voltage_sensor\\default\\1_LR"
+//
+//        if( szRecvBuf[0] == 'Q' )
+//        {
+//            break;
+//        }
+//
+//        SWITCH_TYPE typeofSwitch = ZD6;
+//        CFaultAnalyzer faultAnalyzer( strDataDirPath, typeofSwitch );
+//        double arrdTransformRatio[] = { 300.0, 300.0, 17.857 };    // {v1,v2,i} 3.0=300V, i=17.857A
+////      double arrdTransformRatio[] = { 600, 600, 40 };
+//        double *parrdScore = faultAnalyzer.GetScore( arrdTransformRatio );
+//
+//        printf("ZD6 fault confidences for provided data:\n\n");
+//        printf("Actuating fault: %.2f %%\n", parrdScore[0]);
+//        printf("Engage difficult: %.2f %%\n", parrdScore[1]);
+//        printf("Indicating fault: %.2f %%\n", parrdScore[2]);
+//        printf("Jam: %.2f %%\n", parrdScore[3]);
+//        printf("Motor fault: %.2f %%\n", parrdScore[4]);
+//        printf("Movement resistance: %.2f %%\n", parrdScore[5]);
+//        printf("Power fault: %.2f %%\n", parrdScore[6]);
+//        printf("Unlock difficult: %.2f %%\n", parrdScore[7]);
+//
+//        cout << "Analyzing is successful!" << endl;
+////      int result = faultAnalyzer.SaveRealData( arrdTransformRatio );
+////      if (result != 0)
+////      {
+////         cout << "save real data fail!" << endl;
+////      }
+//
+//    }
+//    cout << "I got the 'Q', now quit" << endl;
+
     wxString strDataDirPath = _("/");
     wxDirDialog dialog( this );
     if (dialog.ShowModal() == wxID_OK)
     {
         strDataDirPath = dialog.GetPath();
+        cout << strDataDirPath << endl;
     }
     else
     {
@@ -112,6 +160,7 @@ void monitorServerFrame::OnZD6(wxCommandEvent &event)
     SWITCH_TYPE typeofSwitch = ZD6;
     CFaultAnalyzer faultAnalyzer( std::string(strDataDirPath.mb_str()), typeofSwitch );
     double arrdTransformRatio[] = { 300.0, 300.0, 17.857 };    // {v1,v2,i} 3.0=300V, i=17.857A
+//    double arrdTransformRatio[] = { 600, 600, 40 };
     double *parrdScore = faultAnalyzer.GetScore( arrdTransformRatio );
 
     printf("ZD6 fault confidences for provided data:\n\n");
@@ -125,6 +174,36 @@ void monitorServerFrame::OnZD6(wxCommandEvent &event)
 	printf("Unlock difficult: %.2f %%\n", parrdScore[7]);
 
     cout << "Analyzing is successful!" << endl;
+    //!< save real data
+//    int result = faultAnalyzer.SaveRealData( arrdTransformRatio );
+//    if (result != 0)
+//    {
+//        cout << "save real data fail!" << endl;
+//    }
+    //!< save preprocessing data
+    int nResult = faultAnalyzer.SaveAfterPreProcessing( arrdTransformRatio );
+    if( nResult != 0 )
+    {
+        cout << "Error, fail to save preprocessing data!" << endl;
+    }
+    else
+    {
+        cout << "Preprocessing data was successfully saved!" << endl;
+    }
+
+    double static_base_v1 = 78.7584;
+	double static_base_v2 = 0;
+	double static_data_v1 = 60;
+	double static_data_v2 = 0;
+
+	double* scores = new double[10];
+	GetStaticScores_ZD6(static_base_v1, static_base_v2, static_data_v1, static_data_v2, scores);
+
+	printf("Actuating fault: %.2f %%\n", scores[0]);
+	printf("Indicating fault: %.2f %%\n", scores[2]);
+	delete scores;
+	scores = NULL;
+
 }
 
 void monitorServerFrame::OnS700K(wxCommandEvent &event)

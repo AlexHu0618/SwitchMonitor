@@ -1,5 +1,0 @@
-LIBRARY "ManagedDll.dll"
-EXPORTS
-GetScores_S700K
-GetScores_ZD6
-GetScores_ZYJ7

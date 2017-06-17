@@ -1,4 +1,5 @@
 #include "CFaultAnalyzer.hpp"
+#include "CPreprocessor.h"
 #include <fstream>
 #include <windows.h>
 #include <iostream>
@@ -22,12 +23,15 @@ extern "C" _declspec(dllexport) void GetScores_ZYJ7( double *base_i1, double *ba
   */
 int CFaultAnalyzer::__AnalyzeFault( double *arrdTransformRatio )
 {
-
-    if (__TransformRawData( arrdTransformRatio ) != 0)
+    if( !m_bisTransformed )
     {
-        cout << "Fail to Transform raw data!" << endl;
-        return -1;
+        if (__TransformRawData( arrdTransformRatio ) != 0)
+        {
+            cout << "Fail to Transform raw data!" << endl;
+            return -1;
+        }
     }
+
     int nNumChannel = 4;
     switch (m_emTypeofSwitch)
     {
@@ -179,6 +183,7 @@ int CFaultAnalyzer::__TransformRawData( double *parrdTranRatio )
         stmRawDataFileIn.close();
     }
     cout << "Transfrom raw data is OK!" << endl;
+    m_bisTransformed = true;
     return 0;
 }
 
@@ -221,6 +226,7 @@ int CFaultAnalyzer::__TransformRawData( double *parrdTranRatio )
     m_strPath = strPath;
     m_emTypeofSwitch = TypeofSwitch;
     m_bisLtoR = true;
+    m_bisTransformed = false;
 }
 
 /** @brief (one liner)
@@ -229,9 +235,13 @@ int CFaultAnalyzer::__TransformRawData( double *parrdTranRatio )
   */
 int CFaultAnalyzer::SaveRealData( double *arrdTransformRatio )
 {
-    if( __TransformRawData( arrdTransformRatio ) == 0 )
+    if( !m_bisTransformed )
     {
-        cout << "transformation is ok" << endl;
+        if( __TransformRawData( arrdTransformRatio ) != 0 )
+        {
+            cout << "Fail to Transform raw data!" << endl;
+            return -1;
+        }
     }
 
     int nNumChannel = 3;
@@ -269,5 +279,77 @@ int CFaultAnalyzer::SaveRealData( double *arrdTransformRatio )
         stmRawDataFileOut.close();
         cout << "save to file: " << strDataFilePath << endl;
     }
+    return 0;
+}
+
+int CFaultAnalyzer::SaveAfterPreProcessing( double *arrdTransformRatio )
+{
+    if( !m_bisTransformed )
+    {
+        if( __TransformRawData( arrdTransformRatio ) != 0 )
+        {
+            cout << "Fail to Transform raw data!" << endl;
+            return -1;
+        }
+    }
+
+    int nNumChannel = 3;
+    switch (m_emTypeofSwitch)
+    {
+    case S700K:
+        nNumChannel = 6;
+        break;
+    case ZYJ7:
+        nNumChannel = 9;
+        break;
+    case ZD6:
+        nNumChannel = 3;
+        break;
+    }
+    vector<double> vecDataOut;
+    CPreprocessor* preprocessor = new CPreprocessor();
+    int nResult = -1;
+
+    for (int nCH = 0; nCH < nNumChannel; ++nCH)
+    {
+        stringstream stream;
+        stream << nCH;
+        string strChNum = stream.str();
+        string strDataFilePath = m_strPath + "\\CH" + strChNum + ".txt";
+        ofstream stmRawDataFileOut( strDataFilePath, ios_base::out );
+        if( !stmRawDataFileOut.is_open() )
+        {
+            cerr << "Fail to open the file CH" << nCH << ".txt!" << endl;
+            return -1;
+        }
+
+        double *parrdChRealData = m_pparrdAllRealData[nCH];
+        vecDataOut.clear();
+        nResult = preprocessor->doPreprocess( parrdChRealData, &vecDataOut, m_nSizeofChRealData, 200, "RMS" );
+        if( nResult != 0 )
+        {
+            cout << "doPreprocess() error!" << endl;
+            return -1;
+        }
+        if( !vecDataOut.empty() )
+        {
+            vector<double>::iterator it;
+            for( it=vecDataOut.begin(); it!=vecDataOut.end(); ++it )
+            {
+                stmRawDataFileOut << *it << "\n";
+            }
+        }
+        else
+        {
+            cout << "vector is empty" << endl;
+            return -1;
+        }
+
+        stmRawDataFileOut.close();
+        cout << "save to file: " << strDataFilePath << endl;
+    }
+
+    delete preprocessor;
+    preprocessor = NULL;
     return 0;
 }

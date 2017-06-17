@@ -22,6 +22,7 @@ public:
     double* GetScore( double *arrdTransformRatio );
     double* GetRealData( void );
     int SaveRealData( double *arrdTransformRatio );
+    int SaveAfterPreProcessing( double *arrdTransformRatio );
 
 private:
     string m_strPath;
@@ -35,6 +36,7 @@ private:
     double* m_parrdScore;
     bool m_bisLtoR;
     int m_nsizeofRealData;
+    bool m_bisTransformed;
 
     int __TransformRawData( double *parrdTranRatio );
     int __AnalyzeFault( double *parrdTranRatio );

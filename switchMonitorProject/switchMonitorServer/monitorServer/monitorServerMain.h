@@ -14,6 +14,7 @@
     #include <wx/wx.h>
 #endif
 
+#include "CNetController.h"
 #include "monitorServerApp.h"
 
 class monitorServerFrame: public wxFrame
@@ -29,6 +30,8 @@ class monitorServerFrame: public wxFrame
             idMenuS700K,
             idMenuZYJ7
         };
+        CNetController* m_pTcpServer;
+
         void OnClose(wxCloseEvent& event);
         void OnQuit(wxCommandEvent& event);
         void OnZD6(wxCommandEvent& event);
