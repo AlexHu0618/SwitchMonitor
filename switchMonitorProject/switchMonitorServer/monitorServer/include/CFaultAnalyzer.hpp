@@ -5,6 +5,7 @@
 
 using namespace std;
 enum SWITCH_TYPE { ZD6, S700K, ZYJ7 };
+enum ACQUICITION_TYPE { Tstatic, Ttrigger };
 
 //! \brief
 //!
@@ -23,6 +24,7 @@ public:
     double* GetRealData( void );
     int SaveRealData( double *arrdTransformRatio );
     int SaveAfterPreProcessing( double *arrdTransformRatio );
+    void GetInfo( string* strTypeofAcq, int* nIsL2R );
 
 private:
     string m_strPath;
@@ -33,13 +35,15 @@ private:
     double* m_parrdV1RealData;
     double* m_parrdI1RealData;
     SWITCH_TYPE m_emTypeofSwitch;
+    ACQUICITION_TYPE m_emTypeofAcq;
     double* m_parrdScore;
-    bool m_bisLtoR;
+    bool m_bisL2R;
     int m_nsizeofRealData;
     bool m_bisTransformed;
 
     int __TransformRawData( double *parrdTranRatio );
     int __AnalyzeFault( double *parrdTranRatio );
+    int __JudgePosL2R( double* pdszVoltageRMS );
 };
 
 #endif // CFAULTANALYZER_HPP

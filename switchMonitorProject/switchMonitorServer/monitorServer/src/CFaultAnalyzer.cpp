@@ -16,6 +16,8 @@ extern "C" _declspec(dllexport) void GetScores_S700K( double *base_i1, double *b
 extern "C" _declspec(dllexport) void GetScores_ZD6( double* base_i1, double* base_v1, int base_length, double* data_i1, double* data_v1, int data_length, double sampleinterval, double* scores);
 extern "C" _declspec(dllexport) void GetScores_ZYJ7( double *base_i1, double *base_i2, double *base_i3, double *base_v1, double *base_v2, double *base_v3, double* base_p1, double* base_p2, int base_length, double *data_i1, double *data_i2, double *data_i3, double *data_v1, double *data_v2, double *data_v3, double* data_p1, double* data_p2, int data_length, double sampleinterval, double* scores);
 
+extern "C" _declspec(dllexport) void GetStaticScores_ZD6(double base_v1, double base_v2, double data_v1, double data_v2, double* scores);
+
 
 /** @brief (one liner)
   *
@@ -32,6 +34,16 @@ int CFaultAnalyzer::__AnalyzeFault( double *arrdTransformRatio )
         }
     }
 
+    //!< judge Position whether is L2R and type of acquicition is static or trigger
+    double szdVoltageRMS[4] = {0};
+    int nResult = __JudgePosL2R( szdVoltageRMS );
+    cout << "judge is ok" << endl;
+    if( nResult < 0 )
+    {
+        cerr << "ERROR! Function JudgePosL2R() return error!" << endl;
+        return -1;
+    }
+
     int nNumChannel = 4;
     switch (m_emTypeofSwitch)
     {
@@ -45,7 +57,8 @@ int CFaultAnalyzer::__AnalyzeFault( double *arrdTransformRatio )
         nNumChannel = 4;
         break;
     }
-    //!< read the base data
+
+    //!< read the trigger base data
     int nNumSample = MAX_BASE_LENGTH;
     int nBaseDataLen;
     for (int nCH = 0; nCH < nNumChannel; ++nCH)
@@ -73,32 +86,70 @@ int CFaultAnalyzer::__AnalyzeFault( double *arrdTransformRatio )
         stmBaseDataFileIn.close();
     }
 
+    //!< read the static base data
+    string strStaticFilePath = "BaseData\\DataStatic.txt";
+    ifstream stmStaticBaseDataFileIn( strStaticFilePath, ios_base::in );
+    if (!stmStaticBaseDataFileIn.is_open())
+    {
+        cerr << "Fail to open the " << strStaticFilePath << " static base data file!" << endl;
+        return -1;
+    }
+    double arrdStaticData[5] = {0};
+    int i=0;
+    while (stmStaticBaseDataFileIn.peek() != EOF)
+    {
+        stmStaticBaseDataFileIn >> arrdStaticData[i++];
+    }
+
     //!< analyzing the fault result
     m_parrdScore = (double *)malloc( 10*sizeof(double) );
     double dSampleInterval = SAMPLE_INTERVAL;
-    char cEndLetter = m_strPath[m_strPath.length()-1];
-    switch (m_emTypeofSwitch)
+    if( m_emTypeofAcq == Ttrigger )
     {
-    case ZD6:
-        if (cEndLetter == 'R' || cEndLetter == 'r')   // L2R
+        switch (m_emTypeofSwitch)
         {
-            GetScores_ZD6( m_pparrdAllBaseData[2], m_pparrdAllBaseData[0], m_arrnAllChDataLen[0], m_pparrdAllRealData[2], m_pparrdAllRealData[0], m_nSizeofChRealData, dSampleInterval, m_parrdScore );
+        case ZD6:
+            if ( m_bisL2R )   // L2R
+            {
+                GetScores_ZD6( m_pparrdAllBaseData[2], m_pparrdAllBaseData[0], m_arrnAllChDataLen[0], m_pparrdAllRealData[2], m_pparrdAllRealData[0], m_nSizeofChRealData, dSampleInterval, m_parrdScore );
+            }
+            else
+            {
+                GetScores_ZD6( m_pparrdAllBaseData[3], m_pparrdAllBaseData[1], m_arrnAllChDataLen[1], m_pparrdAllRealData[2], m_pparrdAllRealData[1], m_nSizeofChRealData, dSampleInterval, m_parrdScore );
+            }
+            break;
+        case S700K:
+            GetScores_S700K( m_pparrdAllBaseData[3], m_pparrdAllBaseData[4], m_pparrdAllBaseData[5], m_pparrdAllBaseData[0], m_pparrdAllBaseData[1], m_pparrdAllBaseData[2], m_arrnAllChDataLen[0],
+                             m_pparrdAllRealData[3], m_pparrdAllRealData[4], m_pparrdAllRealData[5], m_pparrdAllRealData[0], m_pparrdAllRealData[1], m_pparrdAllRealData[2], m_nSizeofChRealData, dSampleInterval, m_parrdScore );
+            break;
+        case ZYJ7:
+            GetScores_ZYJ7( m_pparrdAllBaseData[4], m_pparrdAllBaseData[5], m_pparrdAllBaseData[6], m_pparrdAllBaseData[1], m_pparrdAllBaseData[0], m_pparrdAllBaseData[3], m_pparrdAllBaseData[7], m_pparrdAllBaseData[8], nBaseDataLen,
+                            m_pparrdAllRealData[4], m_pparrdAllRealData[5], m_pparrdAllRealData[6], m_pparrdAllRealData[1], m_pparrdAllRealData[0], m_pparrdAllRealData[3], m_pparrdAllRealData[7], m_pparrdAllRealData[8], m_nSizeofChRealData,
+                            dSampleInterval, m_parrdScore );
+            break;
+        }
+    }
+    else
+    {
+        double static_base_v1 = 0;
+        double static_base_v2 = 0;
+        double static_data_v1 = -szdVoltageRMS[0];
+        double static_data_v2 = -szdVoltageRMS[1];
+        if( m_bisL2R )
+        {
+            static_base_v1 = arrdStaticData[0];
+            static_base_v2 = arrdStaticData[1];
         }
         else
         {
-            GetScores_ZD6( m_pparrdAllBaseData[3], m_pparrdAllBaseData[1], m_arrnAllChDataLen[1], m_pparrdAllRealData[2], m_pparrdAllRealData[1], m_nSizeofChRealData, dSampleInterval, m_parrdScore );
+            static_base_v1 = arrdStaticData[2];
+            static_base_v2 = arrdStaticData[3];
         }
-        break;
-    case S700K:
-        GetScores_S700K( m_pparrdAllBaseData[3], m_pparrdAllBaseData[4], m_pparrdAllBaseData[5], m_pparrdAllBaseData[0], m_pparrdAllBaseData[1], m_pparrdAllBaseData[2], m_arrnAllChDataLen[0],
-                         m_pparrdAllRealData[3], m_pparrdAllRealData[4], m_pparrdAllRealData[5], m_pparrdAllRealData[0], m_pparrdAllRealData[1], m_pparrdAllRealData[2], m_nSizeofChRealData, dSampleInterval, m_parrdScore );
-        break;
-    case ZYJ7:
-        GetScores_ZYJ7( m_pparrdAllBaseData[4], m_pparrdAllBaseData[5], m_pparrdAllBaseData[6], m_pparrdAllBaseData[1], m_pparrdAllBaseData[0], m_pparrdAllBaseData[3], m_pparrdAllBaseData[7], m_pparrdAllBaseData[8], nBaseDataLen,
-                        m_pparrdAllRealData[4], m_pparrdAllRealData[5], m_pparrdAllRealData[6], m_pparrdAllRealData[1], m_pparrdAllRealData[0], m_pparrdAllRealData[3], m_pparrdAllRealData[7], m_pparrdAllRealData[8], m_nSizeofChRealData,
-                        dSampleInterval, m_parrdScore );
-        break;
+        cout << "the staticVol: baseV1=" << static_base_v1 << "; baseV2=" << static_base_v2 << endl;
+        cout << "the staticVOl: dataV1=" << static_data_v1 << "; dataV2=" << static_data_v2 << endl;
+        GetStaticScores_ZD6(static_base_v1, static_base_v2, static_data_v1, static_data_v2, m_parrdScore);
     }
+
     cout << "analyzing finished!" << endl;
     return 0;
 }
@@ -225,8 +276,9 @@ int CFaultAnalyzer::__TransformRawData( double *parrdTranRatio )
 {
     m_strPath = strPath;
     m_emTypeofSwitch = TypeofSwitch;
-    m_bisLtoR = true;
+    m_bisL2R = true;
     m_bisTransformed = false;
+    m_emTypeofAcq = Ttrigger;
 }
 
 /** @brief (one liner)
@@ -352,4 +404,97 @@ int CFaultAnalyzer::SaveAfterPreProcessing( double *arrdTransformRatio )
     delete preprocessor;
     preprocessor = NULL;
     return 0;
+}
+
+int CFaultAnalyzer::__JudgePosL2R( double* pszdVoltageRMS )
+{
+    vector<double> vecDataOut;
+    CPreprocessor* preprocessor = new CPreprocessor();
+    for (int nCH = 0; nCH < 2; ++nCH)
+    {
+        double *parrdChRealData = m_pparrdAllRealData[nCH];
+        int nResult = -1;
+        double dSum = 0;
+        vecDataOut.clear();
+        nResult = preprocessor->doPreprocess( parrdChRealData, &vecDataOut, m_nSizeofChRealData, 200, "RMS" );
+        if( nResult != 0 )
+        {
+            cout << "doPreprocess() error!" << endl;
+            delete preprocessor;
+            preprocessor = NULL;
+            return -1;
+        }
+        if( !vecDataOut.empty() )
+        {
+            for( int nNum=20000; nNum<21000; ++nNum )  // time is 50ms
+            {
+                dSum += vecDataOut[nNum]*vecDataOut[nNum];
+            }
+            cout << dSum << endl;
+            pszdVoltageRMS[nCH] = sqrt( dSum/1000 );
+            cout << "Voltage of CH" << nCH << " is: " << pszdVoltageRMS << "V" << endl;
+        }
+        else
+        {
+            cout << "vector is empty" << endl;
+            delete preprocessor;
+            preprocessor = NULL;
+            return -1;
+        }
+    }
+
+    delete preprocessor;
+    preprocessor = NULL;
+
+    switch (m_emTypeofSwitch)
+    {
+    case S700K:
+        break;
+    case ZYJ7:
+        break;
+    case ZD6:
+        if( (pszdVoltageRMS[0] + pszdVoltageRMS[1]) < 200 )
+        {//static
+            m_emTypeofAcq = Tstatic;
+            if( pszdVoltageRMS[0] < pszdVoltageRMS[1] )
+            {
+                m_bisL2R = false;
+                return 1;
+            }
+            m_bisL2R = true;
+            return 0;
+        }
+        else
+        {//Trig
+            m_emTypeofAcq = Ttrigger;
+            if( pszdVoltageRMS[0] < pszdVoltageRMS[1] )
+            {
+                m_bisL2R = false;
+                return 1;
+            }
+            m_bisL2R = true;
+            return 0;
+        }
+        break;
+    }
+}
+
+void CFaultAnalyzer::GetInfo( string* strTypeofAcq, int* nIsL2R )
+{
+    if( m_emTypeofAcq == Tstatic )
+    {
+        *strTypeofAcq = "static";
+    }
+    else
+    {
+        *strTypeofAcq = "trigger";
+    }
+    if( m_bisL2R )
+    {
+        *nIsL2R = 1;
+    }
+    else
+    {
+        *nIsL2R = 0;
+    }
 }

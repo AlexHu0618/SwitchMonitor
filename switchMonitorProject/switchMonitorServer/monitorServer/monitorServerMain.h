@@ -14,8 +14,9 @@
     #include <wx/wx.h>
 #endif
 
-#include "CNetController.h"
 #include "monitorServerApp.h"
+#include "CNetController.h"
+#include "CSqlController.h"
 
 class monitorServerFrame: public wxFrame
 {
@@ -31,6 +32,7 @@ class monitorServerFrame: public wxFrame
             idMenuZYJ7
         };
         CNetController* m_pTcpServer;
+        CSqlController* m_pDBCtrler;
 
         void OnClose(wxCloseEvent& event);
         void OnQuit(wxCommandEvent& event);

@@ -18,8 +18,7 @@
 #include "monitorServerMain.h"
 #include "CFaultAnalyzer.hpp"
 #include <wx/dirdlg.h>
-
-extern "C" _declspec(dllexport) void GetStaticScores_ZD6(double base_v1, double base_v2, double data_v1, double data_v2, double* scores);
+#include <string>
 
 //helper functions
 enum wxbuildinfoformat {
@@ -83,15 +82,20 @@ monitorServerFrame::monitorServerFrame(wxFrame *frame, const wxString& title)
     SetStatusText(wxbuildinfo(short_f), 1);
 #endif // wxUSE_STATUSBAR
 
-//    m_pTcpServer = new CNetController( "localhost", 1024, server );
-//    m_pTcpServer->Initial();
+    m_pTcpServer = new CNetController( "localhost", 1024, server );
+    m_pTcpServer->Initial();
+
+    m_pDBCtrler = new CSqlController( "10.3.3.144", 3306, "yfzx", "yfzx3305" );
+    m_pDBCtrler->Initial("switchmonitordb", "tab4alldata" );
 }
 
 
 monitorServerFrame::~monitorServerFrame()
 {
-//    delete m_pTcpServer;
-//    m_pTcpServer = NULL;
+    delete m_pTcpServer;
+    m_pTcpServer = NULL;
+    delete m_pDBCtrler;
+    m_pDBCtrler = NULL;
 }
 
 void monitorServerFrame::OnClose(wxCloseEvent &event)
@@ -106,103 +110,149 @@ void monitorServerFrame::OnQuit(wxCommandEvent &event)
 
 void monitorServerFrame::OnZD6(wxCommandEvent &event)
 {
-//    while( true )
+    while( true )
+    {
+        //!< wait for TCP
+        char szRecvBuf[1024]={0};
+        m_pTcpServer->Recv( szRecvBuf, 1024 );
+        cout << szRecvBuf << endl;
+        string strDataDirPath = szRecvBuf;
+//        string strDataDirPath = "F:\\ZD6\\new_voltage_sensor\\default\\1_LR"
+
+        if( szRecvBuf[0] == 'Q' )
+        {
+            break;
+        }
+
+        SWITCH_TYPE typeofSwitch = ZD6;
+        CFaultAnalyzer faultAnalyzer( strDataDirPath, typeofSwitch );
+        double arrdTransformRatio[] = { 300.0, 300.0, 17.857 };    // {v1,v2,i} 3.0=300V, i=17.857A
+//      double arrdTransformRatio[] = { 600, 600, 40 };
+
+        double *parrdScore = NULL;
+        parrdScore = faultAnalyzer.GetScore( arrdTransformRatio );
+
+        printf("ZD6 fault confidences for provided data:\n\n");
+        printf("Actuating fault: %.2f %%\n", parrdScore[0]);
+        printf("Engage difficult: %.2f %%\n", parrdScore[1]);
+        printf("Indicating fault: %.2f %%\n", parrdScore[2]);
+        printf("Jam: %.2f %%\n", parrdScore[3]);
+        printf("Motor fault: %.2f %%\n", parrdScore[4]);
+        printf("Movement resistance: %.2f %%\n", parrdScore[5]);
+        printf("Power fault: %.2f %%\n", parrdScore[6]);
+        printf("Unlock difficult: %.2f %%\n", parrdScore[7]);
+
+        cout << "Analyzing is successful!" << endl;
+
+        //!< save real data
+//      int result = faultAnalyzer.SaveRealData( arrdTransformRatio );
+//      if (result != 0)
+//      {
+//         cout << "save real data fail!" << endl;
+//      }
+
+        //!< save preprocessing data
+        int nResult = faultAnalyzer.SaveAfterPreProcessing( arrdTransformRatio );
+        if( nResult != 0 )
+        {
+            cout << "Error, fail to save preprocessing data!" << endl;
+        }
+        else
+        {
+            cout << "Preprocessing data was successfully saved!" << endl;
+        }
+
+        //!< update DB specified column
+        string strTypeofAcq = "trigger";
+        int nIsL2R = 1;
+        faultAnalyzer.GetInfo( &strTypeofAcq, &nIsL2R );
+        wxString wstrIsL2R = wxString::Format(wxT("%i"), nIsL2R );
+        string strIsL2R = std::string(wstrIsL2R.mbc_str());
+        string arrstrScore[10] = {"0"};
+        for( int i=0;i<8;++i )
+        {
+            arrstrScore[i] = wxString::Format(wxT("%f"), parrdScore[i]);
+        }
+        wxString strTmp(strDataDirPath);
+        strTmp.Replace("\\","\\\\");
+        strDataDirPath = strTmp.mb_str();
+        string strSetValue = "ACTUATING=" + arrstrScore[0] + ",ENGAGE=" + arrstrScore[1] + ",INDICATING=" + arrstrScore[2] + ",JAM=" + arrstrScore[3]
+                            + ",MOTOR=" + arrstrScore[4] + ",MOVEMENT=" + arrstrScore[5] + ",POWERERR=" + arrstrScore[6] + ",UNLOCKERR=" + arrstrScore[7]
+                            + ",STATUS='" + strTypeofAcq + "',ISL2R=" + strIsL2R;
+        string strDBCmd = "UPDATE tab4alldata set " + strSetValue + " WHERE PATH='" + strDataDirPath + "';";
+        cout << strDBCmd << endl;
+        nResult = m_pDBCtrler->Insert( strDBCmd );
+        if( nResult != 1 )
+        {
+            cout << "sql update error" << endl;
+        }
+        else
+        {
+            cout << "Database updata success!" << endl;
+        }
+
+    }
+    cout << "I got the 'Q', now quit" << endl;
+    return;
+
+//    wxString strDataDirPath = _("/");
+//    wxDirDialog dialog( this );
+//    if (dialog.ShowModal() == wxID_OK)
 //    {
-//        //!< wait for TCP
-//        char szRecvBuf[1024]={0};
-//        m_pTcpServer->Recv( szRecvBuf, 1024 );
-//        cout << szRecvBuf << endl;
-//        string strDataDirPath = szRecvBuf;
-////        string strDataDirPath = "F:\\ZD6\\new_voltage_sensor\\default\\1_LR"
-//
-//        if( szRecvBuf[0] == 'Q' )
-//        {
-//            break;
-//        }
-//
-//        SWITCH_TYPE typeofSwitch = ZD6;
-//        CFaultAnalyzer faultAnalyzer( strDataDirPath, typeofSwitch );
-//        double arrdTransformRatio[] = { 300.0, 300.0, 17.857 };    // {v1,v2,i} 3.0=300V, i=17.857A
-////      double arrdTransformRatio[] = { 600, 600, 40 };
-//        double *parrdScore = faultAnalyzer.GetScore( arrdTransformRatio );
-//
-//        printf("ZD6 fault confidences for provided data:\n\n");
-//        printf("Actuating fault: %.2f %%\n", parrdScore[0]);
-//        printf("Engage difficult: %.2f %%\n", parrdScore[1]);
-//        printf("Indicating fault: %.2f %%\n", parrdScore[2]);
-//        printf("Jam: %.2f %%\n", parrdScore[3]);
-//        printf("Motor fault: %.2f %%\n", parrdScore[4]);
-//        printf("Movement resistance: %.2f %%\n", parrdScore[5]);
-//        printf("Power fault: %.2f %%\n", parrdScore[6]);
-//        printf("Unlock difficult: %.2f %%\n", parrdScore[7]);
-//
-//        cout << "Analyzing is successful!" << endl;
-////      int result = faultAnalyzer.SaveRealData( arrdTransformRatio );
-////      if (result != 0)
-////      {
-////         cout << "save real data fail!" << endl;
-////      }
-//
+//        strDataDirPath = dialog.GetPath();
+//        cout << strDataDirPath << endl;
 //    }
-//    cout << "I got the 'Q', now quit" << endl;
-
-    wxString strDataDirPath = _("/");
-    wxDirDialog dialog( this );
-    if (dialog.ShowModal() == wxID_OK)
-    {
-        strDataDirPath = dialog.GetPath();
-        cout << strDataDirPath << endl;
-    }
-    else
-    {
-        return;
-    }
-    SWITCH_TYPE typeofSwitch = ZD6;
-    CFaultAnalyzer faultAnalyzer( std::string(strDataDirPath.mb_str()), typeofSwitch );
-    double arrdTransformRatio[] = { 300.0, 300.0, 17.857 };    // {v1,v2,i} 3.0=300V, i=17.857A
-//    double arrdTransformRatio[] = { 600, 600, 40 };
-    double *parrdScore = faultAnalyzer.GetScore( arrdTransformRatio );
-
-    printf("ZD6 fault confidences for provided data:\n\n");
-	printf("Actuating fault: %.2f %%\n", parrdScore[0]);
-	printf("Engage difficult: %.2f %%\n", parrdScore[1]);
-	printf("Indicating fault: %.2f %%\n", parrdScore[2]);
-	printf("Jam: %.2f %%\n", parrdScore[3]);
-	printf("Motor fault: %.2f %%\n", parrdScore[4]);
-	printf("Movement resistance: %.2f %%\n", parrdScore[5]);
-	printf("Power fault: %.2f %%\n", parrdScore[6]);
-	printf("Unlock difficult: %.2f %%\n", parrdScore[7]);
-
-    cout << "Analyzing is successful!" << endl;
-    //!< save real data
-//    int result = faultAnalyzer.SaveRealData( arrdTransformRatio );
-//    if (result != 0)
+//    else
 //    {
-//        cout << "save real data fail!" << endl;
+//        return;
 //    }
-    //!< save preprocessing data
-    int nResult = faultAnalyzer.SaveAfterPreProcessing( arrdTransformRatio );
-    if( nResult != 0 )
-    {
-        cout << "Error, fail to save preprocessing data!" << endl;
-    }
-    else
-    {
-        cout << "Preprocessing data was successfully saved!" << endl;
-    }
-
-    double static_base_v1 = 78.7584;
-	double static_base_v2 = 0;
-	double static_data_v1 = 60;
-	double static_data_v2 = 0;
-
-	double* scores = new double[10];
-	GetStaticScores_ZD6(static_base_v1, static_base_v2, static_data_v1, static_data_v2, scores);
-
-	printf("Actuating fault: %.2f %%\n", scores[0]);
-	printf("Indicating fault: %.2f %%\n", scores[2]);
-	delete scores;
-	scores = NULL;
+//    SWITCH_TYPE typeofSwitch = ZD6;
+//    CFaultAnalyzer faultAnalyzer( std::string(strDataDirPath.mb_str()), typeofSwitch );
+//    double arrdTransformRatio[] = { 300.0, 300.0, 17.857 };    // {v1,v2,i} 3.0=300V, i=17.857A
+////    double arrdTransformRatio[] = { 600, 600, 40 };
+//    double *parrdScore = faultAnalyzer.GetScore( arrdTransformRatio );
+//
+//    printf("ZD6 fault confidences for provided data:\n\n");
+//	printf("Actuating fault: %.2f %%\n", parrdScore[0]);
+//	printf("Engage difficult: %.2f %%\n", parrdScore[1]);
+//	printf("Indicating fault: %.2f %%\n", parrdScore[2]);
+//	printf("Jam: %.2f %%\n", parrdScore[3]);
+//	printf("Motor fault: %.2f %%\n", parrdScore[4]);
+//	printf("Movement resistance: %.2f %%\n", parrdScore[5]);
+//	printf("Power fault: %.2f %%\n", parrdScore[6]);
+//	printf("Unlock difficult: %.2f %%\n", parrdScore[7]);
+//
+//    cout << "Analyzing is successful!" << endl;
+//    //!< save real data
+////    int result = faultAnalyzer.SaveRealData( arrdTransformRatio );
+////    if (result != 0)
+////    {
+////        cout << "save real data fail!" << endl;
+////    }
+//
+//    //!< save preprocessing data
+//    int nResult = faultAnalyzer.SaveAfterPreProcessing( arrdTransformRatio );
+//    if( nResult != 0 )
+//    {
+//        cout << "Error, fail to save preprocessing data!" << endl;
+//    }
+//    else
+//    {
+//        cout << "Preprocessing data was successfully saved!" << endl;
+//    }
+//
+//    double static_base_v1 = -78.7584;
+//	double static_base_v2 = 0;
+//	double static_data_v1 = -60;
+//	double static_data_v2 = 0;
+//
+//	double* scores = new double[10];
+//	GetStaticScores_ZD6(static_base_v1, static_base_v2, static_data_v1, static_data_v2, scores);
+//
+//	printf("Actuating fault: %.2f %%\n", scores[0]);
+//	printf("Indicating fault: %.2f %%\n", scores[2]);
+//	delete scores;
+//	scores = NULL;
 
 }
 
