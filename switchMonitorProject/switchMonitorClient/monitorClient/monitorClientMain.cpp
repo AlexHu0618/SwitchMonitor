@@ -75,6 +75,11 @@ monitorClientFrame::monitorClientFrame(wxFrame *frame, const wxString& title)
     startMenu->Append(idMenuZYJ7, _("&ZYJ7\tF3"), _("Start to acquire data for ZYJ7"));
     mbar->Append(startMenu, _("&Start"));
 
+    wxMenu* settingMenu = new wxMenu(_T(""));
+    m_MenuItemDefault = new wxMenuItem(settingMenu, idMenuDefault, _("Default\tF2"), _("default data"), wxITEM_CHECK);
+    settingMenu->Append(m_MenuItemDefault);
+    mbar->Append(settingMenu, _("&Setting"));
+
     SetMenuBar(mbar);
 #endif // wxUSE_MENUS
 
@@ -99,6 +104,10 @@ monitorClientFrame::~monitorClientFrame()
     m_pTcpClient->Send("Quit",4);
     delete m_pTcpClient;
     m_pTcpClient = NULL;
+    delete m_pDBCtrler;
+    m_pDBCtrler = NULL;
+    delete m_MenuItemDefault;
+    m_MenuItemDefault = NULL;
 }
 
 void monitorClientFrame::OnClose(wxCloseEvent &event)
@@ -144,7 +153,7 @@ void monitorClientFrame::OnZD6(wxCommandEvent &event)
         {
             result = 0;
         }
-        char acqCmd[4] = {0x04,0x00,0x00,0x04};
+        char acqCmd[4] = {0x04,0x00,0x03,0x07};     //time is 3s
         result = pZD6Server->SendData(acqCmd);
         if(result<0)
         {
@@ -154,7 +163,7 @@ void monitorClientFrame::OnZD6(wxCommandEvent &event)
             return;
         }
         cout << "success to send command 0X04" << endl;
-        nTimeUpSec = 30;
+        nTimeUpSec = 10;
     }
 
     frameCout = pZD6Server->RecvData( nTimeUpSec );
@@ -185,9 +194,15 @@ void monitorClientFrame::OnZD6(wxCommandEvent &event)
         strcpy( szDirPath, str4dataDir.mb_str());
         pZD6Server->SavingRawData( szDirPath );
 
-        //!< send to TCP server for analyzing
-        str4dataDir = "F:\\ZD6\\new_voltage_sensor\\default\\1_LR";    //just for debug test
-        m_pTcpClient->Send((const char*)str4dataDir.mb_str(), str4dataDir.size());
+        //!< send the path to TCP server for analyzing
+        //str4dataDir = "F:\\ZD6\\new_voltage_sensor\\default\\1_static";    //just for debug test
+        wxString strSendCmd = str4dataDir;
+        if( m_MenuItemDefault->IsChecked() )
+        {
+            strSendCmd += "_default";
+        }
+        m_pTcpClient->Send((const char*)strSendCmd.mb_str(), strSendCmd.size());
+        cout << strSendCmd << endl;
 
         //!< insert to DB
         str4dataDir.Replace("\\", "\\\\");

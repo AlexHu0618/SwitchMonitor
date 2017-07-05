@@ -3,17 +3,27 @@
 	<ActiveTarget name="Release" />
 	<File name="monitorClientMain.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="2" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="704" topLine="0" />
+			<Cursor1 position="1066" topLine="23" />
 		</Cursor>
 	</File>
-	<File name="src\CPreprocessor.cpp" open="0" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="2" zoom_2="0">
+	<File name="src\CNetController.cpp" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="606" topLine="0" />
+			<Cursor1 position="2303" topLine="96" />
+		</Cursor>
+	</File>
+	<File name="src\CPreprocessor.cpp" open="1" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="2" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="167" topLine="6" />
 		</Cursor>
 	</File>
 	<File name="src\CSqlController.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="3574" topLine="113" />
+			<Cursor1 position="362" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src\CUdpServer.cpp" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2211" topLine="56" />
 		</Cursor>
 	</File>
 	<File name="include\CNetController.h" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -21,19 +31,9 @@
 			<Cursor1 position="417" topLine="1" />
 		</Cursor>
 	</File>
-	<File name="src\CUdpServer.cpp" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
+	<File name="include\CPreprocessor.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2145" topLine="70" />
-		</Cursor>
-	</File>
-	<File name="monitorClientMain.cpp" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="2" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="4727" topLine="142" />
-		</Cursor>
-	</File>
-	<File name="monitorClientApp.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="438" topLine="1" />
+			<Cursor1 position="162" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="include\CSqlController.h" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
@@ -43,17 +43,17 @@
 	</File>
 	<File name="include\CUdpServer.h" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="2" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="600" topLine="4" />
+			<Cursor1 position="651" topLine="11" />
 		</Cursor>
 	</File>
-	<File name="include\CPreprocessor.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
+	<File name="monitorClientApp.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="126" topLine="0" />
+			<Cursor1 position="438" topLine="1" />
 		</Cursor>
 	</File>
-	<File name="src\CNetController.cpp" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="monitorClientMain.cpp" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="2" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2303" topLine="84" />
+			<Cursor1 position="6706" topLine="192" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

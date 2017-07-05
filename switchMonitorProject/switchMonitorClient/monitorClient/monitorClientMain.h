@@ -33,8 +33,10 @@ class monitorClientFrame: public wxFrame
             idMenuQuit = 1000,
             idMenuZD6,
             idMenuS700K,
-            idMenuZYJ7
+            idMenuZYJ7,
+            idMenuDefault
         };
+        wxMenuItem* m_MenuItemDefault;
         CNetController* m_pTcpClient;
         CSqlController* m_pDBCtrler;
 

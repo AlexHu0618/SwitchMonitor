@@ -1690,7 +1690,7 @@
 1412609644 d:\wxwidgets-3.0.2\include\wx\univ\theme.h
 	"wx/string.h"
 
-1497320170 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\monitorclientmain.h
+1499096561 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\monitorclientmain.h
 	<wx/wx.h>
 	"monitorClientApp.h"
 	"CNetController.h"
@@ -2932,7 +2932,7 @@
 1412609642 d:\wxwidgets-3.0.2\include\wx\cocoa\mdi.h
 	"wx/frame.h"
 
-1497619761 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\monitorclientmain.cpp
+1498651000 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\monitorclientmain.cpp
 	"wx_pch.h"
 	"monitorClientMain.h"
 	"CUdpServer.h"
@@ -2960,7 +2960,7 @@
 
 1412609644 d:\wxwidgets-3.0.2\include\wx\msw\rcdefs.h
 
-1497623087 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\src\cudpserver.cpp
+1498657074 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\src\cudpserver.cpp
 	<stdio.h>
 	<iostream>
 	<iomanip>
@@ -3042,7 +3042,7 @@
 
 1492761152 e:\mysql conncetor\mysql-connector-c-6.1.10-win32\mysql-connector-c-6.1.10-win32\include\errmsg.h
 
-1497324032 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\src\csqlcontroller.cpp
+1498116574 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\src\csqlcontroller.cpp
 	"CSqlController.h"
 	<stdio.h>
 	<iostream>

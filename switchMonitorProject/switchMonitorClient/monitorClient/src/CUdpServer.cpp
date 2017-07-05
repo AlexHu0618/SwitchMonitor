@@ -73,7 +73,7 @@ bool CUdpServer::__IsOKCmdBack( SOCKET sockFd, char* pszSentCmd, int nTimeOutMs 
     nResult = recv( sockFd, pBuf, 1470, 0 );
     if( nResult > 0 )
     {
-        if( pBuf[0] == pszSentCmd[0] && pBuf[2] == pszSentCmd[3] )
+        if( pBuf[0] == pszSentCmd[0] && pBuf[2] == pszSentCmd[0] )
         {
             delete [] pBuf;
             pBuf = NULL;
