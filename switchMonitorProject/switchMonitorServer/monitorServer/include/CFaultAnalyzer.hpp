@@ -25,6 +25,7 @@ public:
     int SaveRealData( double *arrdTransformRatio );
     int SaveAfterPreProcessing( double *arrdTransformRatio );
     void GetInfo( string* strTypeofAcq, int* nIsL2R );
+    void SetBaseData( bool bIsDefault );
 
 private:
     string m_strPath;
@@ -40,6 +41,8 @@ private:
     bool m_bisL2R;
     int m_nsizeofRealData;
     bool m_bisTransformed;
+    double m_szdVoltageRMS[4] = {0};
+    bool m_bIsDefault;
 
     int __TransformRawData( double *parrdTranRatio );
     int __AnalyzeFault( double *parrdTranRatio );

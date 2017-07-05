@@ -112,16 +112,25 @@ void monitorServerFrame::OnZD6(wxCommandEvent &event)
 {
     while( true )
     {
+        SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_GREEN );
+        cout << "START A NEW TASK" << endl;
+        SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN |FOREGROUND_BLUE );
+
         //!< wait for TCP
         char szRecvBuf[1024]={0};
         m_pTcpServer->Recv( szRecvBuf, 1024 );
         cout << szRecvBuf << endl;
         string strDataDirPath = szRecvBuf;
-//        string strDataDirPath = "F:\\ZD6\\new_voltage_sensor\\default\\1_LR"
 
         if( szRecvBuf[0] == 'Q' )
         {
             break;
+        }
+        bool bIsDefault = false;
+        if( strDataDirPath.substr(strDataDirPath.length()-8) == "_default" )
+        {
+            bIsDefault = true;
+            strDataDirPath.erase( strDataDirPath.length()-8, 8 );
         }
 
         SWITCH_TYPE typeofSwitch = ZD6;
@@ -144,12 +153,16 @@ void monitorServerFrame::OnZD6(wxCommandEvent &event)
 
         cout << "Analyzing is successful!" << endl;
 
-        //!< save real data
-//      int result = faultAnalyzer.SaveRealData( arrdTransformRatio );
-//      if (result != 0)
-//      {
-//         cout << "save real data fail!" << endl;
-//      }
+        //!< save real data, here just save the default data
+        if( bIsDefault )
+        {
+            faultAnalyzer.SetBaseData( bIsDefault );
+            int result = faultAnalyzer.SaveRealData( arrdTransformRatio );
+            if (result != 0)
+            {
+                cout << "save real data fail!" << endl;
+            }
+        }
 
         //!< save preprocessing data
         int nResult = faultAnalyzer.SaveAfterPreProcessing( arrdTransformRatio );
@@ -190,7 +203,6 @@ void monitorServerFrame::OnZD6(wxCommandEvent &event)
         {
             cout << "Database updata success!" << endl;
         }
-
     }
     cout << "I got the 'Q', now quit" << endl;
     return;
@@ -240,19 +252,6 @@ void monitorServerFrame::OnZD6(wxCommandEvent &event)
 //    {
 //        cout << "Preprocessing data was successfully saved!" << endl;
 //    }
-//
-//    double static_base_v1 = -78.7584;
-//	double static_base_v2 = 0;
-//	double static_data_v1 = -60;
-//	double static_data_v2 = 0;
-//
-//	double* scores = new double[10];
-//	GetStaticScores_ZD6(static_base_v1, static_base_v2, static_data_v1, static_data_v2, scores);
-//
-//	printf("Actuating fault: %.2f %%\n", scores[0]);
-//	printf("Indicating fault: %.2f %%\n", scores[2]);
-//	delete scores;
-//	scores = NULL;
 
 }
 
