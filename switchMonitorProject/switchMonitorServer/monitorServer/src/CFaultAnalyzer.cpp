@@ -315,6 +315,49 @@ int CFaultAnalyzer::SaveRealData( double *arrdTransformRatio )
     if( m_bIsDefault )
     {
         strFilePath = "BaseData";
+        __SaveBaseData( strFilePath );
+    }
+    else
+    {
+        for (int nCH = 0; nCH < nNumChannel; ++nCH)
+        {
+            stringstream stream;
+            stream << nCH;
+            string strChNum = stream.str();
+            string strDataFilePath = m_strPath + "\\DataCH" + strChNum + ".txt";
+            ofstream stmRawDataFileOut( strDataFilePath, ios_base::out );
+            if( !stmRawDataFileOut.is_open() )
+            {
+                cerr << "Fail to open the DataCH" << nCH << ".dat raw data file!" << endl;
+                return -1;
+            }
+
+            double *parrdChRealData = m_pparrdAllRealData[nCH];
+            for (int nNum = 0; nNum < m_nSizeofChRealData; ++nNum)
+            {
+                stmRawDataFileOut << parrdChRealData[nNum] << "\n";
+            }
+            stmRawDataFileOut.close();
+            cout << "save to file: " << strDataFilePath << endl;
+        }
+    }
+    return 0;
+}
+
+int CFaultAnalyzer::__SaveBaseData( string strFilePath )
+{
+    int nNumChannel = 3;
+    switch (m_emTypeofSwitch)
+    {
+    case S700K:
+        nNumChannel = 6;
+        break;
+    case ZYJ7:
+        nNumChannel = 9;
+        break;
+    case ZD6:
+        nNumChannel = 3;
+        break;
     }
 
     if( m_emTypeofAcq == Tstatic )
@@ -343,9 +386,13 @@ int CFaultAnalyzer::SaveRealData( double *arrdTransformRatio )
         {
             arrd[0] = m_szdVoltageRMS[0];
             arrd[1] = m_szdVoltageRMS[1];
+            arrd[2] = 0;
+            arrd[3] = 0;
         }
         else
         {
+            arrd[0] = 0;
+            arrd[1] = 0;
             arrd[2] = m_szdVoltageRMS[0];
             arrd[3] = m_szdVoltageRMS[1];
         }
@@ -361,24 +408,62 @@ int CFaultAnalyzer::SaveRealData( double *arrdTransformRatio )
     {
         for (int nCH = 0; nCH < nNumChannel; ++nCH)
         {
-            stringstream stream;
-            stream << nCH;
-            string strChNum = stream.str();
-            string strDataFilePath = strFilePath + "\\DataCH" + strChNum + ".txt";
-            ofstream stmRawDataFileOut( strDataFilePath, ios_base::out );
-            if( !stmRawDataFileOut.is_open() )
+            if( m_bisL2R )
             {
-                cerr << "Fail to open the DataCH" << nCH << ".dat raw data file!" << endl;
-                return -1;
+                if( nCH != 1 )
+                {
+                    stringstream stream;
+                    stream << nCH;
+                    string strChNum = stream.str();
+                    string strDataFilePath = strFilePath + "\\DataCH" + strChNum + ".txt";
+                    ofstream stmRawDataFileOut( strDataFilePath, ios_base::out );
+                    if( !stmRawDataFileOut.is_open() )
+                    {
+                        cerr << "Fail to open the DataCH" << nCH << ".dat raw data file!" << endl;
+                        return -1;
+                    }
+
+                    double *parrdChRealData = m_pparrdAllRealData[nCH];
+                    for (int nNum = 0; nNum < m_nSizeofChRealData; ++nNum)
+                    {
+                        stmRawDataFileOut << parrdChRealData[nNum] << "\n";
+                    }
+                    stmRawDataFileOut.close();
+                    cout << "save to file: " << strDataFilePath << endl;
+                }
+            }
+            else
+            {
+                if( nCH != 0 )
+                {
+                    stringstream stream;
+                    if( nCH == 2 )
+                    {
+                        stream << 3;
+                    }
+                    else
+                    {
+                        stream << nCH;
+                    }
+                    string strChNum = stream.str();
+                    string strDataFilePath = strFilePath + "\\DataCH" + strChNum + ".txt";
+                    ofstream stmRawDataFileOut( strDataFilePath, ios_base::out );
+                    if( !stmRawDataFileOut.is_open() )
+                    {
+                        cerr << "Fail to open the DataCH" << nCH << ".dat raw data file!" << endl;
+                        return -1;
+                    }
+
+                    double *parrdChRealData = m_pparrdAllRealData[nCH];
+                    for (int nNum = 0; nNum < m_nSizeofChRealData; ++nNum)
+                    {
+                        stmRawDataFileOut << parrdChRealData[nNum] << "\n";
+                    }
+                    stmRawDataFileOut.close();
+                    cout << "save to file: " << strDataFilePath << endl;
+                }
             }
 
-            double *parrdChRealData = m_pparrdAllRealData[nCH];
-            for (int nNum = 0; nNum < m_nSizeofChRealData; ++nNum)
-            {
-                stmRawDataFileOut << parrdChRealData[nNum] << "\n";
-            }
-            stmRawDataFileOut.close();
-            cout << "save to file: " << strDataFilePath << endl;
         }
     }
     return 0;

@@ -47,6 +47,7 @@ private:
     int __TransformRawData( double *parrdTranRatio );
     int __AnalyzeFault( double *parrdTranRatio );
     int __JudgePosL2R( double* pdszVoltageRMS );
+    int __SaveBaseData( string strFilePath );
 };
 
 #endif // CFAULTANALYZER_HPP
