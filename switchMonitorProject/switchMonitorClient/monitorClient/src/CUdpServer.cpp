@@ -49,6 +49,7 @@ int CUdpServer::SendData( char *pszData )
         cout << "send command error." << endl;
         return -1;
     }
+    //!< it must be reback for confirmation while sent command 0x03 and 0x04
     if( pszData[0] != 0x01 )
     {
         if( !__IsOKCmdBack( RecvSocket, pszData, 1000 ) )

@@ -1690,11 +1690,12 @@
 1412609644 d:\wxwidgets-3.0.2\include\wx\univ\theme.h
 	"wx/string.h"
 
-1499096561 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\monitorclientmain.h
+1501033931 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\monitorclientmain.h
 	<wx/wx.h>
 	"monitorClientApp.h"
 	"CNetController.h"
 	"CSqlController.h"
+	"CUdpServer.h"
 
 1412609644 d:\wxwidgets-3.0.2\include\wx\wx.h
 	"wx/defs.h"
@@ -2960,7 +2961,7 @@
 
 1412609644 d:\wxwidgets-3.0.2\include\wx\msw\rcdefs.h
 
-1498657074 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\src\cudpserver.cpp
+1500610184 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\src\cudpserver.cpp
 	<stdio.h>
 	<iostream>
 	<iomanip>
@@ -3046,4 +3047,9 @@
 	"CSqlController.h"
 	<stdio.h>
 	<iostream>
+
+1500968912 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\src\cacquirer.cpp
+	"CAcquirer.h"
+
+1500970967 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\include\cacquirer.h
 

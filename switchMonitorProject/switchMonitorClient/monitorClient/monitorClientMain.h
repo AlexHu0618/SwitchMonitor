@@ -17,15 +17,13 @@
 #include "monitorClientApp.h"
 #include "CNetController.h"
 #include "CSqlController.h"
+#include "CUdpServer.h"
 
 class monitorClientFrame: public wxFrame
 {
     public:
         monitorClientFrame(wxFrame *frame, const wxString& title);
         ~monitorClientFrame();
-
-        int MakeDir( wxString* pstr4dataDir );
-        int InsertDB();
 
     private:
         enum
@@ -46,6 +44,9 @@ class monitorClientFrame: public wxFrame
         void OnS700K(wxCommandEvent& event);
         void OnZYJ7(wxCommandEvent& event);
         DECLARE_EVENT_TABLE()
+
+        int MakeDir( wxString* pstr4dataDir );
+        void Acquire(SWITCH_TYPE typeofSwitch);
 };
 
 
