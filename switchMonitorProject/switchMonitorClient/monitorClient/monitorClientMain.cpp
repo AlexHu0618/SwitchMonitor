@@ -96,6 +96,8 @@ monitorClientFrame::monitorClientFrame(wxFrame *frame, const wxString& title)
     //!< initial DB
     m_pDBCtrler = new CSqlController( "10.3.3.144", 3306, "yfzx", "yfzx3305" );
     m_pDBCtrler->Initial( "switchmonitordb", "tab4alldata" );
+
+    m_nAcqCounter = 0;
 }
 
 monitorClientFrame::~monitorClientFrame()
@@ -107,6 +109,8 @@ monitorClientFrame::~monitorClientFrame()
     m_pDBCtrler = NULL;
     delete m_MenuItemDefault;
     m_MenuItemDefault = NULL;
+    delete m_pUDPServer;
+    m_pUDPServer = NULL;
 }
 
 void monitorClientFrame::OnClose(wxCloseEvent &event)
@@ -121,52 +125,65 @@ void monitorClientFrame::OnQuit(wxCommandEvent &event)
 
 void monitorClientFrame::OnZD6(wxCommandEvent &event)
 {
+    //!< connect to UDP client
+    SWITCH_TYPE typeofSwitch = ZD6;
+    m_pUDPServer = new CUdpServer( "192.168.1.106", "192.168.1.154", 1024, typeofSwitch );
+
     //!< set the console text color
     SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_GREEN );
     cout << "START A NEW TEST FOR ZD6" << endl;
     SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN |FOREGROUND_BLUE );
 
-    //!< connect to UDP client
-    SWITCH_TYPE typeofSwitch = ZD6;
-    Acquire( typeofSwitch );
+    int nResult = 0;
+    nResult = Acquire( typeofSwitch );
 }
 
 void monitorClientFrame::OnS700K(wxCommandEvent &event)
 {
+    //!< connect to UDP client
+    SWITCH_TYPE typeofSwitch = S700K;
+    m_pUDPServer = new CUdpServer( "192.168.1.106", "192.168.1.154", 1024, typeofSwitch );
+
     SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_GREEN );
     cout << "START A NEW TEST FOR S700K" << endl;
     SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN |FOREGROUND_BLUE );
 
-    SWITCH_TYPE typeofSwitch = S700K;
-    Acquire( typeofSwitch );
+    int nResult = 0;
+    nResult = Acquire( typeofSwitch );
 }
 
 void monitorClientFrame::OnZYJ7(wxCommandEvent &event)
 {
+    //!< connect to UDP client
+    SWITCH_TYPE typeofSwitch = ZYJ7;
+    m_pUDPServer = new CUdpServer( "192.168.1.106", "192.168.1.154", 1024, typeofSwitch );
+
     SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_GREEN );
     cout << "START A NEW TEST FOR ZYJ7" << endl;
     SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN |FOREGROUND_BLUE );
 
-    SWITCH_TYPE typeofSwitch = ZYJ7;
-    Acquire( typeofSwitch );
+    int nResult = 0;
+    nResult = Acquire( typeofSwitch );
 }
 
-void monitorClientFrame::Acquire(SWITCH_TYPE typeofSwitch)
+int monitorClientFrame::Acquire( SWITCH_TYPE typeofSwitch )
 {
-    //!< connect to UDP client
-    CUdpServer *pUDPServer = new CUdpServer( "192.168.1.106", "192.168.1.154", 1024, typeofSwitch );
-    wxString msg = _(" YES --- Acquiring directly\n NO --- Trigger");
+/*    wxString msg = _(" YES --- Acquiring directly\n NO --- Trigger");
     int nAcqMode = wxMessageBox(msg, _("choose the style of acquiring"), wxYES_NO | wxCENTER );
+//    int nAcqMode = wxNO;
+//    if( m_nAcqCounter > 10 )
+//    {
+//        nAcqMode = wxYES;
+//        m_nAcqCounter = 0;
+//    }
 
     //!< send command to start default trigger acquiring
     char startCmd[4] = {0x03,0x00,0x00,0x03};
-    int result = pUDPServer->SendData(startCmd);
+    int result = m_pUDPServer->SendData(startCmd);
     if (result < 0)
     {
         cout << "Failed to send start command! Please try again!" << endl;
-        delete pUDPServer;
-        pUDPServer = NULL;
-        return;
+        return -1;
     }
     cout << "have sent command 0X03" << endl;
 
@@ -177,24 +194,22 @@ void monitorClientFrame::Acquire(SWITCH_TYPE typeofSwitch)
     {
         cout << "start to directly acquire 3S" << endl;
         char acqCmd[4] = {0x04,0x00,0x03,0x07};     //time is 3s
-        result = pUDPServer->SendData(acqCmd);
+        result = m_pUDPServer->SendData(acqCmd);
         if(result<0)
         {
             cout << "Failed to send command 0X04!" << endl;
-            delete pUDPServer;
-            pUDPServer = NULL;
-            return;
+            return -1;
         }
         cout << "success to send command 0X04!" << endl;
         nTimeUpSec = 10;
     }
 
     //!< stop acquiring while received data or till to time up
-    frameCout = pUDPServer->RecvData( nTimeUpSec );
+    frameCout = m_pUDPServer->RecvData( nTimeUpSec );
     if( frameCout > 0 )
     {
         char stopCmd[4] = {0x02,0x00,0x00,0x02};
-        result=pUDPServer->SendData(stopCmd);
+        result = m_pUDPServer->SendData(stopCmd);
         if(result<0)
         {
             cout << "send command 0X02 false!" << endl;
@@ -210,25 +225,26 @@ void monitorClientFrame::Acquire(SWITCH_TYPE typeofSwitch)
         if( MakeDir( &str4dataDir ) != 0 )
         {
             cout << "MakeDir() failed!" << endl;
+            return -1;
         }
 
         //!< save data to local dish
         char szDirPath[100] = {0};
         strcpy( szDirPath, str4dataDir.mb_str());
-        pUDPServer->SavingRawData( szDirPath );
+        m_pUDPServer->SavingRawData( szDirPath );*/
 
-//        //!< choose for analyzing modified data file
-//        wxString str4dataDir = _("/");
-//        wxDirDialog dialog( this );
-//        if (dialog.ShowModal() == wxID_OK)
-//        {
-//            str4dataDir = dialog.GetPath();
-//            cout << str4dataDir << endl;
-//        }
-//        else
-//        {
-//            return;
-//        }
+        //!< choose for analyzing specified data file
+        wxString str4dataDir = _("/");
+        wxDirDialog dialog( this );
+        if (dialog.ShowModal() == wxID_OK)
+        {
+            str4dataDir = dialog.GetPath();
+            cout << str4dataDir << endl;
+        }
+        else
+        {
+            return -1;
+        }
 
         //!< send the path to TCP server for analyzing
         wxString strSendCmd = str4dataDir;
@@ -251,14 +267,15 @@ void monitorClientFrame::Acquire(SWITCH_TYPE typeofSwitch)
         {
             cout << "sql insert error" << endl;
         }
-    }
+//        ++m_nAcqCounter;
+/*    }
     else
     {
         cout << "maybe time up, no data was acquired!" << endl;
-    }
+        return -1;
+    }*/
 
-    delete pUDPServer;
-    pUDPServer = NULL;
+    return 0;
 }
 
 int monitorClientFrame::MakeDir( wxString* pstr4dataDir )

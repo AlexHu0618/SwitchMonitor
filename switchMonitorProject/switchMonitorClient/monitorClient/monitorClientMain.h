@@ -37,6 +37,8 @@ class monitorClientFrame: public wxFrame
         wxMenuItem* m_MenuItemDefault;
         CNetController* m_pTcpClient;
         CSqlController* m_pDBCtrler;
+        CUdpServer *m_pUDPServer;
+        int m_nAcqCounter;
 
         void OnClose(wxCloseEvent& event);
         void OnQuit(wxCommandEvent& event);
@@ -46,7 +48,7 @@ class monitorClientFrame: public wxFrame
         DECLARE_EVENT_TABLE()
 
         int MakeDir( wxString* pstr4dataDir );
-        void Acquire(SWITCH_TYPE typeofSwitch);
+        int Acquire( SWITCH_TYPE typeofSwitch );
 };
 
 

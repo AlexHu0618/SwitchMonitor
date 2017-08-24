@@ -1690,7 +1690,7 @@
 1412609644 d:\wxwidgets-3.0.2\include\wx\univ\theme.h
 	"wx/string.h"
 
-1501033931 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\monitorclientmain.h
+1503478600 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\monitorclientmain.h
 	<wx/wx.h>
 	"monitorClientApp.h"
 	"CNetController.h"
@@ -2933,10 +2933,9 @@
 1412609642 d:\wxwidgets-3.0.2\include\wx\cocoa\mdi.h
 	"wx/frame.h"
 
-1498651000 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\monitorclientmain.cpp
+1501040767 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\monitorclientmain.cpp
 	"wx_pch.h"
 	"monitorClientMain.h"
-	"CUdpServer.h"
 	<wx/timer.h>
 	<wx/filename.h>
 	<wx/string.h>
