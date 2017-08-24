@@ -16,7 +16,6 @@
 #endif //__BORLANDC__
 
 #include "monitorServerMain.h"
-#include "CFaultAnalyzer.hpp"
 #include <wx/dirdlg.h>
 #include <string>
 
@@ -110,121 +109,46 @@ void monitorServerFrame::OnQuit(wxCommandEvent &event)
 
 void monitorServerFrame::OnZD6(wxCommandEvent &event)
 {
+    SWITCH_TYPE typeofSwitch = ZD6;
+    int nResult = 0;
     while( true )
     {
-        SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_GREEN );
-        cout << "START A NEW TASK" << endl;
-        SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN |FOREGROUND_BLUE );
-
-        //!< wait for TCP
-        char szRecvBuf[1024]={0};
-        m_pTcpServer->Recv( szRecvBuf, 1024 );
-        cout << szRecvBuf << endl;
-        string strDataDirPath = szRecvBuf;
-
-        if( szRecvBuf[0] == 'Q' )
+        nResult = Diagnosing( typeofSwitch );   //!<  diagnose and save data and result
+        if( nResult != 0 )
         {
             break;
         }
-        bool bIsDefault = false;
-        if( strDataDirPath.substr(strDataDirPath.length()-8) == "_default" )
-        {
-            bIsDefault = true;
-            strDataDirPath.erase( strDataDirPath.length()-8, 8 );
-        }
+    }
+}
 
-        SWITCH_TYPE typeofSwitch = ZD6;
-        CFaultAnalyzer faultAnalyzer( strDataDirPath, typeofSwitch );
-        double arrdTransformRatio[] = { 300.0, 300.0, 17.857 };    // {v1,v2,i} 3.0=300V, i=17.857A
-//      double arrdTransformRatio[] = { 600, 600, 40 };
-
-        double *parrdScore = NULL;
-        parrdScore = faultAnalyzer.GetScore( arrdTransformRatio );
-
-        printf("ZD6 fault confidences for provided data:\n\n");
-        printf("Actuating fault: %.2f %%\n", parrdScore[0]);
-        printf("Engage difficult: %.2f %%\n", parrdScore[1]);
-        printf("Indicating fault: %.2f %%\n", parrdScore[2]);
-        printf("Jam: %.2f %%\n", parrdScore[3]);
-        printf("Motor fault: %.2f %%\n", parrdScore[4]);
-        printf("Movement resistance: %.2f %%\n", parrdScore[5]);
-        printf("Power fault: %.2f %%\n", parrdScore[6]);
-        printf("Unlock difficult: %.2f %%\n", parrdScore[7]);
-
-        cout << "Analyzing is successful!" << endl;
-
-        //!< save real data, here just save the default data
-        if( bIsDefault )
-        {
-            faultAnalyzer.SetBaseData( bIsDefault );
-            int result = faultAnalyzer.SaveRealData( arrdTransformRatio );
-            if (result != 0)
-            {
-                cout << "save real data fail!" << endl;
-            }
-        }
-
-        //!< save preprocessing data
-        int nResult = faultAnalyzer.SaveAfterPreProcessing( arrdTransformRatio );
+void monitorServerFrame::OnS700K(wxCommandEvent &event)
+{
+    SWITCH_TYPE typeofSwitch = S700K;
+    int nResult = 0;
+    while( true )
+    {
+        nResult = Diagnosing( typeofSwitch );   //!<  diagnose and save data and result
         if( nResult != 0 )
         {
-            cout << "Error, fail to save preprocessing data!" << endl;
-        }
-        else
-        {
-            cout << "Preprocessing data was successfully saved!" << endl;
-        }
-
-        //!< update DB specified column
-        string strTypeofAcq = "trigger";
-        int nIsL2R = 1;
-        faultAnalyzer.GetInfo( &strTypeofAcq, &nIsL2R );
-        wxString wstrIsL2R = wxString::Format(wxT("%i"), nIsL2R );
-        string strIsL2R = std::string(wstrIsL2R.mbc_str());
-        string arrstrScore[10] = {"0"};
-        for( int i=0;i<8;++i )
-        {
-            arrstrScore[i] = wxString::Format(wxT("%f"), parrdScore[i]);
-        }
-        wxString strTmp(strDataDirPath);
-        strTmp.Replace("\\","\\\\");
-        strDataDirPath = strTmp.mb_str();
-        string strSetValue = "ACTUATING=" + arrstrScore[0] + ",ENGAGE=" + arrstrScore[1] + ",INDICATING=" + arrstrScore[2] + ",JAM=" + arrstrScore[3]
-                            + ",MOTOR=" + arrstrScore[4] + ",MOVEMENT=" + arrstrScore[5] + ",POWERERR=" + arrstrScore[6] + ",UNLOCKERR=" + arrstrScore[7]
-                            + ",STATUS='" + strTypeofAcq + "',ISL2R=" + strIsL2R;
-        string strDBCmd = "UPDATE tab4alldata set " + strSetValue + " WHERE PATH='" + strDataDirPath + "';";
-        cout << strDBCmd << endl;
-        nResult = m_pDBCtrler->Insert( strDBCmd );
-        if( nResult != 1 )
-        {
-            cout << "sql update error" << endl;
-        }
-        else
-        {
-            cout << "Database updata success!" << endl;
+            break;
         }
     }
-    cout << "I got the 'Q', now quit" << endl;
-    return;
-
 //    wxString strDataDirPath = _("/");
 //    wxDirDialog dialog( this );
 //    if (dialog.ShowModal() == wxID_OK)
 //    {
 //        strDataDirPath = dialog.GetPath();
-//        cout << strDataDirPath << endl;
 //    }
 //    else
 //    {
 //        return;
 //    }
-//    SWITCH_TYPE typeofSwitch = ZD6;
+//    SWITCH_TYPE typeofSwitch = S700K;
 //    CFaultAnalyzer faultAnalyzer( std::string(strDataDirPath.mb_str()), typeofSwitch );
-//    double arrdTransformRatio[] = { 300.0, 300.0, 17.857 };    // {v1,v2,i} 3.0=300V, i=17.857A
-////    double arrdTransformRatio[] = { 600, 600, 40 };
+//    double arrdTransformRatio[] = { 600, 600, 600, 40, 40, 40 };  //{v,v,v,i,i,i}
 //    double *parrdScore = faultAnalyzer.GetScore( arrdTransformRatio );
 //
-//    printf("ZD6 fault confidences for provided data:\n\n");
+//    printf("S700K fault confidences for provided data:\n\n");
 //	printf("Actuating fault: %.2f %%\n", parrdScore[0]);
 //	printf("Engage difficult: %.2f %%\n", parrdScore[1]);
 //	printf("Indicating fault: %.2f %%\n", parrdScore[2]);
@@ -235,54 +159,6 @@ void monitorServerFrame::OnZD6(wxCommandEvent &event)
 //	printf("Unlock difficult: %.2f %%\n", parrdScore[7]);
 //
 //    cout << "Analyzing is successful!" << endl;
-//    //!< save real data
-////    int result = faultAnalyzer.SaveRealData( arrdTransformRatio );
-////    if (result != 0)
-////    {
-////        cout << "save real data fail!" << endl;
-////    }
-//
-//    //!< save preprocessing data
-//    int nResult = faultAnalyzer.SaveAfterPreProcessing( arrdTransformRatio );
-//    if( nResult != 0 )
-//    {
-//        cout << "Error, fail to save preprocessing data!" << endl;
-//    }
-//    else
-//    {
-//        cout << "Preprocessing data was successfully saved!" << endl;
-//    }
-
-}
-
-void monitorServerFrame::OnS700K(wxCommandEvent &event)
-{
-    wxString strDataDirPath = _("/");
-    wxDirDialog dialog( this );
-    if (dialog.ShowModal() == wxID_OK)
-    {
-        strDataDirPath = dialog.GetPath();
-    }
-    else
-    {
-        return;
-    }
-    SWITCH_TYPE typeofSwitch = S700K;
-    CFaultAnalyzer faultAnalyzer( std::string(strDataDirPath.mb_str()), typeofSwitch );
-    double arrdTransformRatio[] = { 600, 600, 600, 40, 40, 40 };  //{v,v,v,i,i,i}
-    double *parrdScore = faultAnalyzer.GetScore( arrdTransformRatio );
-
-    printf("S700K fault confidences for provided data:\n\n");
-	printf("Actuating fault: %.2f %%\n", parrdScore[0]);
-	printf("Engage difficult: %.2f %%\n", parrdScore[1]);
-	printf("Indicating fault: %.2f %%\n", parrdScore[2]);
-	printf("Jam: %.2f %%\n", parrdScore[3]);
-	printf("Motor fault: %.2f %%\n", parrdScore[4]);
-	printf("Movement resistance: %.2f %%\n", parrdScore[5]);
-	printf("Power fault: %.2f %%\n", parrdScore[6]);
-	printf("Unlock difficult: %.2f %%\n", parrdScore[7]);
-
-    cout << "Analyzing is successful!" << endl;
 }
 
 void monitorServerFrame::OnZYJ7(wxCommandEvent &event)
@@ -313,4 +189,114 @@ void monitorServerFrame::OnZYJ7(wxCommandEvent &event)
 	printf("Unlock difficult: %.2f %%\n", parrdScore[7]);
 
     cout << "Analyzing is successful!" << endl;
+}
+
+int monitorServerFrame::Diagnosing( SWITCH_TYPE typeofSwitch )
+{
+    SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_GREEN );
+    cout << "START A NEW TASK" << endl;
+    SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN |FOREGROUND_BLUE );
+
+    //!< receive block and wait for TCP
+    char szRecvBuf[1024]={0};
+    m_pTcpServer->Recv( szRecvBuf, 1024 );
+    cout << szRecvBuf << endl;
+    string strDataDirPath = szRecvBuf;
+
+    if( szRecvBuf[0] == 'Q' )
+    {
+        return -1;
+    }
+    bool bIsDefault = false;
+    if( strDataDirPath.substr(strDataDirPath.length()-8) == "_default" )
+    {
+        bIsDefault = true;
+        strDataDirPath.erase( strDataDirPath.length()-8, 8 );
+    }
+
+    CFaultAnalyzer faultAnalyzer( strDataDirPath, typeofSwitch );
+//    double arrdTransformRatio[] = { 300.0, 300.0, 17.857 };    // {v1,v2,i} 3.0=300V, i=17.857A
+    double arrdTransformRatioZD6[] = { 600, 600, 40 };
+    double arrdTransformRatioS700K[] = { 600, 600, 600, 40, 40, 40 };  //{v,v,v,i,i,i}
+    double arrdTransformRatioZYJ7[] = { 600, 600, 600, 600, 40, 40, 40, 3000, 3000 };   // {v,v,v,v,i,i,i,p,p}
+    double *parrdTransformRatio = arrdTransformRatioZD6;
+    if( typeofSwitch == S700K )
+    {
+        parrdTransformRatio = arrdTransformRatioS700K;
+    }
+    if( typeofSwitch == ZYJ7 )
+    {
+        parrdTransformRatio = arrdTransformRatioZYJ7;
+    }
+
+    double *parrdScore = NULL;
+    parrdScore = faultAnalyzer.GetScore( parrdTransformRatio );
+
+    printf("ZD6 fault confidences for provided data:\n\n");
+    printf("Actuating fault: %.2f %%\n", parrdScore[0]);
+    printf("Engage difficult: %.2f %%\n", parrdScore[1]);
+    printf("Indicating fault: %.2f %%\n", parrdScore[2]);
+    printf("Jam: %.2f %%\n", parrdScore[3]);
+    printf("Motor fault: %.2f %%\n", parrdScore[4]);
+    printf("Movement resistance: %.2f %%\n", parrdScore[5]);
+    printf("Power fault: %.2f %%\n", parrdScore[6]);
+    printf("Unlock difficult: %.2f %%\n", parrdScore[7]);
+
+    cout << "Analyzing is successful!" << endl;
+
+    //!< save real data, here just save the default data
+    if( bIsDefault )
+    {
+        faultAnalyzer.SetBaseData( bIsDefault );
+        int result = faultAnalyzer.SaveRealData( parrdTransformRatio );
+        if (result != 0)
+        {
+            cout << "save real data fail!" << endl;
+            return 1;
+        }
+    }
+
+    //!< save preprocessing data
+    int nResult = faultAnalyzer.SaveAfterPreProcessing( parrdTransformRatio );
+    if( nResult != 0 )
+    {
+        cout << "Error, fail to save preprocessing data!" << endl;
+        return 1;
+    }
+    else
+    {
+        cout << "Preprocessing data was successfully saved!" << endl;
+    }
+
+    //!< update DB specified column
+    string strTypeofAcq = "trigger";
+    int nIsL2R = 1;
+    faultAnalyzer.GetInfo( &strTypeofAcq, &nIsL2R );
+    wxString wstrIsL2R = wxString::Format(wxT("%i"), nIsL2R );
+    string strIsL2R = std::string(wstrIsL2R.mbc_str());
+    string arrstrScore[10] = {"0"};
+    for( int i=0;i<8;++i )
+    {
+        arrstrScore[i] = wxString::Format(wxT("%f"), parrdScore[i]);
+    }
+    wxString strTmp(strDataDirPath);
+    strTmp.Replace("\\","\\\\");
+    strDataDirPath = strTmp.mb_str();
+    string strSetValue = "ACTUATING=" + arrstrScore[0] + ",ENGAGE=" + arrstrScore[1] + ",INDICATING=" + arrstrScore[2] + ",JAM=" + arrstrScore[3]
+                        + ",MOTOR=" + arrstrScore[4] + ",MOVEMENT=" + arrstrScore[5] + ",POWERERR=" + arrstrScore[6] + ",UNLOCKERR=" + arrstrScore[7]
+                        + ",STATUS='" + strTypeofAcq + "',ISL2R=" + strIsL2R;
+    string strDBCmd = "UPDATE tab4alldata set " + strSetValue + " WHERE PATH='" + strDataDirPath + "';";
+    cout << strDBCmd << endl;
+    nResult = m_pDBCtrler->Insert( strDBCmd );
+    if( nResult != 1 )
+    {
+        cout << "sql update error" << endl;
+        return 1;
+    }
+    else
+    {
+        cout << "Database updata success!" << endl;
+    }
+
+    return 0;
 }

@@ -17,6 +17,7 @@
 #include "monitorServerApp.h"
 #include "CNetController.h"
 #include "CSqlController.h"
+#include "CFaultAnalyzer.hpp"
 
 class monitorServerFrame: public wxFrame
 {
@@ -33,6 +34,8 @@ class monitorServerFrame: public wxFrame
         };
         CNetController* m_pTcpServer;
         CSqlController* m_pDBCtrler;
+
+        int Diagnosing( SWITCH_TYPE typeofSwitch );
 
         void OnClose(wxCloseEvent& event);
         void OnQuit(wxCommandEvent& event);

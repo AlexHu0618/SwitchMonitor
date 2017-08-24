@@ -36,7 +36,7 @@ int CFaultAnalyzer::__AnalyzeFault( double *arrdTransformRatio )
     }
 
     //!< judge Position whether is L2R and type of acquicition is static or trigger
-    double szdVoltageRMS[4] = {0};
+    double szdVoltageRMS[9] = {0};
     int nResult = __JudgePosL2R( szdVoltageRMS );
     cout << "judge is ok" << endl;
     if( nResult < 0 )
@@ -346,22 +346,23 @@ int CFaultAnalyzer::SaveRealData( double *arrdTransformRatio )
 
 int CFaultAnalyzer::__SaveBaseData( string strFilePath )
 {
-    int nNumChannel = 3;
-    switch (m_emTypeofSwitch)
-    {
-    case S700K:
-        nNumChannel = 6;
-        break;
-    case ZYJ7:
-        nNumChannel = 9;
-        break;
-    case ZD6:
-        nNumChannel = 3;
-        break;
-    }
-
+    //!< save static value or dynamic data
     if( m_emTypeofAcq == Tstatic )
     {
+        int nNumChannel = 4;
+        switch (m_emTypeofSwitch)
+        {
+        case S700K:
+            nNumChannel = 6;
+            break;
+        case ZYJ7:
+            nNumChannel = 9;
+            break;
+        case ZD6:
+            nNumChannel = 4;
+            break;
+        }
+
         string strDataFilePath = strFilePath + "\\DataStatic" + ".txt";
         ifstream istmRawDataFileOut( strDataFilePath, ios_base::in );
         if( !istmRawDataFileOut.is_open() )
@@ -369,8 +370,8 @@ int CFaultAnalyzer::__SaveBaseData( string strFilePath )
             cerr << "Fail to open the data file!" << endl;
             return -1;
         }
-        double arrd[4]={0};
-        for(int i=0;i<4;++i)
+        double arrd[9]={0};
+        for( int i=0;i<nNumChannel;++i )
         {
             istmRawDataFileOut >> arrd[i];
         }
@@ -397,7 +398,7 @@ int CFaultAnalyzer::__SaveBaseData( string strFilePath )
             arrd[3] = m_szdVoltageRMS[1];
         }
 
-        for(int i=0;i<4;++i)
+        for(int i=0;i<nNumChannel;++i)
         {
             ostmRawDataFileOut << arrd[i] << "\n";
         }
@@ -406,6 +407,20 @@ int CFaultAnalyzer::__SaveBaseData( string strFilePath )
     }
     else
     {
+        int nNumChannel = 3;
+        switch (m_emTypeofSwitch)
+        {
+        case S700K:
+            nNumChannel = 6;
+            break;
+        case ZYJ7:
+            nNumChannel = 9;
+            break;
+        case ZD6:
+            nNumChannel = 3;
+            break;
+        }
+
         for (int nCH = 0; nCH < nNumChannel; ++nCH)
         {
             if( m_bisL2R )
@@ -545,8 +560,8 @@ int CFaultAnalyzer::__JudgePosL2R( double* pszdVoltageRMS )
 {
     vector<double> vecDataOut;
     int nNumChannel = 2;
-    int nNumBegin = 0;
-    int nNumEnd = 0;
+    int nNumBegin = 20000;
+    int nNumEnd = 21000;  // intercept 50ms from Num begin to end for judging
     switch (m_emTypeofSwitch)
     {
     case S700K:
@@ -557,13 +572,12 @@ int CFaultAnalyzer::__JudgePosL2R( double* pszdVoltageRMS )
         break;
     case ZD6:
         nNumChannel = 2;
-        nNumBegin = 20000;
-        nNumEnd = 21000;  // time is 50ms from Num begin to end
         break;
     }
 
     //!< RMS data between nNumBegin to nNumEnd and get the average value
     CPreprocessor* preprocessor = new CPreprocessor();
+    double szdVS700K1000[3]={0};
     for (int nCH = 0; nCH < nNumChannel; ++nCH)
     {
         double *parrdChRealData = m_pparrdAllRealData[nCH];
@@ -586,7 +600,18 @@ int CFaultAnalyzer::__JudgePosL2R( double* pszdVoltageRMS )
             }
             cout << dSum << endl;
             pszdVoltageRMS[nCH] = sqrt( dSum/(nNumEnd-nNumBegin) );
-            cout << "Voltage of CH" << nCH << " is: " << pszdVoltageRMS << "V" << endl;
+            cout << "Voltage of CH" << nCH << " is: " << pszdVoltageRMS[nCH] << "V" << endl;
+
+            //!< just for S700K judging whether is L2R
+            if( m_emTypeofSwitch == S700K )
+            {
+                double dSum1000=0;
+                for( int nNum=1000; nNum<2000; ++nNum )
+                {
+                    dSum1000 += vecDataOut[nNum]*vecDataOut[nNum];
+                }
+                szdVS700K1000[nCH] = sqrt( dSum1000/1000 );
+            }
         }
         else
         {
@@ -599,10 +624,44 @@ int CFaultAnalyzer::__JudgePosL2R( double* pszdVoltageRMS )
     delete preprocessor;
     preprocessor = NULL;
 
-    //!< judge status and isL2R
+    //!< judge status(static or trigger) and isL2R
     switch (m_emTypeofSwitch)
     {
     case S700K:
+        if( ( pszdVoltageRMS[0] + pszdVoltageRMS[1] + pszdVoltageRMS[2]) < 300 )
+        {//static
+            cout << "It is Static!" << endl;
+            m_emTypeofAcq = Tstatic;
+            if( pszdVoltageRMS[0]>pszdVoltageRMS[1] && pszdVoltageRMS[2]>pszdVoltageRMS[1] )
+            {
+                cout << "It is L2R, at position L!" << endl;
+                m_bisL2R = true;
+            }
+            else
+            {
+                cout << "It is R2L, at position R!" << endl;
+                m_bisL2R = false;
+            }
+            m_szdVoltageRMS[0] = pszdVoltageRMS[0];
+            m_szdVoltageRMS[1] = pszdVoltageRMS[1];
+            m_szdVoltageRMS[2] = pszdVoltageRMS[2];
+        }
+        else
+        {//Trigger
+            cout << "It is Trigger!" << endl;
+            m_emTypeofAcq = Ttrigger;
+            cout << "The value of position 1000 is: " << szdVS700K1000[0] << " " << szdVS700K1000[1] << " " << szdVS700K1000[2] << endl;
+            if( szdVS700K1000[0]>szdVS700K1000[1] && szdVS700K1000[2]>szdVS700K1000[1] )
+            {
+                cout << "It is L2R, at position L!" << endl;
+                m_bisL2R = true;
+            }
+            else
+            {
+                cout << "It is R2L, at position R!" << endl;
+                m_bisL2R = false;
+            }
+        }
         break;
     case ZYJ7:
         break;
@@ -617,13 +676,14 @@ int CFaultAnalyzer::__JudgePosL2R( double* pszdVoltageRMS )
                 m_bisL2R = false;
                 m_szdVoltageRMS[0] = pszdVoltageRMS[0];
                 m_szdVoltageRMS[1] = pszdVoltageRMS[1];
-                return 1;
             }
-            cout << "it is L2R!" << endl;
-            m_bisL2R = true;
-            m_szdVoltageRMS[0] = -pszdVoltageRMS[0];
-            m_szdVoltageRMS[1] = -pszdVoltageRMS[1];
-            return 0;
+            else
+            {
+                cout << "it is L2R!" << endl;
+                m_bisL2R = true;
+                m_szdVoltageRMS[0] = -pszdVoltageRMS[0];
+                m_szdVoltageRMS[1] = -pszdVoltageRMS[1];
+            }
         }
         else
         {//Trig
@@ -633,14 +693,16 @@ int CFaultAnalyzer::__JudgePosL2R( double* pszdVoltageRMS )
             {
                 cout << "it is R2L!" << endl;
                 m_bisL2R = false;
-                return 1;
             }
-            cout << "it is L2R!" << endl;
-            m_bisL2R = true;
-            return 0;
+            else
+            {
+                cout << "it is L2R!" << endl;
+                m_bisL2R = true;
+            }
         }
         break;
     }
+    return 0;
 }
 
 void CFaultAnalyzer::GetInfo( string* strTypeofAcq, int* nIsL2R )
