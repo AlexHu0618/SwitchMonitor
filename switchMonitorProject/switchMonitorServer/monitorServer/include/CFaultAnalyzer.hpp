@@ -31,8 +31,8 @@ private:
     string m_strPath;
     double *m_pparrdAllRealData[12];
     double *m_pparrdAllBaseData[12];
-    int m_arrnAllChDataLen[12];
-    int m_nSizeofChRealData;
+    int m_arrnAllChBaseDataLen[12];
+    int m_nAllChRealDataLen;
     double* m_parrdV1RealData;
     double* m_parrdI1RealData;
     SWITCH_TYPE m_emTypeofSwitch;
@@ -48,6 +48,7 @@ private:
     int __AnalyzeFault( double *parrdTranRatio );
     int __JudgePosL2R( double* pdszVoltageRMS );
     int __SaveBaseData( string strFilePath );
+    void __CalculatePower( void );
 };
 
 #endif // CFAULTANALYZER_HPP

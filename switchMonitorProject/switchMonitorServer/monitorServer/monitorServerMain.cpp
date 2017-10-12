@@ -18,6 +18,7 @@
 #include "monitorServerMain.h"
 #include <wx/dirdlg.h>
 #include <string>
+#include <windows.h>
 
 //helper functions
 enum wxbuildinfoformat {
@@ -81,10 +82,112 @@ monitorServerFrame::monitorServerFrame(wxFrame *frame, const wxString& title)
     SetStatusText(wxbuildinfo(short_f), 1);
 #endif // wxUSE_STATUSBAR
 
-    m_pTcpServer = new CNetController( "localhost", 1024, server );
+    //!< read regedit to get the IP,port,user and pw
+    HKEY hKey;
+    HKEY hTempKey;
+    DWORD dwSize = sizeof(DWORD);
+    DWORD dwType = REG_DWORD;
+    DWORD nPort4net = 0;
+    DWORD nPort4SQL = 0;
+    char szValue[256];
+    char sztemp[64];
+    DWORD dwSzType = REG_SZ;
+    DWORD dwSzSize = sizeof(szValue);
+    string strIP4SQL = "";
+    string strUser4SQL = "";
+    string strPW4SQL = "";
+
+    LPCTSTR data_Set= _T("Software\\GZMetro");
+    if (ERROR_SUCCESS == ::RegOpenKeyEx(HKEY_CURRENT_USER, data_Set,0,KEY_ALL_ACCESS, &hKey))
+    {
+        //!< port4net
+        if (::RegQueryValueEx(hKey, _T("port4net"), 0, &dwType, (LPBYTE)&nPort4net, &dwSize) != ERROR_SUCCESS)
+        {
+             cout << "no key named port4net" << endl;
+        }
+        else
+        {
+            cout << "the value is " << nPort4net << endl;
+        }
+
+        //!< port4SQL
+        if (::RegQueryValueEx(hKey, _T("port4SQL"), 0, &dwType, (LPBYTE)&nPort4SQL, &dwSize) != ERROR_SUCCESS)
+        {
+             cout << "no key named port4SQL" << endl;
+        }
+        else
+        {
+            cout << "the value is " << nPort4SQL << endl;
+        }
+
+        //!< IP4SQL
+        if (::RegQueryValueEx(hKey, _T("IP4SQL"), 0, &dwSzType, (LPBYTE)&szValue, &dwSzSize) != ERROR_SUCCESS)
+        {
+             cout << "no key named IP4SQL" << endl;
+        }
+        else
+        {
+            //!< transform unicode to utf-8, or the raw data is 'szValue[]= '1 0 . 3 . 3 . 1 4 4'.
+            for( int i=0;i<dwSzSize;i=i+2 )
+            {
+                sztemp[i/2] = szValue[i];
+            }
+
+            strIP4SQL = sztemp;
+            cout << strIP4SQL << endl;
+            dwSzSize = 256;
+        }
+
+        //!< user4SQL
+        if (::RegQueryValueEx(hKey, _T("user4SQL"), 0, &dwSzType, (LPBYTE)&szValue, &dwSzSize) != ERROR_SUCCESS)
+        {
+             cout << "no key named user4SQL" << endl;
+        }
+        else
+        {
+            //!< transform unicode to utf-8
+            for( int i=0;i<dwSzSize;i=i+2 )
+            {
+                sztemp[i/2] = szValue[i];
+            }
+
+            strUser4SQL = sztemp;
+            cout << strUser4SQL << endl;
+            dwSzSize = 256;
+        }
+
+        //!< pw4SQL
+        if (::RegQueryValueEx(hKey,_T("pw4SQL"), 0, &dwSzType, (LPBYTE)&szValue, &dwSzSize) != ERROR_SUCCESS)
+        {
+             cout << "no key named pw4SQL" << endl;
+        }
+        else
+        {
+            //!< transform unicode to utf-8
+            for( int i=0;i<dwSzSize;i=i+2 )
+            {
+                sztemp[i/2] = szValue[i];
+            }
+
+            strPW4SQL = sztemp;
+            cout << strPW4SQL << endl;
+        }
+    }
+    else
+    {
+        printf("the key do not exist, and will be created!\n");
+
+        if (ERROR_SUCCESS == ::RegCreateKey(HKEY_CURRENT_USER, data_Set, &hTempKey))
+        {
+            printf("success to create key!\n");
+        }
+    }
+    ::RegCloseKey(hKey);
+
+    m_pTcpServer = new CNetController( "localhost", (unsigned int)nPort4net, server );
     m_pTcpServer->Initial();
 
-    m_pDBCtrler = new CSqlController( "10.3.3.144", 3306, "yfzx", "yfzx3305" );
+    m_pDBCtrler = new CSqlController( strIP4SQL, (unsigned int)nPort4SQL, strUser4SQL, strPW4SQL );
     m_pDBCtrler->Initial("switchmonitordb", "tab4alldata" );
 }
 
@@ -232,7 +335,7 @@ int monitorServerFrame::Diagnosing( SWITCH_TYPE typeofSwitch )
     double *parrdScore = NULL;
     parrdScore = faultAnalyzer.GetScore( parrdTransformRatio );
 
-    printf("ZD6 fault confidences for provided data:\n\n");
+    printf("SWITCH fault confidences for provided data:\n\n");
     printf("Actuating fault: %.2f %%\n", parrdScore[0]);
     printf("Engage difficult: %.2f %%\n", parrdScore[1]);
     printf("Indicating fault: %.2f %%\n", parrdScore[2]);

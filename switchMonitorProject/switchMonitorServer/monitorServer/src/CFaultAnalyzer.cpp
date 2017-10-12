@@ -67,11 +67,15 @@ int CFaultAnalyzer::__AnalyzeFault( double *arrdTransformRatio )
         stringstream stream;
         stream << nCH;
         string strChNum = stream.str();
-        string strFilePath = "BaseData\\DataCH" + strChNum + ".txt";
+        string strFilePath = "BaseData_LR\\DataCH" + strChNum + ".txt";
+        if( !m_bisL2R )
+        {
+            strFilePath = "BaseData_RL\\DataCH" + strChNum + ".txt";
+        }
         ifstream stmBaseDataFileIn( strFilePath, ios_base::in );
         if (!stmBaseDataFileIn.is_open())
         {
-            cerr << "Fail to open the " << strFilePath << " base data file!" << endl;
+            cerr << "Fail to open the " << strFilePath << " base data file! Maybe it is not existed" << endl;
             return -1;
         }
 
@@ -83,12 +87,16 @@ int CFaultAnalyzer::__AnalyzeFault( double *arrdTransformRatio )
             stmBaseDataFileIn >> *(pdChBaseData++);
             ++nBaseDataLen;
         }
-        m_arrnAllChDataLen[nCH] = (--nBaseDataLen);
+        m_arrnAllChBaseDataLen[nCH] = (--nBaseDataLen);
         stmBaseDataFileIn.close();
     }
 
     //!< read the static base data
-    string strStaticFilePath = "BaseData\\DataStatic.txt";
+    string strStaticFilePath = "BaseData_LR\\DataStatic.txt";
+    if( !m_bisL2R )
+    {
+        strStaticFilePath = "BaseData_RL\\DataStatic.txt";
+    }
     ifstream stmStaticBaseDataFileIn( strStaticFilePath, ios_base::in );
     if (!stmStaticBaseDataFileIn.is_open())
     {
@@ -112,43 +120,44 @@ int CFaultAnalyzer::__AnalyzeFault( double *arrdTransformRatio )
         case ZD6:
             if ( m_bisL2R )   // L2R
             {
-                GetScores_ZD6( m_pparrdAllBaseData[2], m_pparrdAllBaseData[0], m_arrnAllChDataLen[0], m_pparrdAllRealData[2], m_pparrdAllRealData[0], m_nSizeofChRealData, dSampleInterval, m_parrdScore );
+                GetScores_ZD6( m_pparrdAllBaseData[2], m_pparrdAllBaseData[0], m_arrnAllChBaseDataLen[0], m_pparrdAllRealData[2], m_pparrdAllRealData[0], m_nAllChRealDataLen, dSampleInterval, m_parrdScore );
             }
             else
             {
-                GetScores_ZD6( m_pparrdAllBaseData[3], m_pparrdAllBaseData[1], m_arrnAllChDataLen[1], m_pparrdAllRealData[2], m_pparrdAllRealData[1], m_nSizeofChRealData, dSampleInterval, m_parrdScore );
+                GetScores_ZD6( m_pparrdAllBaseData[3], m_pparrdAllBaseData[1], m_arrnAllChBaseDataLen[1], m_pparrdAllRealData[2], m_pparrdAllRealData[1], m_nAllChRealDataLen, dSampleInterval, m_parrdScore );
             }
             break;
         case S700K:
-            GetScores_S700K( m_pparrdAllBaseData[3], m_pparrdAllBaseData[4], m_pparrdAllBaseData[5], m_pparrdAllBaseData[0], m_pparrdAllBaseData[1], m_pparrdAllBaseData[2], m_arrnAllChDataLen[0],
-                             m_pparrdAllRealData[3], m_pparrdAllRealData[4], m_pparrdAllRealData[5], m_pparrdAllRealData[0], m_pparrdAllRealData[1], m_pparrdAllRealData[2], m_nSizeofChRealData, dSampleInterval, m_parrdScore );
+            GetScores_S700K( m_pparrdAllBaseData[3], m_pparrdAllBaseData[4], m_pparrdAllBaseData[5], m_pparrdAllBaseData[0], m_pparrdAllBaseData[1], m_pparrdAllBaseData[2], m_arrnAllChBaseDataLen[0],
+                             m_pparrdAllRealData[3], m_pparrdAllRealData[4], m_pparrdAllRealData[5], m_pparrdAllRealData[0], m_pparrdAllRealData[1], m_pparrdAllRealData[2], m_nAllChRealDataLen, dSampleInterval, m_parrdScore );
             break;
         case ZYJ7:
             GetScores_ZYJ7( m_pparrdAllBaseData[4], m_pparrdAllBaseData[5], m_pparrdAllBaseData[6], m_pparrdAllBaseData[1], m_pparrdAllBaseData[0], m_pparrdAllBaseData[3], m_pparrdAllBaseData[7], m_pparrdAllBaseData[8], nBaseDataLen,
-                            m_pparrdAllRealData[4], m_pparrdAllRealData[5], m_pparrdAllRealData[6], m_pparrdAllRealData[1], m_pparrdAllRealData[0], m_pparrdAllRealData[3], m_pparrdAllRealData[7], m_pparrdAllRealData[8], m_nSizeofChRealData,
+                            m_pparrdAllRealData[4], m_pparrdAllRealData[5], m_pparrdAllRealData[6], m_pparrdAllRealData[1], m_pparrdAllRealData[0], m_pparrdAllRealData[3], m_pparrdAllRealData[7], m_pparrdAllRealData[8], m_nAllChRealDataLen,
                             dSampleInterval, m_parrdScore );
             break;
         }
     }
     else
     {
-        double static_base_v1 = 0;
-        double static_base_v2 = 0;
+        double static_base_v1 = arrdStaticData[0];
+        double static_base_v2 = arrdStaticData[1];
+        double static_base_v3 = arrdStaticData[2];
         double static_data_v1 = -szdVoltageRMS[0];
         double static_data_v2 = -szdVoltageRMS[1];
-        if( m_bisL2R )
+        double static_data_v3 = -szdVoltageRMS[2];
+
+        cout << "the staticVol: baseV1=" << static_base_v1 << "; baseV2=" << static_base_v2 << "; baseV3=" << static_base_v3 << endl;
+        cout << "the staticVOl: dataV1=" << static_data_v1 << "; dataV2=" << static_data_v2 << "; dataV3=" << static_data_v3 << endl;
+
+        switch( m_emTypeofSwitch )
         {
-            static_base_v1 = arrdStaticData[0];
-            static_base_v2 = arrdStaticData[1];
+        case ZD6:
+            GetStaticScores_ZD6( static_base_v1, static_base_v2, static_data_v1, static_data_v2, m_parrdScore );
+            break;
+        case S700K:
+            GetStaticScores_S700K( static_base_v1, static_base_v2, static_base_v3, static_data_v1, static_data_v2, static_data_v3, m_parrdScore );
         }
-        else
-        {
-            static_base_v1 = arrdStaticData[2];
-            static_base_v2 = arrdStaticData[3];
-        }
-        cout << "the staticVol: baseV1=" << static_base_v1 << "; baseV2=" << static_base_v2 << endl;
-        cout << "the staticVOl: dataV1=" << static_data_v1 << "; dataV2=" << static_data_v2 << endl;
-        GetStaticScores_ZD6(static_base_v1, static_base_v2, static_data_v1, static_data_v2, m_parrdScore);
     }
 
     cout << "analyzing finished!" << endl;
@@ -231,7 +240,7 @@ int CFaultAnalyzer::__TransformRawData( double *parrdTranRatio )
                 break;
             }
         }
-        m_nSizeofChRealData = (nChDataLength--);
+        m_nAllChRealDataLen = (nChDataLength--);
         stmRawDataFileIn.close();
     }
     cout << "Transfrom raw data is OK!" << endl;
@@ -314,7 +323,11 @@ int CFaultAnalyzer::SaveRealData( double *arrdTransformRatio )
     string strFilePath = m_strPath;
     if( m_bIsDefault )
     {
-        strFilePath = "BaseData";
+        strFilePath = "BaseData_LR";
+        if( !m_bisL2R )
+        {
+            strFilePath = "BaseData_RL";
+        }
         __SaveBaseData( strFilePath );
     }
     else
@@ -333,7 +346,7 @@ int CFaultAnalyzer::SaveRealData( double *arrdTransformRatio )
             }
 
             double *parrdChRealData = m_pparrdAllRealData[nCH];
-            for (int nNum = 0; nNum < m_nSizeofChRealData; ++nNum)
+            for (int nNum = 0; nNum < m_nAllChRealDataLen; ++nNum)
             {
                 stmRawDataFileOut << parrdChRealData[nNum] << "\n";
             }
@@ -346,20 +359,20 @@ int CFaultAnalyzer::SaveRealData( double *arrdTransformRatio )
 
 int CFaultAnalyzer::__SaveBaseData( string strFilePath )
 {
-    //!< save static value or dynamic data
+    //!< save static value or dynamic data, just voltage channel
     if( m_emTypeofAcq == Tstatic )
     {
-        int nNumChannel = 4;
+        int nNumChannel = 2;
         switch (m_emTypeofSwitch)
         {
         case S700K:
-            nNumChannel = 6;
+            nNumChannel = 3;
             break;
         case ZYJ7:
             nNumChannel = 9;
             break;
         case ZD6:
-            nNumChannel = 4;
+            nNumChannel = 2;
             break;
         }
 
@@ -383,19 +396,9 @@ int CFaultAnalyzer::__SaveBaseData( string strFilePath )
             cerr << "Fail to open the data file!" << endl;
             return -1;
         }
-        if( m_bisL2R )
+        for( int i=0;i<nNumChannel;++i )
         {
-            arrd[0] = m_szdVoltageRMS[0];
-            arrd[1] = m_szdVoltageRMS[1];
-            arrd[2] = 0;
-            arrd[3] = 0;
-        }
-        else
-        {
-            arrd[0] = 0;
-            arrd[1] = 0;
-            arrd[2] = m_szdVoltageRMS[0];
-            arrd[3] = m_szdVoltageRMS[1];
+            arrd[i] = m_szdVoltageRMS[i];
         }
 
         for(int i=0;i<nNumChannel;++i)
@@ -423,61 +426,58 @@ int CFaultAnalyzer::__SaveBaseData( string strFilePath )
 
         for (int nCH = 0; nCH < nNumChannel; ++nCH)
         {
-            if( m_bisL2R )
-            {
-                if( nCH != 1 )
+//            if( m_bisL2R )
+//            {
+                stringstream stream;
+                stream << nCH;
+                string strChNum = stream.str();
+                string strDataFilePath = strFilePath + "\\DataCH" + strChNum + ".txt";
+                ofstream stmRawDataFileOut( strDataFilePath, ios_base::out );
+                if( !stmRawDataFileOut.is_open() )
                 {
-                    stringstream stream;
-                    stream << nCH;
-                    string strChNum = stream.str();
-                    string strDataFilePath = strFilePath + "\\DataCH" + strChNum + ".txt";
-                    ofstream stmRawDataFileOut( strDataFilePath, ios_base::out );
-                    if( !stmRawDataFileOut.is_open() )
-                    {
-                        cerr << "Fail to open the DataCH" << nCH << ".dat raw data file!" << endl;
-                        return -1;
-                    }
-
-                    double *parrdChRealData = m_pparrdAllRealData[nCH];
-                    for (int nNum = 0; nNum < m_nSizeofChRealData; ++nNum)
-                    {
-                        stmRawDataFileOut << parrdChRealData[nNum] << "\n";
-                    }
-                    stmRawDataFileOut.close();
-                    cout << "save to file: " << strDataFilePath << endl;
+                    cerr << "Fail to open the DataCH" << nCH << ".dat raw data file!" << endl;
+                    return -1;
                 }
-            }
-            else
-            {
-                if( nCH != 0 )
+
+                double *parrdChRealData = m_pparrdAllRealData[nCH];
+                for (int nNum = 0; nNum < m_nAllChRealDataLen; ++nNum)
                 {
-                    stringstream stream;
-                    if( nCH == 2 )
-                    {
-                        stream << 3;
-                    }
-                    else
-                    {
-                        stream << nCH;
-                    }
-                    string strChNum = stream.str();
-                    string strDataFilePath = strFilePath + "\\DataCH" + strChNum + ".txt";
-                    ofstream stmRawDataFileOut( strDataFilePath, ios_base::out );
-                    if( !stmRawDataFileOut.is_open() )
-                    {
-                        cerr << "Fail to open the DataCH" << nCH << ".dat raw data file!" << endl;
-                        return -1;
-                    }
-
-                    double *parrdChRealData = m_pparrdAllRealData[nCH];
-                    for (int nNum = 0; nNum < m_nSizeofChRealData; ++nNum)
-                    {
-                        stmRawDataFileOut << parrdChRealData[nNum] << "\n";
-                    }
-                    stmRawDataFileOut.close();
-                    cout << "save to file: " << strDataFilePath << endl;
+                    stmRawDataFileOut << parrdChRealData[nNum] << "\n";
                 }
-            }
+                stmRawDataFileOut.close();
+                cout << "save to file: " << strDataFilePath << endl;
+//            }
+//            else
+//            {
+//                if( nCH != 0 )
+//                {
+//                    stringstream stream;
+//                    if( nCH == 2 )
+//                    {
+//                        stream << 3;
+//                    }
+//                    else
+//                    {
+//                        stream << nCH;
+//                    }
+//                    string strChNum = stream.str();
+//                    string strDataFilePath = strFilePath + "\\DataCH" + strChNum + ".txt";
+//                    ofstream stmRawDataFileOut( strDataFilePath, ios_base::out );
+//                    if( !stmRawDataFileOut.is_open() )
+//                    {
+//                        cerr << "Fail to open the DataCH" << nCH << ".dat raw data file!" << endl;
+//                        return -1;
+//                    }
+//
+//                    double *parrdChRealData = m_pparrdAllRealData[nCH];
+//                    for (int nNum = 0; nNum < m_nAllChRealDataLen; ++nNum)
+//                    {
+//                        stmRawDataFileOut << parrdChRealData[nNum] << "\n";
+//                    }
+//                    stmRawDataFileOut.close();
+//                    cout << "save to file: " << strDataFilePath << endl;
+//                }
+//            }
 
         }
     }
@@ -527,7 +527,7 @@ int CFaultAnalyzer::SaveAfterPreProcessing( double *arrdTransformRatio )
 
         double *parrdChRealData = m_pparrdAllRealData[nCH];
         vecDataOut.clear();
-        nResult = preprocessor->doPreprocess( parrdChRealData, &vecDataOut, m_nSizeofChRealData, 200, "RMS" );
+        nResult = preprocessor->doPreprocess( parrdChRealData, &vecDataOut, m_nAllChRealDataLen, 200, "RMS" );
         if( nResult != 0 )
         {
             cout << "doPreprocess() error!" << endl;
@@ -584,7 +584,7 @@ int CFaultAnalyzer::__JudgePosL2R( double* pszdVoltageRMS )
         int nResult = -1;
         double dSum = 0;
         vecDataOut.clear();
-        nResult = preprocessor->doPreprocess( parrdChRealData, &vecDataOut, m_nSizeofChRealData, 200, "RMS" );
+        nResult = preprocessor->doPreprocess( parrdChRealData, &vecDataOut, m_nAllChRealDataLen, 200, "RMS" );
         if( nResult != 0 )
         {
             cout << "doPreprocess() error!" << endl;
@@ -728,4 +728,43 @@ void CFaultAnalyzer::GetInfo( string* strTypeofAcq, int* nIsL2R )
 void CFaultAnalyzer::SetBaseData( bool bIsDefault )
 {
     m_bIsDefault = bIsDefault;
+}
+
+void CFaultAnalyzer::__CalculatePower( void )
+{
+    int nChVol = 0;
+    switch( m_emTypeofSwitch )
+    {
+    case ZD6:
+        nChVol = 2;
+        break;
+    case S700K:
+        nChVol = 3;
+        break;
+    case ZYJ7:
+        nChVol = 4;
+        break;
+    default:
+        nChVol = 2;
+    }
+
+    double *parrdPower = (double *)malloc( m_nAllChRealDataLen*sizeof(double) );
+    double nTem = 0;
+    for( int i=0; i<m_nAllChRealDataLen; ++i )
+    {
+        for( int j=0; j<nChVol; ++j )
+        {
+            nTem += m_pparrdAllRealData[j][i] * m_pparrdAllRealData[j+nChVol][i];
+        }
+        parrdPower[i] = nTem;
+        nTem = 0;
+    }
+    CPreprocessor* preprocessor = new CPreprocessor();
+
+    delete preprocessor;
+    preprocessor = NULL;
+
+
+    free( parrdPower );
+    parrdPower = NULL;
 }
