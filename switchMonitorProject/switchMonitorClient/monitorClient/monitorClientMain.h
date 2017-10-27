@@ -39,6 +39,7 @@ class monitorClientFrame: public wxFrame
         CSqlController* m_pDBCtrler;
         CUdpServer *m_pUDPServer;
         int m_nAcqCounter;
+        bool m_bIsConnUDP;
 
         void OnClose(wxCloseEvent& event);
         void OnQuit(wxCommandEvent& event);
@@ -47,8 +48,10 @@ class monitorClientFrame: public wxFrame
         void OnZYJ7(wxCommandEvent& event);
         DECLARE_EVENT_TABLE()
 
+        int InitializeAll( void );
         int MakeDir( wxString* pstr4dataDir );
         int Acquire( SWITCH_TYPE typeofSwitch );
+        void ZD6Work( void );
 };
 
 

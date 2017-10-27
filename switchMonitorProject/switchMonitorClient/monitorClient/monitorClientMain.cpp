@@ -19,6 +19,8 @@
 #include <wx/timer.h>
 #include <wx/filename.h>
 #include <wx/string.h>
+#include <windows.h>
+#include <shellapi.h>
 
 using namespace std;
 
@@ -89,107 +91,11 @@ monitorClientFrame::monitorClientFrame(wxFrame *frame, const wxString& title)
     SetStatusText(wxbuildinfo(short_f), 1);
 #endif // wxUSE_STATUSBAR
 
-    //!< read regedit to get the IP,port,user and pw
-    HKEY hKey;
-    HKEY hTempKey;
-    DWORD dwSize = sizeof(DWORD);
-    DWORD dwType = REG_DWORD;
-    DWORD nPort4net = 0;
-    DWORD nPort4SQL = 0;
-    char szValue[256];
-    char sztemp[64];
-    DWORD dwSzType = REG_SZ;
-    DWORD dwSzSize = sizeof(szValue);
-    string strIP4SQL = "";
-    string strUser4SQL = "";
-    string strPW4SQL = "";
-
-    LPCTSTR data_Set= _T("Software\\GZMetro");
-    if (ERROR_SUCCESS == ::RegOpenKeyEx(HKEY_CURRENT_USER, data_Set,0,KEY_ALL_ACCESS, &hKey))
+    //!< initial config
+    if( InitializeAll() < 0 )
     {
-        //!< port4net
-        if (::RegQueryValueEx(hKey, _T("port4net"), 0, &dwType, (LPBYTE)&nPort4net, &dwSize) != ERROR_SUCCESS)
-        {
-             cout << "no key named port4net" << endl;
-        }
-        else
-        {
-            cout << "the value is " << nPort4net << endl;
-        }
-
-        //!< port4SQL
-        if (::RegQueryValueEx(hKey, _T("port4SQL"), 0, &dwType, (LPBYTE)&nPort4SQL, &dwSize) != ERROR_SUCCESS)
-        {
-             cout << "no key named port4SQL" << endl;
-        }
-        else
-        {
-            cout << "the value is " << nPort4SQL << endl;
-        }
-
-        //!< IP4SQL
-        if (::RegQueryValueEx(hKey, _T("IP4SQL"), 0, &dwSzType, (LPBYTE)&szValue, &dwSzSize) != ERROR_SUCCESS)
-        {
-             cout << "no key named IP4SQL" << endl;
-        }
-        else
-        {
-            //!< transform unicode to utf-8, or the raw data is 'szValue[]= '1 0 . 3 . 3 . 1 4 4'.
-            for( int i=0;i<dwSzSize;i=i+2 )
-            {
-                sztemp[i/2] = szValue[i];
-            }
-
-            strIP4SQL = sztemp;
-            cout << strIP4SQL << endl;
-            dwSzSize = 256;
-        }
-
-        //!< user4SQL
-        if (::RegQueryValueEx(hKey, _T("user4SQL"), 0, &dwSzType, (LPBYTE)&szValue, &dwSzSize) != ERROR_SUCCESS)
-        {
-             cout << "no key named user4SQL" << endl;
-        }
-        else
-        {
-            //!< transform unicode to utf-8
-            for( int i=0;i<dwSzSize;i=i+2 )
-            {
-                sztemp[i/2] = szValue[i];
-            }
-
-            strUser4SQL = sztemp;
-            cout << strUser4SQL << endl;
-            dwSzSize = 256;
-        }
-
-        //!< pw4SQL
-        if (::RegQueryValueEx(hKey,_T("pw4SQL"), 0, &dwSzType, (LPBYTE)&szValue, &dwSzSize) != ERROR_SUCCESS)
-        {
-             cout << "no key named pw4SQL" << endl;
-        }
-        else
-        {
-            //!< transform unicode to utf-8
-            for( int i=0;i<dwSzSize;i=i+2 )
-            {
-                sztemp[i/2] = szValue[i];
-            }
-
-            strPW4SQL = sztemp;
-            cout << strPW4SQL << endl;
-        }
+        return -1;
     }
-    else
-    {
-        printf("the key do not exist, and will be created!\n");
-
-        if (ERROR_SUCCESS == ::RegCreateKey(HKEY_CURRENT_USER, data_Set, &hTempKey))
-        {
-            printf("success to create key!\n");
-        }
-    }
-    ::RegCloseKey(hKey);
 
     //!< initial TCP
     m_pTcpClient = new CNetController( "localhost", (unsigned int)nPort4net, client );
@@ -200,6 +106,9 @@ monitorClientFrame::monitorClientFrame(wxFrame *frame, const wxString& title)
     m_pDBCtrler->Initial( "switchmonitordb", "tab4alldata" );
 
     m_nAcqCounter = 0;
+    m_bIsConnUDP = false;
+
+    ZD6Work();
 }
 
 monitorClientFrame::~monitorClientFrame()
@@ -227,90 +136,7 @@ void monitorClientFrame::OnQuit(wxCommandEvent &event)
 
 void monitorClientFrame::OnZD6(wxCommandEvent &event)
 {
-    //!< read regedit to get the IP,port,user and pw
-    HKEY hKey;
-    HKEY hTempKey;
-    DWORD dwSize = sizeof(DWORD);
-    DWORD dwType = REG_DWORD;
-    DWORD nPort4UDP = 0;
-    char szValue[256];
-    char sztemp[64];
-    DWORD dwSzType = REG_SZ;
-    DWORD dwSzSize = sizeof(szValue);
-    string strIP4UDP_Clt = "";
-    string strIP4UDP_Sev = "";
 
-    LPCTSTR data_Set= _T("Software\\GZMetro");
-    if (ERROR_SUCCESS == ::RegOpenKeyEx(HKEY_CURRENT_USER, data_Set,0,KEY_ALL_ACCESS, &hKey))
-    {
-        //!< port4UDP
-        if (::RegQueryValueEx(hKey, _T("port4UDP"), 0, &dwType, (LPBYTE)&nPort4UDP, &dwSize) != ERROR_SUCCESS)
-        {
-             cout << "no key named port4UDP" << endl;
-        }
-        else
-        {
-            cout << "the value is " << nPort4UDP << endl;
-        }
-
-        //!< IP4UDP_Clt
-        if (::RegQueryValueEx(hKey, _T("IP4UDP_Clt"), 0, &dwSzType, (LPBYTE)&szValue, &dwSzSize) != ERROR_SUCCESS)
-        {
-             cout << "no key named IP4UDP_Clt" << endl;
-        }
-        else
-        {
-            //!< transform unicode to utf-8, or the raw data is 'szValue[]= '1 0 . 3 . 3 . 1 4 4'.
-            for( int i=0;i<dwSzSize;i=i+2 )
-            {
-                sztemp[i/2] = szValue[i];
-            }
-
-            strIP4UDP_Clt = sztemp;
-            cout << strIP4UDP_Clt << endl;
-            dwSzSize = 256;
-        }
-
-        //!< IP4UDP_Sev
-        if (::RegQueryValueEx(hKey, _T("IP4UDP_Sev"), 0, &dwSzType, (LPBYTE)&szValue, &dwSzSize) != ERROR_SUCCESS)
-        {
-             cout << "no key named IP4UDP_Sev" << endl;
-        }
-        else
-        {
-            //!< transform unicode to utf-8
-            for( int i=0;i<dwSzSize;i=i+2 )
-            {
-                sztemp[i/2] = szValue[i];
-            }
-
-            strIP4UDP_Sev = sztemp;
-            cout << strIP4UDP_Sev << endl;
-            dwSzSize = 256;
-        }
-    }
-    else
-    {
-        printf("the key do not exist, and will be created!\n");
-
-        if (ERROR_SUCCESS == ::RegCreateKey(HKEY_CURRENT_USER, data_Set, &hTempKey))
-        {
-            printf("success to create key!\n");
-        }
-    }
-    ::RegCloseKey(hKey);
-
-    //!< connect to UDP client
-    SWITCH_TYPE typeofSwitch = ZD6;
-    m_pUDPServer = new CUdpServer( strIP4UDP_Sev.c_str(), strIP4UDP_Sev.c_str(), (int)nPort4UDP, typeofSwitch );
-
-    //!< set the console text color
-    SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_GREEN );
-    cout << "START A NEW TEST FOR ZD6" << endl;
-    SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN |FOREGROUND_BLUE );
-
-    int nResult = 0;
-    nResult = Acquire( typeofSwitch );
 }
 
 void monitorClientFrame::OnS700K(wxCommandEvent &event)
@@ -343,57 +169,49 @@ void monitorClientFrame::OnZYJ7(wxCommandEvent &event)
 
 int monitorClientFrame::Acquire( SWITCH_TYPE typeofSwitch )
 {
-/*    wxString msg = _(" YES --- Acquiring directly\n NO --- Trigger");
-    int nAcqMode = wxMessageBox(msg, _("choose the style of acquiring"), wxYES_NO | wxCENTER );
+//    wxString msg = _(" YES --- Acquiring directly\n NO --- Trigger");
+//    int nAcqMode = wxMessageBox(msg, _("choose the style of acquiring"), wxYES_NO | wxCENTER );
 //    int nAcqMode = wxNO;
+
 //    if( m_nAcqCounter > 10 )
 //    {
 //        nAcqMode = wxYES;
 //        m_nAcqCounter = 0;
 //    }
 
-    //!< send command to start default trigger acquiring
-    char startCmd[4] = {0x03,0x00,0x00,0x03};
-    int result = m_pUDPServer->SendData(startCmd);
-    if (result < 0)
-    {
-        cout << "Failed to send start command! Please try again!" << endl;
-        return -1;
-    }
-    cout << "have sent command 0X03" << endl;
-
     //!< directly acquire or wait for triggering
     int frameCout = 0;
     int nTimeUpSec = NULL;
-    if (nAcqMode == wxYES)
-    {
-        cout << "start to directly acquire 3S" << endl;
-        char acqCmd[4] = {0x04,0x00,0x03,0x07};     //time is 3s
-        result = m_pUDPServer->SendData(acqCmd);
-        if(result<0)
-        {
-            cout << "Failed to send command 0X04!" << endl;
-            return -1;
-        }
-        cout << "success to send command 0X04!" << endl;
-        nTimeUpSec = 10;
-    }
+//    if (nAcqMode == wxYES)
+//    {
+//        cout << "start to directly acquire 3S" << endl;
+//        char acqCmd[4] = {0x04,0x00,0x03,0x07};     //time is 3s
+//        result = m_pUDPServer->SendData(acqCmd);
+//        if(result<0)
+//        {
+//            cout << "Failed to send command 0X04!" << endl;
+//            return -1;
+//        }
+//        cout << "success to send command 0X04!" << endl;
+//        nTimeUpSec = 10;
+//    }
 
     //!< stop acquiring while received data or till to time up
     frameCout = m_pUDPServer->RecvData( nTimeUpSec );
     if( frameCout > 0 )
     {
-        char stopCmd[4] = {0x02,0x00,0x00,0x02};
-        result = m_pUDPServer->SendData(stopCmd);
-        if(result<0)
-        {
-            cout << "send command 0X02 false!" << endl;
-        }
-        else
-        {
-            cout << "received " << frameCout << " frames data!" << endl;
-            cout << "\n" << endl;
-        }
+        //!< stop acquiring
+//        char stopCmd[4] = {0x02,0x00,0x00,0x02};
+//        result = m_pUDPServer->SendData(stopCmd);
+//        if(result<0)
+//        {
+//            cout << "send command 0X02 false!" << endl;
+//        }
+//        else
+//        {
+//            cout << "received " << frameCout << " frames data!" << endl;
+//            cout << "\n" << endl;
+//        }
 
         //!< mkdir with datetime
         wxString str4dataDir = "D:\\";
@@ -406,20 +224,20 @@ int monitorClientFrame::Acquire( SWITCH_TYPE typeofSwitch )
         //!< save data to local dish
         char szDirPath[100] = {0};
         strcpy( szDirPath, str4dataDir.mb_str());
-        m_pUDPServer->SavingRawData( szDirPath );*/
+        m_pUDPServer->SavingRawData( szDirPath );
 
-        //!< choose for analyzing specified data file
-        wxString str4dataDir = _("/");
-        wxDirDialog dialog( this );
-        if (dialog.ShowModal() == wxID_OK)
-        {
-            str4dataDir = dialog.GetPath();
-            cout << str4dataDir << endl;
-        }
-        else
-        {
-            return -1;
-        }
+//        //!< choose for analyzing specified data file
+//        wxString str4dataDir = _("/");
+//        wxDirDialog dialog( this );
+//        if (dialog.ShowModal() == wxID_OK)
+//        {
+//            str4dataDir = dialog.GetPath();
+//            cout << str4dataDir << endl;
+//        }
+//        else
+//        {
+//            return -1;
+//        }
 
         //!< send the path to TCP server for analyzing
         wxString strSendCmd = str4dataDir;
@@ -441,14 +259,15 @@ int monitorClientFrame::Acquire( SWITCH_TYPE typeofSwitch )
         if( result != 1 )
         {
             cout << "sql insert error" << endl;
+            return -1;
         }
 //        ++m_nAcqCounter;
-/*    }
+    }
     else
     {
         cout << "maybe time up, no data was acquired!" << endl;
         return -1;
-    }*/
+    }
 
     return 0;
 }
@@ -484,6 +303,261 @@ int monitorClientFrame::MakeDir( wxString* pstr4dataDir )
         wxMessageBox(_T("Fail to build directory by date!"),_T("Error"));
     }
     wxFileName::SetCwd( *pstr4dataDir );
+
+    return 0;
+}
+
+void monitorClientFrame::ZD6Work( void )
+{
+    SWITCH_TYPE typeofSwitch = ZD6;
+    if( !m_bIsConnUDP )
+    {
+#ifdef _WIN32
+        //!< read regedit to get the IP,port,user and pw
+        HKEY hKey;
+        HKEY hTempKey;
+        DWORD dwSize = sizeof(DWORD);
+        DWORD dwType = REG_DWORD;
+        DWORD nPort4UDP = 0;
+        char szValue[256];
+        char sztemp[64];
+        DWORD dwSzType = REG_SZ;
+        DWORD dwSzSize = sizeof(szValue);
+        string strIP4UDP_Clt = "";
+        string strIP4UDP_Sev = "";
+
+        LPCTSTR data_Set= _T("Software\\GZMetro");
+        if (ERROR_SUCCESS == ::RegOpenKeyEx(HKEY_CURRENT_USER, data_Set,0,KEY_ALL_ACCESS, &hKey))
+        {
+            //!< port4UDP
+            if (::RegQueryValueEx(hKey, _T("port4UDP"), 0, &dwType, (LPBYTE)&nPort4UDP, &dwSize) != ERROR_SUCCESS)
+            {
+                 cout << "no key named port4UDP" << endl;
+            }
+            else
+            {
+                cout << "the port4UDP is " << nPort4UDP << endl;
+            }
+
+            //!< IP4UDP_Clt
+            if (::RegQueryValueEx(hKey, _T("IP4UDP_Clt"), 0, &dwSzType, (LPBYTE)&szValue, &dwSzSize) != ERROR_SUCCESS)
+            {
+                 cout << "no key named IP4UDP_Clt" << endl;
+            }
+            else
+            {
+                //!< transform unicode to utf-8, or the raw data is 'szValue[]= '1 0 . 3 . 3 . 1 4 4'.
+                for( int i=0;i<dwSzSize;i=i+2 )
+                {
+                    sztemp[i/2] = szValue[i];
+                }
+
+                strIP4UDP_Clt = sztemp;
+                cout << "the IP4UDP client is " << strIP4UDP_Clt << endl;
+                dwSzSize = 256;
+            }
+
+            //!< IP4UDP_Sev
+            if (::RegQueryValueEx(hKey, _T("IP4UDP_Sev"), 0, &dwSzType, (LPBYTE)&szValue, &dwSzSize) != ERROR_SUCCESS)
+            {
+                 cout << "no key named IP4UDP_Sev" << endl;
+            }
+            else
+            {
+                //!< transform unicode to utf-8
+                for( int i=0;i<dwSzSize;i=i+2 )
+                {
+                    sztemp[i/2] = szValue[i];
+                }
+
+                strIP4UDP_Sev = sztemp;
+                cout << "the IP4UDP server is " << strIP4UDP_Sev << endl;
+                dwSzSize = 256;
+            }
+        }
+        else
+        {
+            printf("the key do not exist, and will be created!\n");
+
+            if (ERROR_SUCCESS == ::RegCreateKey(HKEY_CURRENT_USER, data_Set, &hTempKey))
+            {
+                printf("success to create key!\n");
+            }
+        }
+        ::RegCloseKey(hKey);
+#else
+    cout << "Not WIN32, NO regedit!" << endl;
+#endif  // _WIN32
+
+        //!< connect to UDP client
+        m_pUDPServer = new CUdpServer( strIP4UDP_Sev.c_str(), strIP4UDP_Clt.c_str(), (int)nPort4UDP, typeofSwitch );
+    }
+    int nConnUDPCounter = 3;    // try 3 times if no conn
+    do
+    {
+        //!< send command to start acquiring
+        char startCmd[4] = {0x03,0x00,0x00,0x03};
+        int result = m_pUDPServer->SendData(startCmd);
+        if( result < 0 )
+        {
+            cout << "Failed to send command 0X03! Please try again!" << endl;
+            nConnUDPCounter--;
+            continue;
+        }
+        else
+        {
+            cout << "have sent command 0X03" << endl;
+            m_bIsConnUDP = true;
+        }
+    }while( !m_bIsConnUDP && nConnUDPCounter>0 );
+
+    if( m_bIsConnUDP )
+    {
+        int nResult = 0;
+        while(1)
+        {
+            if( nResult==0 )
+            {
+                //!< set the console text color
+                SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_GREEN );
+                cout << "START A NEW TEST FOR ZD6" << endl;
+                SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN |FOREGROUND_BLUE );
+            }
+            nResult = Acquire( typeofSwitch );
+        }
+    }
+    else
+    {
+        cout << "Please send cmd to server" << endl;
+    }
+}
+
+int monitorClientFrame::InitializeAll( void )
+{
+#ifdef _WIN32
+    //!< open server.exe
+    HINSTANCE hNewExe = ShellExecuteA( NULL, "open", ".\\Server\\monitorServer.exe", NULL, NULL, SW_SHOW );
+    if( (DWORD)hNewExe <=32 )
+    {
+        cout << "Failed to open server.exe! Error = " << hNewExe << endl;
+        return -1;
+
+    }
+    else
+    {
+        cout << "success to open server.exe!" << endl;
+    }
+
+    //!< read regedit to get the IP,port,user and pw
+    HKEY hKey;
+    HKEY hTempKey;
+    DWORD dwSize = sizeof(DWORD);
+    DWORD dwType = REG_DWORD;
+    DWORD nPort4net = 0;
+    DWORD nPort4SQL = 0;
+    char szValue[256];
+    char sztemp[64];
+    DWORD dwSzType = REG_SZ;
+    DWORD dwSzSize = sizeof(szValue);
+    string strIP4SQL = "";
+    string strUser4SQL = "";
+    string strPW4SQL = "";
+
+    LPCTSTR data_Set= _T("Software\\GZMetro");
+    if (ERROR_SUCCESS == ::RegOpenKeyEx(HKEY_CURRENT_USER, data_Set,0,KEY_ALL_ACCESS, &hKey))
+    {
+        //!< port4net
+        if (::RegQueryValueEx(hKey, _T("port4net"), 0, &dwType, (LPBYTE)&nPort4net, &dwSize) != ERROR_SUCCESS)
+        {
+             cout << "no key named port4net" << endl;
+             return -1;
+        }
+        else
+        {
+            cout << "the value is " << nPort4net << endl;
+        }
+
+        //!< port4SQL
+        if (::RegQueryValueEx(hKey, _T("port4SQL"), 0, &dwType, (LPBYTE)&nPort4SQL, &dwSize) != ERROR_SUCCESS)
+        {
+             cout << "no key named port4SQL" << endl;
+             return -1;
+        }
+        else
+        {
+            cout << "the value is " << nPort4SQL << endl;
+        }
+
+        //!< IP4SQL
+        if (::RegQueryValueEx(hKey, _T("IP4SQL"), 0, &dwSzType, (LPBYTE)&szValue, &dwSzSize) != ERROR_SUCCESS)
+        {
+             cout << "no key named IP4SQL" << endl;
+             return -1;
+        }
+        else
+        {
+            //!< transform unicode to utf-8, or the raw data is 'szValue[]= '1 0 . 3 . 3 . 1 4 4'.
+            for( int i=0;i<dwSzSize;i=i+2 )
+            {
+                sztemp[i/2] = szValue[i];
+            }
+
+            strIP4SQL = sztemp;
+            cout << strIP4SQL << endl;
+            dwSzSize = 256;
+        }
+
+        //!< user4SQL
+        if (::RegQueryValueEx(hKey, _T("user4SQL"), 0, &dwSzType, (LPBYTE)&szValue, &dwSzSize) != ERROR_SUCCESS)
+        {
+             cout << "no key named user4SQL" << endl;
+             return -1;
+        }
+        else
+        {
+            //!< transform unicode to utf-8
+            for( int i=0;i<dwSzSize;i=i+2 )
+            {
+                sztemp[i/2] = szValue[i];
+            }
+
+            strUser4SQL = sztemp;
+            cout << strUser4SQL << endl;
+            dwSzSize = 256;
+        }
+
+        //!< pw4SQL
+        if (::RegQueryValueEx(hKey,_T("pw4SQL"), 0, &dwSzType, (LPBYTE)&szValue, &dwSzSize) != ERROR_SUCCESS)
+        {
+             cout << "no key named pw4SQL" << endl;
+             return -1;
+        }
+        else
+        {
+            //!< transform unicode to utf-8
+            for( int i=0;i<dwSzSize;i=i+2 )
+            {
+                sztemp[i/2] = szValue[i];
+            }
+
+            strPW4SQL = sztemp;
+            cout << strPW4SQL << endl;
+        }
+    }
+    else
+    {
+        printf("the key do not exist, and will be created!\n");
+
+        if (ERROR_SUCCESS == ::RegCreateKey(HKEY_CURRENT_USER, data_Set, &hTempKey))
+        {
+            printf("success to create key!\n");
+        }
+    }
+    ::RegCloseKey(hKey);
+
+#else
+    cout << "Not WIN32, NO read regedit!" << endl;
+#endif // _WIN32
 
     return 0;
 }

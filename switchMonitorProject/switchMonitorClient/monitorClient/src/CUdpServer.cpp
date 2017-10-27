@@ -110,7 +110,7 @@ int CUdpServer::RecvData( int nTimeUpSec )
         break;
     case ZD6:
     default:
-        m_ppszDataBuf = new char[10000][1470];
+        m_ppszDataBuf = new char[10000][1470];   //[frames][bytes]
         break;
     }
     char (*ppszMovePtr)[1470] = m_ppszDataBuf;
@@ -193,6 +193,7 @@ bool CUdpServer::__FrameAnalysis( void )
             {
                 cout << "miss frame in the air(frmaNum): " << nAreaNum  << "(" << nAreaFrameNum << ")" << endl;
             }
+            nAreaFrameCounter++;
         }
         else
         {
@@ -219,6 +220,8 @@ void CUdpServer::__ExtractRawData( void )
         break;
     }
 
+    m_nSizeofEveryChannelRawData = (m_ppszDataBuf[0][4]&0xFF) | (m_ppszDataBuf[0][5]<<8&0xFF00);
+
     for (int i = 0; i < m_nFrameCounter; i++)
     {
         int byteCounter=0;
@@ -235,7 +238,7 @@ void CUdpServer::SavingRawData( char* szDirPath )
 {
     __ExtractRawData();
 
-    int nTotalChannel = 4;
+    int nTotalChannel = 3;
     switch (m_emTypeofSwitch)
     {
     case S700K:
@@ -246,7 +249,7 @@ void CUdpServer::SavingRawData( char* szDirPath )
         break;
     case ZD6:
     default:
-        nTotalChannel = 4;
+        nTotalChannel = 3;
         break;
     }
 
@@ -271,13 +274,27 @@ void CUdpServer::SavingRawData( char* szDirPath )
             cout << "has opened the file " << szFileName << endl;
         }
         nNumSavingFrameEnd = (int)(m_nFrameCounter*(nChannelNum+1)/nTotalChannel);
+        int nSizeofCHFrame = nNumSavingFrameEnd - nNumSavingFrameStart;
+
         for (int nFrameNum = nNumSavingFrameStart; nFrameNum < nNumSavingFrameEnd; ++nFrameNum)
         {
-            for (int nDataNum = 0; nDataNum < 365; ++nDataNum)
+            //!< whether is the last frame of CH
+            if( nFrameNum == (nNumSavingFrameEnd-1) )
             {
-                fprintf( pFile, "%d\n", m_ppnarrRawData[nFrameNum][nDataNum] );
+                for (int nDataNum = 0; nDataNum < (m_nSizeofEveryChannelRawData-365*(nSizeofCHFrame-1)); ++nDataNum)
+                {
+                    fprintf( pFile, "%d\n", m_ppnarrRawData[nFrameNum][nDataNum] );
+                }
+            }
+            else
+            {
+                for (int nDataNum = 0; nDataNum < 365; ++nDataNum)
+                {
+                    fprintf( pFile, "%d\n", m_ppnarrRawData[nFrameNum][nDataNum] );
+                }
             }
         }
+
         fclose( pFile );
         nNumSavingFrameStart = nNumSavingFrameEnd;
     }

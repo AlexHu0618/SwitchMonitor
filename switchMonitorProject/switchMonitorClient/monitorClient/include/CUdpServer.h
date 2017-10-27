@@ -23,6 +23,7 @@ class CUdpServer
         char (*m_ppszDataBuf)[1470];
         int (*m_ppnarrRawData)[370];
         int m_nFrameCounter;
+        int m_nSizeofEveryChannelRawData;
 
         WSADATA wsaData;
         SOCKET RecvSocket;
