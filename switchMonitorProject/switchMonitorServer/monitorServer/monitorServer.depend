@@ -2954,7 +2954,7 @@
 
 1412609644 d:\wxwidgets-3.0.2\include\wx\msw\rcdefs.h
 
-1489055695 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorserver\monitorserver\monitorserverapp.cpp
+1509895653 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorserver\monitorserver\monitorserverapp.cpp
 	"wx_pch.h"
 	"monitorServerApp.h"
 	"monitorServerMain.h"
@@ -2962,23 +2962,26 @@
 1489055695 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorserver\monitorserver\monitorserverapp.h
 	<wx/app.h>
 
-1501507585 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorserver\monitorserver\monitorservermain.h
+1509697315 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorserver\monitorserver\monitorservermain.h
 	<wx/wx.h>
+	<wx/socket.h>
+	<wx/string.h>
 	"monitorServerApp.h"
 	"CNetController.h"
 	"CSqlController.h"
 	"CFaultAnalyzer.hpp"
 
-1503544571 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorserver\monitorserver\monitorservermain.cpp
+1509898470 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorserver\monitorserver\monitorservermain.cpp
 	"wx_pch.h"
 	"monitorServerMain.h"
 	<wx/dirdlg.h>
 	<string>
+	<windows.h>
 
 1385316876 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorserver\monitorserver\resource.rc
 	"wx/msw/wx.rc"
 
-1504084291 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorserver\monitorserver\src\cfaultanalyzer.cpp
+1509892508 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorserver\monitorserver\src\cfaultanalyzer.cpp
 	"CFaultAnalyzer.hpp"
 	"CPreprocessor.h"
 	<fstream>
@@ -3066,4 +3069,14 @@
 	"CSqlController.h"
 	<stdio.h>
 	<iostream>
+
+1412609644 d:\wxwidgets-3.0.2\include\wx\socket.h
+	"wx/defs.h"
+	"wx/event.h"
+	"wx/sckaddr.h"
+	"wx/list.h"
+
+1412609644 d:\wxwidgets-3.0.2\include\wx\sckaddr.h
+	"wx/defs.h"
+	"wx/string.h"
 

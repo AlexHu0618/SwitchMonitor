@@ -54,6 +54,8 @@ BEGIN_EVENT_TABLE(monitorServerFrame, wxFrame)
     EVT_MENU(idMenuZD6, monitorServerFrame::OnZD6)
     EVT_MENU(idMenuS700K, monitorServerFrame::OnS700K)
     EVT_MENU(idMenuZYJ7, monitorServerFrame::OnZYJ7)
+    EVT_SOCKET(SERVER_ID,  monitorServerFrame::OnServerEvent)
+    EVT_SOCKET(SOCKET_ID,  monitorServerFrame::OnSocketEvent)
 END_EVENT_TABLE()
 
 monitorServerFrame::monitorServerFrame(wxFrame *frame, const wxString& title)
@@ -184,18 +186,47 @@ monitorServerFrame::monitorServerFrame(wxFrame *frame, const wxString& title)
     }
     ::RegCloseKey(hKey);
 
-    m_pTcpServer = new CNetController( "localhost", (unsigned int)nPort4net, server );
-    m_pTcpServer->Initial();
+    //m_pTcpServer = new CNetController( "localhost", (unsigned int)nPort4net, server );
+    //m_pTcpServer->Initial();
 
     m_pDBCtrler = new CSqlController( strIP4SQL, (unsigned int)nPort4SQL, strUser4SQL, strPW4SQL );
     m_pDBCtrler->Initial("switchmonitordb", "tab4alldata" );
+
+    wxIPV4address addr;
+    addr.Service(9001);
+
+    // Create the socket
+    m_server = new wxSocketServer(addr);
+
+    // We use Ok() here to see if the server is really listening
+    if (! m_server->Ok())
+    {
+        cout << "Could not listen at the specified port !" << endl;
+        return;
+    }
+    else
+    {
+        cout << "Server listening." << endl;
+    }
+
+    // Setup the event handler and subscribe to connection events
+    m_server->SetEventHandler(*this, SERVER_ID);
+    m_server->SetNotify(wxSOCKET_CONNECTION_FLAG);
+    m_server->Notify(true);
+
+    m_busy = false;
+    m_numClients = 0;
+    m_bIsDefault = false;
+
+    //!< start analyzing
+    //ZD6Analyzing();
 }
 
 
 monitorServerFrame::~monitorServerFrame()
 {
-    delete m_pTcpServer;
-    m_pTcpServer = NULL;
+//    delete m_pTcpServer;
+//    m_pTcpServer = NULL;
     delete m_pDBCtrler;
     m_pDBCtrler = NULL;
 }
@@ -212,30 +243,31 @@ void monitorServerFrame::OnQuit(wxCommandEvent &event)
 
 void monitorServerFrame::OnZD6(wxCommandEvent &event)
 {
-    SWITCH_TYPE typeofSwitch = ZD6;
-    int nResult = 0;
-    while( true )
-    {
-        nResult = Diagnosing( typeofSwitch );   //!<  diagnose and save data and result
-        if( nResult != 0 )
-        {
-            break;
-        }
-    }
+//    SWITCH_TYPE typeofSwitch = ZD6;
+//    int nResult = 0;
+//    while( true )
+//    {
+//        nResult = Diagnosing( typeofSwitch );   //!<  diagnose and save data and result
+//        if( nResult != 0 )
+//        {
+//            break;
+//        }
+//    }
 }
 
 void monitorServerFrame::OnS700K(wxCommandEvent &event)
 {
-    SWITCH_TYPE typeofSwitch = S700K;
-    int nResult = 0;
-    while( true )
-    {
-        nResult = Diagnosing( typeofSwitch );   //!<  diagnose and save data and result
-        if( nResult != 0 )
-        {
-            break;
-        }
-    }
+//    SWITCH_TYPE typeofSwitch = S700K;
+//    int nResult = 0;
+//    while( true )
+//    {
+//        nResult = Diagnosing( typeofSwitch );   //!<  diagnose and save data and result
+//        if( nResult != 0 )
+//        {
+//            break;
+//        }
+//    }
+
 //    wxString strDataDirPath = _("/");
 //    wxDirDialog dialog( this );
 //    if (dialog.ShowModal() == wxID_OK)
@@ -294,28 +326,30 @@ void monitorServerFrame::OnZYJ7(wxCommandEvent &event)
     cout << "Analyzing is successful!" << endl;
 }
 
-int monitorServerFrame::Diagnosing( SWITCH_TYPE typeofSwitch )
+int monitorServerFrame::Diagnosing( SWITCH_TYPE typeofSwitch, wxString strPath )
 {
     SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_GREEN );
     cout << "START A NEW TASK" << endl;
     SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN |FOREGROUND_BLUE );
 
-    //!< receive block and wait for TCP
-    char szRecvBuf[1024]={0};
-    m_pTcpServer->Recv( szRecvBuf, 1024 );
-    cout << szRecvBuf << endl;
-    string strDataDirPath = szRecvBuf;
-
-    if( szRecvBuf[0] == 'Q' )
-    {
-        return -1;
-    }
-    bool bIsDefault = false;
-    if( strDataDirPath.substr(strDataDirPath.length()-8) == "_default" )
-    {
-        bIsDefault = true;
-        strDataDirPath.erase( strDataDirPath.length()-8, 8 );
-    }
+//    //!< receive block and wait for TCP
+//    char szRecvBuf[1024]={0};
+//    m_pTcpServer->Recv( szRecvBuf, 1024 );
+//    cout << szRecvBuf << endl;
+//    string strDataDirPath = szRecvBuf;
+//
+//    if( szRecvBuf[0] == 'Q' )
+//    {
+//        //return -1;
+//        Close(true);
+//    }
+//    bool bIsDefault = false;
+//    if( strDataDirPath.substr(strDataDirPath.length()-8) == "_default" )
+//    {
+//        bIsDefault = true;
+//        strDataDirPath.erase( strDataDirPath.length()-8, 8 );
+//    }
+    string strDataDirPath = strPath.ToStdString();
 
     CFaultAnalyzer faultAnalyzer( strDataDirPath, typeofSwitch );
 //    double arrdTransformRatio[] = { 300.0, 300.0, 17.857 };    // {v1,v2,i} 3.0=300V, i=17.857A
@@ -348,15 +382,16 @@ int monitorServerFrame::Diagnosing( SWITCH_TYPE typeofSwitch )
     cout << "Analyzing is successful!" << endl;
 
     //!< save real data, here just save the default data
-    if( bIsDefault )
+    if( m_bIsDefault )
     {
-        faultAnalyzer.SetBaseData( bIsDefault );
+        faultAnalyzer.SetBaseData( m_bIsDefault );
         int result = faultAnalyzer.SaveRealData( parrdTransformRatio );
         if (result != 0)
         {
             cout << "save real data fail!" << endl;
             return 1;
         }
+        m_bIsDefault = false;
     }
 
     //!< save preprocessing data
@@ -402,4 +437,161 @@ int monitorServerFrame::Diagnosing( SWITCH_TYPE typeofSwitch )
     }
 
     return 0;
+}
+
+void monitorServerFrame::ZD6Analyzing( wxString strPath )
+{
+    SWITCH_TYPE typeofSwitch = ZD6;
+    int nResult = 0;
+    nResult = Diagnosing( typeofSwitch, strPath );   //!<  diagnose and save data and result
+    if( nResult != 0 )
+    {
+        cout << "Fail to analyze!" << endl;
+    }
+    else
+    {
+        SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_GREEN );
+        cout << "WAITTING FOR NEXT TASK" << endl;
+        SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN |FOREGROUND_BLUE );
+    }
+}
+
+void monitorServerFrame::OnServerEvent( wxSocketEvent &event )
+{
+    wxString s = _("OnServerEvent: ");
+    wxSocketBase *sock;
+
+    switch(event.GetSocketEvent())
+    {
+        case wxSOCKET_CONNECTION : s.Append(_("wxSOCKET_CONNECTION\n")); break;
+        default                  : s.Append(_("Unexpected event !\n")); break;
+    }
+
+    cout << s << endl;
+
+    // Accept new connection if there is one in the pending
+    // connections queue, else exit. We use Accept(false) for
+    // non-blocking accept (although if we got here, there
+    // should ALWAYS be a pending connection).
+
+    sock = m_server->Accept(false);
+
+    if (sock)
+    {
+        cout << "New client connection accepted" << endl;
+    }
+    else
+    {
+        cout << "Error: couldn't accept a new connection" << endl;
+        return;
+    }
+
+    sock->SetEventHandler(*this, SOCKET_ID);
+    sock->SetNotify(wxSOCKET_INPUT_FLAG | wxSOCKET_LOST_FLAG);
+    sock->Notify(true);
+
+    m_numClients++;
+}
+
+void monitorServerFrame::OnSocketEvent( wxSocketEvent &event )
+{
+    wxString s = _("OnSocketEvent: ");
+    wxSocketBase *sock = event.GetSocket();
+
+    // First, print a message
+    switch(event.GetSocketEvent())
+    {
+        case wxSOCKET_INPUT : s.Append(_("wxSOCKET_INPUT\n")); break;
+        case wxSOCKET_LOST  : s.Append(_("wxSOCKET_LOST\n")); break;
+        default             : s.Append(_("Unexpected event !\n")); break;
+    }
+
+    cout << s << endl;
+
+    // Now we process the event
+    switch(event.GetSocketEvent())
+    {
+        case wxSOCKET_INPUT:
+        {
+            // We disable input events, so that the test doesn't trigger
+            // wxSocketEvent again.
+            sock->SetNotify(wxSOCKET_LOST_FLAG);
+
+            // Which test are we going to run?
+            unsigned char c;
+            unsigned char len=0;
+//            char *buf;
+            wxString strBuf, strSubBefore, strSubAfter;
+
+            // Receive data from socket and send it back. We will first
+            // get a byte with the buffer size, so we can specify the
+            // exact size and use the wxSOCKET_WAITALL flag. Also, we
+            // disabled input events so we won't have unwanted reentrance.
+            // This way we can avoid the infamous wxSOCKET_BLOCK flag.
+
+            sock->SetFlags(wxSOCKET_WAITALL);
+
+//            buf = new char[1024];
+            char buf[128]={0};
+
+            char *tem = buf;
+
+            // Read the data
+            do{
+                sock->Read(&c, 1);
+                *(tem++) = c;
+                len++;
+            }while(c!=0x0A);
+            strBuf.Printf(_("%s"), buf);
+            cout << "Client said: " << strBuf << endl;
+            cout << "first char: " << *buf << endl;
+
+            // Write it back
+            sock->Write(buf, len);
+//            delete[] buf;
+//            buf = NULL;
+
+            strSubBefore = strBuf.Before('=');
+            strSubAfter  = strBuf.After('=').BeforeLast('\r');
+            cout << strSubBefore << endl;
+            cout << strSubAfter << endl;
+            if( strSubBefore == "CMD" )
+            {
+                m_bIsDefault = true;
+            }
+            else
+            {
+                if( strSubBefore == "PATH" )
+                {
+                    ZD6Analyzing(strSubAfter);
+                }
+                else
+                {
+                    cout << "unknow CMD or PATH" << endl;
+                }
+            }
+
+            // Enable input events again.
+            sock->SetNotify(wxSOCKET_LOST_FLAG | wxSOCKET_INPUT_FLAG);
+            break;
+        }
+        case wxSOCKET_LOST:
+        {
+            m_numClients--;
+
+            // Destroy() should be used instead of delete wherever possible,
+            // due to the fact that wxSocket uses 'delayed events' (see the
+            // documentation for wxPostEvent) and we don't want an event to
+            // arrive to the event handler (the frame, here) after the socket
+            // has been deleted. Also, we might be doing some other thing with
+            // the socket at the same time; for example, we might be in the
+            // middle of a test or something. Destroy() takes care of all
+            // this for us.
+
+            cout << "Deleting socket." << endl;
+            sock->Destroy();
+            break;
+        }
+        default: ;
+    }
 }

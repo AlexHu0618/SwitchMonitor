@@ -95,6 +95,7 @@
 			<Add option="-DwxUSE_UNICODE" />
 			<Add option="-Wall" />
 			<Add directory="D:/wxWidgets-3.0.2/include" />
+			<Add directory="../../../../../../../mysql conncetor/mysql-connector-c-6.1.10-win32/mysql-connector-c-6.1.10-win32/include" />
 		</Compiler>
 		<ResourceCompiler>
 			<Add directory="D:/wxWidgets-3.0.2/include" />
@@ -114,6 +115,8 @@
 			<Add library="libcomctl32.a" />
 			<Add library="libwsock32.a" />
 			<Add library="libodbc32.a" />
+			<Add library="..\..\..\..\..\..\..\mysql conncetor\mysql-connector-c-6.1.10-win32\mysql-connector-c-6.1.10-win32\lib\libmysql.lib" />
+			<Add directory="../../../../../../../mysql conncetor/mysql-connector-c-6.1.10-win32/mysql-connector-c-6.1.10-win32/lib" />
 		</Linker>
 		<Unit filename="include/CFaultAnalyzer.hpp" />
 		<Unit filename="include/CNetController.h" />

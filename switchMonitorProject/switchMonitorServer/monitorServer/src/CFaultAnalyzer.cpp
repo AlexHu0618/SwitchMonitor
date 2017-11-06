@@ -45,7 +45,7 @@ int CFaultAnalyzer::__AnalyzeFault( double *arrdTransformRatio )
         return -1;
     }
 
-    int nNumChannel = 4;
+    int nNumChannel = 3;
     switch (m_emTypeofSwitch)
     {
     case S700K:
@@ -55,7 +55,7 @@ int CFaultAnalyzer::__AnalyzeFault( double *arrdTransformRatio )
         nNumChannel = 9;
         break;
     case ZD6:
-        nNumChannel = 4;
+        nNumChannel = 3;
         break;
     }
 
