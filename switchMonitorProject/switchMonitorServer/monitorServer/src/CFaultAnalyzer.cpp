@@ -124,7 +124,7 @@ int CFaultAnalyzer::__AnalyzeFault( double *arrdTransformRatio )
             }
             else
             {
-                GetScores_ZD6( m_pparrdAllBaseData[3], m_pparrdAllBaseData[1], m_arrnAllChBaseDataLen[1], m_pparrdAllRealData[2], m_pparrdAllRealData[1], m_nAllChRealDataLen, dSampleInterval, m_parrdScore );
+                GetScores_ZD6( m_pparrdAllBaseData[2], m_pparrdAllBaseData[1], m_arrnAllChBaseDataLen[1], m_pparrdAllRealData[2], m_pparrdAllRealData[1], m_nAllChRealDataLen, dSampleInterval, m_parrdScore );
             }
             break;
         case S700K:

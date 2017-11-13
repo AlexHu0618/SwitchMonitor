@@ -1,11 +1,31 @@
+/** \file CUdpServer.cpp
+ *
+ * \brief the c++ file for UDP communication
+ *
+ * \author by Alex, jthu4alex@163.com, on 2017/11/14
+ *
+ */
+
 #include <stdio.h>
 #include <iostream>
 #include <iomanip>
 #include <time.h>
+#include <math.h>
 #include "CUdpServer.h"
+
+/** \brief 下位机采样频率为20kHz
+ */
+#define FREQ 20000     // frequency=20kHz
 
 using namespace std;
 
+/** \brief 构造函数
+ *
+ * \param serverAddress, 服务器地址; clientAddress, 客户端地址(下位机); port, 端口号; TypeofSwitch, 设备类型(ZD6/S700K/ZYJ7)
+ * \enum CUdpServer::SWITCH_TYPE
+ * \return 无
+ *
+ */
 CUdpServer::CUdpServer( const char* serverAddress, const char* clientAddress, int port, SWITCH_TYPE TypeofSwitch )
 {
     m_emTypeofSwitch = TypeofSwitch;
@@ -37,6 +57,12 @@ CUdpServer::~CUdpServer()
     m_ppnarrRawData = NULL;
 }
 
+/** \brief 本函数主要是发送数据，其中指令0x03与0x04发送后被直接返回判断下位机是否接收指令成功，1秒超时；
+ *
+ * \param pszData, 数据缓冲区指针
+ * \return 成功返回0；不成功返回-1
+ *
+ */
 int CUdpServer::SendData( char *pszData )
 {
     int sendBytes = sendto(RecvSocket,pszData,sizeof(pszData),0,(SOCKADDR *)&SenderAddr,sizeof(SenderAddr));
@@ -62,6 +88,14 @@ int CUdpServer::SendData( char *pszData )
     return 0;
 }
 
+/** \brief 本函数主要是判断下位机是否接收指令成功
+ *
+ * \param sockFd SOCKET，socket文件符
+ * \param pszSentCmd char*，要发送的指令缓冲区指针
+ * \param nTimeOutMs int，超时时间
+ * \return bool，成功返回0；不成功返回-1
+ *
+ */
 bool CUdpServer::__IsOKCmdBack( SOCKET sockFd, char* pszSentCmd, int nTimeOutMs )
 {
     int nResult = setsockopt( sockFd, SOL_SOCKET, SO_RCVTIMEO, (char*)&nTimeOutMs, sizeof(int) );
@@ -98,6 +132,12 @@ bool CUdpServer::__IsOKCmdBack( SOCKET sockFd, char* pszSentCmd, int nTimeOutMs 
     }
 }
 
+/** \brief 本函数主要是接收下位机数据，在第一帧到达时获取本机时间，接收完成后分析是否有漏帧
+ *
+ * \param nTimeUpSec int，超时时间
+ * \return int，成功返回接收的总帧数；不成功返回0
+ *
+ */
 int CUdpServer::RecvData( int nTimeUpSec )
 {
     switch (m_emTypeofSwitch)
@@ -129,8 +169,6 @@ int CUdpServer::RecvData( int nTimeUpSec )
     m_nFrameCounter=0;
     bool haveReceived=false;
     int recvBytes = 0;
-    clock_t startTime, endTime;
-    startTime = clock();
     while (true)
     {
         if( haveReceived )  //finished receving
@@ -151,6 +189,10 @@ int CUdpServer::RecvData( int nTimeUpSec )
         default:
             if(FD_ISSET(RecvSocket,&testfds))   // check the filedescriptor set whether can be read, it means whether there are some datas in the receive buffer
             {
+                #ifdef _WIN32
+                GetLocalTime(&m_tTimeofFirstRecv);
+                printf( "%4d/%02d/%02d %02d:%02d:%02d.%03d week%1d\n",m_tTimeofFirstRecv.wYear,m_tTimeofFirstRecv.wMonth,m_tTimeofFirstRecv.wDay,m_tTimeofFirstRecv.wHour,m_tTimeofFirstRecv.wMinute, m_tTimeofFirstRecv.wSecond,m_tTimeofFirstRecv.wMilliseconds,m_tTimeofFirstRecv.wDayOfWeek);
+                #endif // _WIN32
                 do
                 {
                     recvBytes = recvfrom( RecvSocket, *ppszMovePtr, m_nBufLen, 0, (SOCKADDR *)&SenderAddr, &SenderAddrSize );
@@ -169,8 +211,6 @@ int CUdpServer::RecvData( int nTimeUpSec )
 
     cout << endl;
     cout << "recived " << total <<" Bytes data" << endl;
-    endTime = clock();
-    cout << "Total acquire Time : " <<(double)(endTime - startTime) / CLOCKS_PER_SEC << "s" << endl;
 
     //!<  analyzing frame
     cout << "start to analyze frame..." << endl;
@@ -179,6 +219,12 @@ int CUdpServer::RecvData( int nTimeUpSec )
     return m_nFrameCounter;
 }
 
+/** \brief 本函数主要是分析是否漏帧，并根据总数据量计算下位机采集触发的时间
+ *
+ * \param void
+ * \return bool，成功返回true；不成功返回false
+ *
+ */
 bool CUdpServer::__FrameAnalysis( void )
 {
     int nAreaNum = m_ppszDataBuf[0][0]&0xFF;
@@ -186,24 +232,43 @@ bool CUdpServer::__FrameAnalysis( void )
     int nAreaFrameCounter = 0;
     for (int nFrameNum = 0; nFrameNum < m_nFrameCounter; nFrameNum++)
     {
-        if (m_ppszDataBuf[nFrameNum][0]&0xFF == nAreaNum)
+        if (m_ppszDataBuf[nFrameNum][0]&0xFF == nAreaNum)      // all the frames in the same area
         {
             nAreaFrameNum = m_ppszDataBuf[0][2]&0xFF | m_ppszDataBuf[0][3]<<8&0xFF00;
             if (nAreaFrameNum != nAreaFrameCounter)
             {
                 cout << "miss frame in the air(frmaNum): " << nAreaNum  << "(" << nAreaFrameNum << ")" << endl;
+                return false;
             }
             nAreaFrameCounter++;
         }
         else
         {
-            nAreaNum = m_ppszDataBuf[nFrameNum][0]&0xFF;
+            nAreaNum = m_ppszDataBuf[nFrameNum][0]&0xFF;      //next area
             nAreaFrameCounter = 0;
         }
+    }
+    //caculate the start acquiring time
+    int nSecondofAcq = round((int)(m_ppszDataBuf[0][4]&0xFF | m_ppszDataBuf[0][5]<<8&0xFF00 | m_ppszDataBuf[0][6]&0xFF0000 | m_ppszDataBuf[0][7]<<8&0xFF000000)/FREQ);
+    m_tTimeofStartAcq = m_tTimeofFirstRecv;
+    if( m_tTimeofFirstRecv.wSecond < nSecondofAcq )
+    {
+        m_tTimeofStartAcq.wMinute = m_tTimeofFirstRecv.wMinute;
+        m_tTimeofStartAcq.wSecond = m_tTimeofFirstRecv.wSecond + 60 - nSecondofAcq;
+    }
+    else
+    {
+        m_tTimeofStartAcq.wSecond = m_tTimeofFirstRecv.wSecond - nSecondofAcq;
     }
     return true;
 }
 
+/** \brief 本函数主要是从每一帧中抽取每一个采样值（32bit表示）到大缓冲区
+ *
+ * \param void
+ * \return void
+ *
+ */
 void CUdpServer::__ExtractRawData( void )
 {
     switch (m_emTypeofSwitch)
@@ -220,7 +285,7 @@ void CUdpServer::__ExtractRawData( void )
         break;
     }
 
-    m_nSizeofEveryChannelRawData = (m_ppszDataBuf[0][4]&0xFF) | (m_ppszDataBuf[0][5]<<8&0xFF00);
+    m_nSizeofEveryChannelRawData = (m_ppszDataBuf[0][4]&0xFF | m_ppszDataBuf[0][5]<<8&0xFF00 | m_ppszDataBuf[0][6]&0xFF0000 | m_ppszDataBuf[0][7]<<8&0xFF000000);
 
     for (int i = 0; i < m_nFrameCounter; i++)
     {
@@ -234,6 +299,12 @@ void CUdpServer::__ExtractRawData( void )
     cout << "extracting raw data successful!" << endl;
 }
 
+/** \brief 本函数主要是保存大缓冲区中抽取的源数据
+ *
+ * \param szDirPath char*，要保存的文件夹名称指针
+ * \return void
+ *
+ */
 void CUdpServer::SavingRawData( char* szDirPath )
 {
     __ExtractRawData();
@@ -312,4 +383,15 @@ void CUdpServer::SavingRawData( char* szDirPath )
         cout << dec << m_ppnarrRawData[0][j] << " ";
     }
     cout << endl;
+}
+
+/** \brief 本函数主要是获取下位机触发采集的时间
+ *
+ * \param tTimeofStartAcq SYSTEMTIME*，保存时间的结构体
+ * \return void
+ *
+ */
+void CUdpServer::GetTimeofStartAcq( SYSTEMTIME *tTimeofStartAcq )
+{
+    tTimeofStartAcq = &m_tTimeofStartAcq;
 }

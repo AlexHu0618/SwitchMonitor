@@ -535,7 +535,6 @@ void monitorServerFrame::OnSocketEvent( wxSocketEvent &event )
 
             sock->SetFlags(wxSOCKET_WAITALL);
 
-//            buf = new char[1024];
             char buf[128]={0};
 
             char *tem = buf;
@@ -552,8 +551,6 @@ void monitorServerFrame::OnSocketEvent( wxSocketEvent &event )
 
             // Write it back
             sock->Write(buf, len);
-//            delete[] buf;
-//            buf = NULL;
 
             strSubBefore = strBuf.Before('=');
             strSubAfter  = strBuf.After('=').BeforeLast('\r');
@@ -605,5 +602,8 @@ void monitorServerFrame::OnSocketEvent( wxSocketEvent &event )
 
 void monitorServerFrame::SendMSG2UI( const void *buffer, wxUint32 nbytes )
 {
-    m_sockUI->Write( buffer, nbytes );
+    if( m_sockUI != NULL )
+    {
+        m_sockUI->Write( buffer, nbytes );
+    }
 }

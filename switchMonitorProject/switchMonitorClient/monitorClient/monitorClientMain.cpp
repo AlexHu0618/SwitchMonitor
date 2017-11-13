@@ -60,6 +60,12 @@ BEGIN_EVENT_TABLE(monitorClientFrame, wxFrame)
     EVT_MENU(idMenuZYJ7, monitorClientFrame::OnZYJ7)
 END_EVENT_TABLE()
 
+/** \brief 主窗体构造函数，负责窗体创建，通信连接初始化，并发送指令到下位机开始触发采集
+ *
+ * \param frame wxFrame*
+ * \param title const wxString&
+ *
+ */
 monitorClientFrame::monitorClientFrame(wxFrame *frame, const wxString& title)
     : wxFrame(frame, -1, title)
 {
@@ -94,16 +100,8 @@ monitorClientFrame::monitorClientFrame(wxFrame *frame, const wxString& title)
     //!< initial config
     if( InitializeAll() < 0 )
     {
-        return -1;
+        return;
     }
-
-    //!< initial TCP
-    m_pTcpClient = new CNetController( "localhost", (unsigned int)nPort4net, client );
-    m_pTcpClient->Initial();
-
-    //!< initial DB
-    m_pDBCtrler = new CSqlController( strIP4SQL, (unsigned int)nPort4SQL, strUser4SQL, strPW4SQL );
-    m_pDBCtrler->Initial( "switchmonitordb", "tab4alldata" );
 
     m_nAcqCounter = 0;
     m_bIsConnUDP = false;
@@ -167,6 +165,13 @@ void monitorClientFrame::OnZYJ7(wxCommandEvent &event)
     nResult = Acquire( typeofSwitch );
 }
 
+/** \brief 本函数主要是等待接收下位机数据，一旦接收到数据就创建文件夹并保存数据到本地，通过TCP发送保存路径到服务器，把时间和路径写入数据库
+ *
+ * \param typeofSwitch SWITCH_TYPE，被测设备类型
+ * \enum SWITCH_TYPE
+ * \return int，成功返回0；不成功返回-1
+ *
+ */
 int monitorClientFrame::Acquire( SWITCH_TYPE typeofSwitch )
 {
 //    wxString msg = _(" YES --- Acquiring directly\n NO --- Trigger");
@@ -181,7 +186,7 @@ int monitorClientFrame::Acquire( SWITCH_TYPE typeofSwitch )
 
     //!< directly acquire or wait for triggering
     int frameCout = 0;
-    int nTimeUpSec = NULL;
+    int nTimeUpSec = 30;
 //    if (nAcqMode == wxYES)
 //    {
 //        cout << "start to directly acquire 3S" << endl;
@@ -240,23 +245,27 @@ int monitorClientFrame::Acquire( SWITCH_TYPE typeofSwitch )
 //        }
 
         //!< send the path to TCP server for analyzing
-        wxString strSendCmd = str4dataDir;
-        if( m_MenuItemDefault->IsChecked() )
-        {
-            strSendCmd += "_default";
-        }
+        wxString strSendCmd = "PATH=" + str4dataDir + "\r\n";
+//        if( m_MenuItemDefault->IsChecked() )
+//        {
+//            strSendCmd += "_default";
+//        }
         m_pTcpClient->Send((const char*)strSendCmd.mb_str(), strSendCmd.size());
         cout << strSendCmd << endl;
 
         //!< insert to DB
         str4dataDir.Replace("\\", "\\\\");
         wxString strTYPE = (typeofSwitch == ZD6) ? "ZD6" : (typeofSwitch == S700K) ? "S700K" : "ZYJ7";
-        wxString strSQLCmd = "INSERT INTO tab4alldata(TYPE, DATE, TIME, ACTUATING, PATH) VALUES ('" + strTYPE + "', CURDATE(), CURTIME(), 50, '" + str4dataDir + "');";
+        SYSTEMTIME tTimeofStartAcq;
+        m_pUDPServer->GetTimeofStartAcq( &tTimeofStartAcq );
+        wxString strDate = wxString::Format( wxT("%i"), tTimeofStartAcq.wYear ) + "-" + wxString::Format( wxT("%02i"), tTimeofStartAcq.wMonth ) + "-" + wxString::Format( wxT("%02i"), tTimeofStartAcq.wDay );
+        wxString strTime = wxString::Format( wxT("%02i"), tTimeofStartAcq.wHour ) + ":" + wxString::Format( wxT("%02i"), tTimeofStartAcq.wMinute ) + ":" + wxString::Format( wxT("%02i"), tTimeofStartAcq.wSecond );
+        wxString strSQLCmd = "INSERT INTO tab4alldata(TYPE, DATE, TIME, PATH) VALUES ('" + strTYPE + "', '" + strDate + "', '" + strTime + "', '" + str4dataDir + "');";
         string strCmd = string( strSQLCmd.mb_str() );
         cout << strSQLCmd << endl;
         cout << strCmd << endl;
         int result = m_pDBCtrler->Insert( strCmd );
-        if( result != 1 )
+        if( result < 0 )
         {
             cout << "sql insert error" << endl;
             return -1;
@@ -272,6 +281,12 @@ int monitorClientFrame::Acquire( SWITCH_TYPE typeofSwitch )
     return 0;
 }
 
+/** \brief 本函数主要是创建文件夹，用于保存数据
+ *
+ * \param pstr4dataDir wxString*，创建后的文件夹路径名
+ * \return int，成功返回0；不成功返回-1
+ *
+ */
 int monitorClientFrame::MakeDir( wxString* pstr4dataDir )
 {
     //these for built a directory and a file
@@ -287,6 +302,7 @@ int monitorClientFrame::MakeDir( wxString* pstr4dataDir )
         if(!wxFileName::Mkdir(_T("SwitchData")))
         {
             wxMessageBox(_T("Fail to build directory SwitchData!"),_T("Error"));
+            return -1;
         }
     }
     wxFileName::SetCwd(_T("D:\\SwitchData"));
@@ -295,18 +311,26 @@ int monitorClientFrame::MakeDir( wxString* pstr4dataDir )
         if(!wxFileName::Mkdir(str4date))
         {
             wxMessageBox(_T("Fail to build directory by date!"),_T("Error"));
+            return -1;
         }
     }
     wxFileName::SetCwd(str4dir);
     if(!wxFileName::Mkdir(str4time))
     {
         wxMessageBox(_T("Fail to build directory by date!"),_T("Error"));
+        return -1;
     }
     wxFileName::SetCwd( *pstr4dataDir );
 
     return 0;
 }
 
+/** \brief 本函数主要是读取注册表中的参数值，UDP连接下位机并发送开始采集指令，进入循环等待接收数据
+ *
+ * \param void
+ * \return void
+ *
+ */
 void monitorClientFrame::ZD6Work( void )
 {
     SWITCH_TYPE typeofSwitch = ZD6;
@@ -392,6 +416,7 @@ void monitorClientFrame::ZD6Work( void )
         //!< connect to UDP client
         m_pUDPServer = new CUdpServer( strIP4UDP_Sev.c_str(), strIP4UDP_Clt.c_str(), (int)nPort4UDP, typeofSwitch );
     }
+
     int nConnUDPCounter = 3;    // try 3 times if no conn
     do
     {
@@ -413,6 +438,8 @@ void monitorClientFrame::ZD6Work( void )
 
     if( m_bIsConnUDP )
     {
+        wxString strSendCmd = "MSG=Acquirer is working!\r\n";
+        m_pTcpClient->Send((const char*)strSendCmd.mb_str(), strSendCmd.size());
         int nResult = 0;
         while(1)
         {
@@ -432,28 +459,34 @@ void monitorClientFrame::ZD6Work( void )
     }
 }
 
+/** \brief 本函数主要是读取注册表参数值，创建TCP连接，创建MySQL数据库连接
+ *
+ * \param void
+ * \return int，成功返回0；不成功返回-1
+ *
+ */
 int monitorClientFrame::InitializeAll( void )
 {
 #ifdef _WIN32
     //!< open server.exe
-    HINSTANCE hNewExe = ShellExecuteA( NULL, "open", ".\\Server\\monitorServer.exe", NULL, NULL, SW_SHOW );
-    if( (DWORD)hNewExe <=32 )
-    {
-        cout << "Failed to open server.exe! Error = " << hNewExe << endl;
-        return -1;
-
-    }
-    else
-    {
-        cout << "success to open server.exe!" << endl;
-    }
+//    HINSTANCE hNewExe = ShellExecuteA( NULL, "open", ".\\Server\\monitorServer.exe", NULL, NULL, SW_SHOW );
+//    if( (DWORD)hNewExe <=32 )
+//    {
+//        cout << "Failed to open server.exe! Error = " << hNewExe << endl;
+//        return -1;
+//
+//    }
+//    else
+//    {
+//        cout << "success to open server.exe!" << endl;
+//    }
 
     //!< read regedit to get the IP,port,user and pw
     HKEY hKey;
     HKEY hTempKey;
     DWORD dwSize = sizeof(DWORD);
     DWORD dwType = REG_DWORD;
-    DWORD nPort4net = 0;
+    DWORD nPort4TCP = 0;
     DWORD nPort4SQL = 0;
     char szValue[256];
     char sztemp[64];
@@ -466,15 +499,15 @@ int monitorClientFrame::InitializeAll( void )
     LPCTSTR data_Set= _T("Software\\GZMetro");
     if (ERROR_SUCCESS == ::RegOpenKeyEx(HKEY_CURRENT_USER, data_Set,0,KEY_ALL_ACCESS, &hKey))
     {
-        //!< port4net
-        if (::RegQueryValueEx(hKey, _T("port4net"), 0, &dwType, (LPBYTE)&nPort4net, &dwSize) != ERROR_SUCCESS)
+        //!< port4TCP
+        if (::RegQueryValueEx(hKey, _T("port4TCP"), 0, &dwType, (LPBYTE)&nPort4TCP, &dwSize) != ERROR_SUCCESS)
         {
-             cout << "no key named port4net" << endl;
+             cout << "no key named port4TCP" << endl;
              return -1;
         }
         else
         {
-            cout << "the value is " << nPort4net << endl;
+            cout << "the value is " << nPort4TCP << endl;
         }
 
         //!< port4SQL
@@ -558,6 +591,20 @@ int monitorClientFrame::InitializeAll( void )
 #else
     cout << "Not WIN32, NO read regedit!" << endl;
 #endif // _WIN32
+
+    //!< initial TCP
+    m_pTcpClient = new CNetController( "localhost", (unsigned int)nPort4TCP, client );
+    if( m_pTcpClient->Initial() < 0 )
+    {
+        return -1;
+    }
+
+    //!< initial DB
+    m_pDBCtrler = new CSqlController( strIP4SQL, (unsigned int)nPort4SQL, strUser4SQL, strPW4SQL );
+    if( m_pDBCtrler->Initial( "switchmonitordb", "tab4alldata" ) < 0 )
+    {
+        return -1;
+    }
 
     return 0;
 }

@@ -36,6 +36,7 @@
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add option="-D_WIN32" />
 					<Add directory="D:/wxWidgets-3.0.2/lib/gcc_lib/mswu" />
 					<Add directory="E:/Project/GZMetro/Switch/softwareDesign/switchMonitorProject/switchMonitorClient/monitorClient/include" />
 					<Add directory="../../../../../../../mysql conncetor/mysql-connector-c-6.1.10-win32/mysql-connector-c-6.1.10-win32/include" />
@@ -104,7 +105,7 @@
 			<debugger />
 			<lib_finder disable_auto="1" />
 			<DoxyBlocks>
-				<comment_style block="1" line="1" />
+				<comment_style block="0" line="1" />
 				<doxyfile_project />
 				<doxyfile_build />
 				<doxyfile_warnings />

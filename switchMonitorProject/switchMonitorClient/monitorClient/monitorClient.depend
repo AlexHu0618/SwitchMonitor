@@ -1690,7 +1690,7 @@
 1412609644 d:\wxwidgets-3.0.2\include\wx\univ\theme.h
 	"wx/string.h"
 
-1508070372 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\monitorclientmain.h
+1510646132 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\monitorclientmain.h
 	<wx/wx.h>
 	"monitorClientApp.h"
 	"CNetController.h"
@@ -2933,12 +2933,14 @@
 1412609642 d:\wxwidgets-3.0.2\include\wx\cocoa\mdi.h
 	"wx/frame.h"
 
-1508588816 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\monitorclientmain.cpp
+1510543938 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\monitorclientmain.cpp
 	"wx_pch.h"
 	"monitorClientMain.h"
 	<wx/timer.h>
 	<wx/filename.h>
 	<wx/string.h>
+	<windows.h>
+	<shellapi.h>
 
 1385316876 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\resource.rc
 	"wx/msw/wx.rc"
@@ -2960,37 +2962,38 @@
 
 1412609644 d:\wxwidgets-3.0.2\include\wx\msw\rcdefs.h
 
-1500610184 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\src\cudpserver.cpp
+1510544020 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\src\cudpserver.cpp
 	<stdio.h>
 	<iostream>
 	<iomanip>
 	<time.h>
+	<math.h>
 	"CUdpServer.h"
 
-1508596624 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\include\cudpserver.h
+1510642703 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\include\cudpserver.h
 	<WINSOCK2.H>
 
-1497234391 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\include\cnetcontroller.h
+1510641472 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\include\cnetcontroller.h
 	<string>
 	<winsock2.h>
 
-1496916992 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\include\csqlcontroller.h
+1510641620 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\include\csqlcontroller.h
 	<string>
 	<mysql.h>
 	<errmsg.h>
 	<mysql_version.h>
 
-1497341063 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\src\cnetcontroller.cpp
+1510640093 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\src\cnetcontroller.cpp
 	"CNetController.h"
 	<iostream>
 
-1496829932 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\src\cpreprocessor.cpp
+1510641377 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\src\cpreprocessor.cpp
 	"CPreprocessor.h"
 	<iostream>
 	<malloc.h>
 	<math.h>
 
-1496829932 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\include\cpreprocessor.h
+1510641378 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\include\cpreprocessor.h
 	<string>
 	<vector>
 
@@ -3042,7 +3045,7 @@
 
 1492761152 e:\mysql conncetor\mysql-connector-c-6.1.10-win32\mysql-connector-c-6.1.10-win32\include\errmsg.h
 
-1498116574 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\src\csqlcontroller.cpp
+1510642332 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\src\csqlcontroller.cpp
 	"CSqlController.h"
 	<stdio.h>
 	<iostream>
