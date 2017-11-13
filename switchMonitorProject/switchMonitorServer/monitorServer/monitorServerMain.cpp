@@ -89,7 +89,7 @@ monitorServerFrame::monitorServerFrame(wxFrame *frame, const wxString& title)
     HKEY hTempKey;
     DWORD dwSize = sizeof(DWORD);
     DWORD dwType = REG_DWORD;
-    DWORD nPort4net = 0;
+    DWORD nPort4TCP = 0;
     DWORD nPort4SQL = 0;
     char szValue[256];
     char sztemp[64];
@@ -102,14 +102,14 @@ monitorServerFrame::monitorServerFrame(wxFrame *frame, const wxString& title)
     LPCTSTR data_Set= _T("Software\\GZMetro");
     if (ERROR_SUCCESS == ::RegOpenKeyEx(HKEY_CURRENT_USER, data_Set,0,KEY_ALL_ACCESS, &hKey))
     {
-        //!< port4net
-        if (::RegQueryValueEx(hKey, _T("port4net"), 0, &dwType, (LPBYTE)&nPort4net, &dwSize) != ERROR_SUCCESS)
+        //!< port4TCP
+        if (::RegQueryValueEx(hKey, _T("port4TCP"), 0, &dwType, (LPBYTE)&nPort4TCP, &dwSize) != ERROR_SUCCESS)
         {
-             cout << "no key named port4net" << endl;
+             cout << "no key named port4TCP" << endl;
         }
         else
         {
-            cout << "the value is " << nPort4net << endl;
+            cout << "the value is " << nPort4TCP << endl;
         }
 
         //!< port4SQL
@@ -186,14 +186,14 @@ monitorServerFrame::monitorServerFrame(wxFrame *frame, const wxString& title)
     }
     ::RegCloseKey(hKey);
 
-    //m_pTcpServer = new CNetController( "localhost", (unsigned int)nPort4net, server );
+    //m_pTcpServer = new CNetController( "localhost", (unsigned int)nPort4TCP, server );
     //m_pTcpServer->Initial();
 
     m_pDBCtrler = new CSqlController( strIP4SQL, (unsigned int)nPort4SQL, strUser4SQL, strPW4SQL );
     m_pDBCtrler->Initial("switchmonitordb", "tab4alldata" );
 
     wxIPV4address addr;
-    addr.Service(9001);
+    addr.Service(nPort4TCP);
 
     // Create the socket
     m_server = new wxSocketServer(addr);
@@ -217,6 +217,8 @@ monitorServerFrame::monitorServerFrame(wxFrame *frame, const wxString& title)
     m_busy = false;
     m_numClients = 0;
     m_bIsDefault = false;
+    m_sockUI = NULL;
+    m_sockAcquirer = NULL;
 
     //!< start analyzing
     //ZD6Analyzing();
@@ -229,6 +231,8 @@ monitorServerFrame::~monitorServerFrame()
 //    m_pTcpServer = NULL;
     delete m_pDBCtrler;
     m_pDBCtrler = NULL;
+    delete m_server;
+    m_server = NULL;
 }
 
 void monitorServerFrame::OnClose(wxCloseEvent &event)
@@ -558,17 +562,20 @@ void monitorServerFrame::OnSocketEvent( wxSocketEvent &event )
             if( strSubBefore == "CMD" )
             {
                 m_bIsDefault = true;
+                m_sockUI = sock;
+            }
+            else if( strSubBefore == "PATH" )
+            {
+                ZD6Analyzing(strSubAfter);
+                m_sockAcquirer = sock;
+            }
+            else if( strSubBefore == "MSG" )
+            {
+                SendMSG2UI( buf, len );
             }
             else
             {
-                if( strSubBefore == "PATH" )
-                {
-                    ZD6Analyzing(strSubAfter);
-                }
-                else
-                {
-                    cout << "unknow CMD or PATH" << endl;
-                }
+                cout << "unknow CMD or PATH" << endl;
             }
 
             // Enable input events again.
@@ -594,4 +601,9 @@ void monitorServerFrame::OnSocketEvent( wxSocketEvent &event )
         }
         default: ;
     }
+}
+
+void monitorServerFrame::SendMSG2UI( const void *buffer, wxUint32 nbytes )
+{
+    m_sockUI->Write( buffer, nbytes );
 }
