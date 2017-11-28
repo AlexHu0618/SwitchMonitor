@@ -19,6 +19,10 @@
 #include "CSqlController.h"
 #include "CUdpServer.h"
 
+enum ACQUIRE_MODE {TRIGGER, DIRECT};
+
+/** \brief 本类主要负责采集客户端的数据前处理和保存，并与分析服务端通信
+ */
 class monitorClientFrame: public wxFrame
 {
     public:
@@ -40,6 +44,7 @@ class monitorClientFrame: public wxFrame
         CUdpServer *m_pUDPServer;
         int m_nAcqCounter;
         bool m_bIsConnUDP;
+        SWITCH_TYPE m_emTypeofSwitch;
 
         void OnClose(wxCloseEvent& event);
         void OnQuit(wxCommandEvent& event);
@@ -50,7 +55,7 @@ class monitorClientFrame: public wxFrame
 
         int InitializeAll( void );
         int MakeDir( wxString* pstr4dataDir );
-        int Acquire( SWITCH_TYPE typeofSwitch );
+        int Acquire( ACQUIRE_MODE emAcqMode );
         void ZD6Work( void );
 };
 

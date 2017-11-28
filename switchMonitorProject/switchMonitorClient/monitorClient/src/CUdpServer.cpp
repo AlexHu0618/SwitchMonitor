@@ -393,5 +393,11 @@ void CUdpServer::SavingRawData( char* szDirPath )
  */
 void CUdpServer::GetTimeofStartAcq( SYSTEMTIME *tTimeofStartAcq )
 {
-    tTimeofStartAcq = &m_tTimeofStartAcq;
+    tTimeofStartAcq->wYear = m_tTimeofStartAcq.wYear;
+    tTimeofStartAcq->wMonth = m_tTimeofStartAcq.wMonth;
+    tTimeofStartAcq->wDay = m_tTimeofStartAcq.wDay;
+    tTimeofStartAcq->wHour = m_tTimeofStartAcq.wHour;
+    tTimeofStartAcq->wMinute = m_tTimeofStartAcq.wMinute;
+    tTimeofStartAcq->wSecond = m_tTimeofStartAcq.wSecond;
+    tTimeofStartAcq->wMilliseconds = m_tTimeofStartAcq.wMilliseconds;
 }

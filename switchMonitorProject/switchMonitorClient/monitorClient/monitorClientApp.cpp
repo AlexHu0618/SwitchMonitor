@@ -24,7 +24,7 @@ bool monitorClientApp::OnInit()
 {
     monitorClientFrame* frame = new monitorClientFrame(0L, _("wxWidgets Application Template"));
     frame->SetIcon(wxICON(aaaa)); // To Set App Icon
-    frame->Show();
-    
+//    frame->Show();
+
     return true;
 }

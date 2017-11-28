@@ -105,6 +105,7 @@ monitorClientFrame::monitorClientFrame(wxFrame *frame, const wxString& title)
 
     m_nAcqCounter = 0;
     m_bIsConnUDP = false;
+    m_emTypeofSwitch = ZD6;
 
     ZD6Work();
 }
@@ -148,7 +149,7 @@ void monitorClientFrame::OnS700K(wxCommandEvent &event)
     SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN |FOREGROUND_BLUE );
 
     int nResult = 0;
-    nResult = Acquire( typeofSwitch );
+    nResult = Acquire( TRIGGER );
 }
 
 void monitorClientFrame::OnZYJ7(wxCommandEvent &event)
@@ -162,44 +163,33 @@ void monitorClientFrame::OnZYJ7(wxCommandEvent &event)
     SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN |FOREGROUND_BLUE );
 
     int nResult = 0;
-    nResult = Acquire( typeofSwitch );
+    nResult = Acquire( TRIGGER );
 }
 
 /** \brief 本函数主要是等待接收下位机数据，一旦接收到数据就创建文件夹并保存数据到本地，通过TCP发送保存路径到服务器，把时间和路径写入数据库
  *
- * \param typeofSwitch SWITCH_TYPE，被测设备类型
- * \enum SWITCH_TYPE
+ * \param emAcqMode ACQUIRE_MODE，采集模式（触发或直接采集）
+ * \enum ACQUIRE_MODE
  * \return int，成功返回0；不成功返回-1
  *
  */
-int monitorClientFrame::Acquire( SWITCH_TYPE typeofSwitch )
+int monitorClientFrame::Acquire( ACQUIRE_MODE emAcqMode )
 {
-//    wxString msg = _(" YES --- Acquiring directly\n NO --- Trigger");
-//    int nAcqMode = wxMessageBox(msg, _("choose the style of acquiring"), wxYES_NO | wxCENTER );
-//    int nAcqMode = wxNO;
-
-//    if( m_nAcqCounter > 10 )
-//    {
-//        nAcqMode = wxYES;
-//        m_nAcqCounter = 0;
-//    }
-
-    //!< directly acquire or wait for triggering
+    //!< directly acquire or else wait for triggering
     int frameCout = 0;
     int nTimeUpSec = 30;
-//    if (nAcqMode == wxYES)
-//    {
-//        cout << "start to directly acquire 3S" << endl;
-//        char acqCmd[4] = {0x04,0x00,0x03,0x07};     //time is 3s
-//        result = m_pUDPServer->SendData(acqCmd);
-//        if(result<0)
-//        {
-//            cout << "Failed to send command 0X04!" << endl;
-//            return -1;
-//        }
-//        cout << "success to send command 0X04!" << endl;
-//        nTimeUpSec = 10;
-//    }
+    if (emAcqMode == DIRECT)
+    {
+        cout << "start to directly acquire 3S" << endl;
+        char acqCmd[4] = {0x04,0x00,0x03,0x07};     //time is 3s
+        int result = m_pUDPServer->SendData(acqCmd);
+        if(result<0)
+        {
+            cout << "Failed to send command 0X04!" << endl;
+            return -1;
+        }
+        cout << "success to send command 0X04!" << endl;
+    }
 
     //!< stop acquiring while received data or till to time up
     frameCout = m_pUDPServer->RecvData( nTimeUpSec );
@@ -231,7 +221,7 @@ int monitorClientFrame::Acquire( SWITCH_TYPE typeofSwitch )
         strcpy( szDirPath, str4dataDir.mb_str());
         m_pUDPServer->SavingRawData( szDirPath );
 
-//        //!< choose for analyzing specified data file
+        //!< for test to choose specified data file for analyzing
 //        wxString str4dataDir = _("/");
 //        wxDirDialog dialog( this );
 //        if (dialog.ShowModal() == wxID_OK)
@@ -246,20 +236,17 @@ int monitorClientFrame::Acquire( SWITCH_TYPE typeofSwitch )
 
         //!< send the path to TCP server for analyzing
         wxString strSendCmd = "PATH=" + str4dataDir + "\r\n";
-//        if( m_MenuItemDefault->IsChecked() )
-//        {
-//            strSendCmd += "_default";
-//        }
         m_pTcpClient->Send((const char*)strSendCmd.mb_str(), strSendCmd.size());
         cout << strSendCmd << endl;
 
         //!< insert to DB
         str4dataDir.Replace("\\", "\\\\");
-        wxString strTYPE = (typeofSwitch == ZD6) ? "ZD6" : (typeofSwitch == S700K) ? "S700K" : "ZYJ7";
+        wxString strTYPE = (m_emTypeofSwitch == ZD6) ? "ZD6" : (m_emTypeofSwitch == S700K) ? "S700K" : "ZYJ7";
         SYSTEMTIME tTimeofStartAcq;
         m_pUDPServer->GetTimeofStartAcq( &tTimeofStartAcq );
         wxString strDate = wxString::Format( wxT("%i"), tTimeofStartAcq.wYear ) + "-" + wxString::Format( wxT("%02i"), tTimeofStartAcq.wMonth ) + "-" + wxString::Format( wxT("%02i"), tTimeofStartAcq.wDay );
         wxString strTime = wxString::Format( wxT("%02i"), tTimeofStartAcq.wHour ) + ":" + wxString::Format( wxT("%02i"), tTimeofStartAcq.wMinute ) + ":" + wxString::Format( wxT("%02i"), tTimeofStartAcq.wSecond );
+        cout << tTimeofStartAcq.wYear << "-" << tTimeofStartAcq.wMonth << "-" << tTimeofStartAcq.wDay << endl;
         wxString strSQLCmd = "INSERT INTO tab4alldata(TYPE, DATE, TIME, PATH) VALUES ('" + strTYPE + "', '" + strDate + "', '" + strTime + "', '" + str4dataDir + "');";
         string strCmd = string( strSQLCmd.mb_str() );
         cout << strSQLCmd << endl;
@@ -270,7 +257,6 @@ int monitorClientFrame::Acquire( SWITCH_TYPE typeofSwitch )
             cout << "sql insert error" << endl;
             return -1;
         }
-//        ++m_nAcqCounter;
     }
     else
     {
@@ -333,7 +319,6 @@ int monitorClientFrame::MakeDir( wxString* pstr4dataDir )
  */
 void monitorClientFrame::ZD6Work( void )
 {
-    SWITCH_TYPE typeofSwitch = ZD6;
     if( !m_bIsConnUDP )
     {
 #ifdef _WIN32
@@ -414,7 +399,7 @@ void monitorClientFrame::ZD6Work( void )
 #endif  // _WIN32
 
         //!< connect to UDP client
-        m_pUDPServer = new CUdpServer( strIP4UDP_Sev.c_str(), strIP4UDP_Clt.c_str(), (int)nPort4UDP, typeofSwitch );
+        m_pUDPServer = new CUdpServer( strIP4UDP_Sev.c_str(), strIP4UDP_Clt.c_str(), (int)nPort4UDP, m_emTypeofSwitch );
     }
 
     int nConnUDPCounter = 3;    // try 3 times if no conn
@@ -443,14 +428,40 @@ void monitorClientFrame::ZD6Work( void )
         int nResult = 0;
         while(1)
         {
-            if( nResult==0 )
+            if (nResult == 0)
             {
                 //!< set the console text color
                 SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_GREEN );
                 cout << "START A NEW TEST FOR ZD6" << endl;
                 SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN |FOREGROUND_BLUE );
             }
-            nResult = Acquire( typeofSwitch );
+            if (m_nAcqCounter < 10)            // trigger 10 times
+            {
+                nResult = Acquire( TRIGGER );
+                if (nResult != 0)
+                {
+                    cout << "ERROR: Trigger acquire failed!" << endl;
+                    continue;
+                }
+                else
+                {
+                    ++m_nAcqCounter;
+                }
+            }
+            else                              // directly 1 time
+            {
+                nResult = Acquire( DIRECT );
+                if (nResult != 0)
+                {
+                    cout << "ERROR: Directly acquire failed!" << endl;
+                    continue;
+                }
+                else
+                {
+                    m_nAcqCounter == 0;
+                }
+            }
+
         }
     }
     else
@@ -468,7 +479,7 @@ void monitorClientFrame::ZD6Work( void )
 int monitorClientFrame::InitializeAll( void )
 {
 #ifdef _WIN32
-    //!< open server.exe
+    //!< open server.exe by shell
 //    HINSTANCE hNewExe = ShellExecuteA( NULL, "open", ".\\Server\\monitorServer.exe", NULL, NULL, SW_SHOW );
 //    if( (DWORD)hNewExe <=32 )
 //    {
