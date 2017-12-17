@@ -39,16 +39,17 @@ class monitorServerFrame: public wxFrame
         };
         CNetController* m_pTcpServer;
         CSqlController* m_pDBCtrler;
-        wxSocketServer *m_server;
+        CFaultAnalyzer* m_pAnalyzer;
+        wxSocketServer* m_server;
         wxSocketBase *m_sockUI;
         wxSocketBase *m_sockAcquirer;
         bool m_busy;
         int m_numClients;
-        bool m_bIsDefault;
 
         int Diagnosing( SWITCH_TYPE typeofSwitch, wxString strPath );
         void ZD6Analyzing( wxString strPath );
         void SendMSG2UI( const void *buffer, wxUint32 nbytes );
+        bool HaveSetAllDefault( void );
 
         void OnClose(wxCloseEvent& event);
         void OnQuit(wxCommandEvent& event);

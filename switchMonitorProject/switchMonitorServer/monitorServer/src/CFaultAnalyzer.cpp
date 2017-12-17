@@ -111,7 +111,7 @@ int CFaultAnalyzer::__AnalyzeFault( double *arrdTransformRatio )
     }
 
     //!< analyzing the fault result
-    m_parrdScore = (double *)malloc( 10*sizeof(double) );
+//    m_parrdScore = (double *)malloc( 10*sizeof(double) );
     double dSampleInterval = SAMPLE_INTERVAL;
     if( m_emTypeofAcq == Ttrigger )
     {
@@ -170,15 +170,20 @@ int CFaultAnalyzer::__AnalyzeFault( double *arrdTransformRatio )
   */
 double* CFaultAnalyzer::GetRealData(void)
 {
-
+    return NULL;
 }
 
 /** @brief (one liner)
   *
   * (documentation goes here)
   */
-double* CFaultAnalyzer::GetScore( double *arrdTransformRatio )
+double* CFaultAnalyzer::GetScore( double *arrdTransformRatio, string strPath, SWITCH_TYPE emTypeofSwitch )
 {
+    m_bisL2R = true;
+    m_bisTransformed = false;
+    m_bIsDefault = false;
+    m_strPath = strPath;
+    m_emTypeofSwitch = emTypeofSwitch;
     if( __AnalyzeFault( arrdTransformRatio ) == 0 )
     {
         return m_parrdScore;
@@ -282,14 +287,14 @@ int CFaultAnalyzer::__TransformRawData( double *parrdTranRatio )
   *
   * (documentation goes here)
   */
- CFaultAnalyzer::CFaultAnalyzer( string strPath, SWITCH_TYPE TypeofSwitch )
+ CFaultAnalyzer::CFaultAnalyzer( void )
 {
-    m_strPath = strPath;
-    m_emTypeofSwitch = TypeofSwitch;
     m_bisL2R = true;
     m_bisTransformed = false;
     m_emTypeofAcq = Ttrigger;
     m_bIsDefault = false;
+    m_szFlagofSetDefault = 0b00000000;    // bits: 0 0 0 0 staticL2R staticR2L triggerL2R triggerR2L, 0--normal;1--should set
+    m_parrdScore = (double *)malloc( 10*sizeof(double) );
 }
 
 /** @brief (one liner)
@@ -360,7 +365,7 @@ int CFaultAnalyzer::SaveRealData( double *arrdTransformRatio )
 int CFaultAnalyzer::__SaveBaseData( string strFilePath )
 {
     //!< save static value or dynamic data, just voltage channel
-    if( m_emTypeofAcq == Tstatic )
+    if( m_emTypeofAcq == Tstatic )       // save static datas
     {
         int nNumChannel = 2;
         switch (m_emTypeofSwitch)
@@ -408,7 +413,7 @@ int CFaultAnalyzer::__SaveBaseData( string strFilePath )
         ostmRawDataFileOut.close();
         cout << "save to file: " << strDataFilePath << endl;
     }
-    else
+    else                          // save trigger datas
     {
         int nNumChannel = 3;
         switch (m_emTypeofSwitch)
@@ -426,59 +431,24 @@ int CFaultAnalyzer::__SaveBaseData( string strFilePath )
 
         for (int nCH = 0; nCH < nNumChannel; ++nCH)
         {
-//            if( m_bisL2R )
-//            {
-                stringstream stream;
-                stream << nCH;
-                string strChNum = stream.str();
-                string strDataFilePath = strFilePath + "\\DataCH" + strChNum + ".txt";
-                ofstream stmRawDataFileOut( strDataFilePath, ios_base::out );
-                if( !stmRawDataFileOut.is_open() )
-                {
-                    cerr << "Fail to open the DataCH" << nCH << ".dat raw data file!" << endl;
-                    return -1;
-                }
+            stringstream stream;
+            stream << nCH;
+            string strChNum = stream.str();
+            string strDataFilePath = strFilePath + "\\DataCH" + strChNum + ".txt";
+            ofstream stmRawDataFileOut( strDataFilePath, ios_base::out );
+            if( !stmRawDataFileOut.is_open() )
+            {
+                cerr << "Fail to open the DataCH" << nCH << ".dat raw data file!" << endl;
+                return -1;
+            }
 
-                double *parrdChRealData = m_pparrdAllRealData[nCH];
-                for (int nNum = 0; nNum < m_nAllChRealDataLen; ++nNum)
-                {
-                    stmRawDataFileOut << parrdChRealData[nNum] << "\n";
-                }
-                stmRawDataFileOut.close();
-                cout << "save to file: " << strDataFilePath << endl;
-//            }
-//            else
-//            {
-//                if( nCH != 0 )
-//                {
-//                    stringstream stream;
-//                    if( nCH == 2 )
-//                    {
-//                        stream << 3;
-//                    }
-//                    else
-//                    {
-//                        stream << nCH;
-//                    }
-//                    string strChNum = stream.str();
-//                    string strDataFilePath = strFilePath + "\\DataCH" + strChNum + ".txt";
-//                    ofstream stmRawDataFileOut( strDataFilePath, ios_base::out );
-//                    if( !stmRawDataFileOut.is_open() )
-//                    {
-//                        cerr << "Fail to open the DataCH" << nCH << ".dat raw data file!" << endl;
-//                        return -1;
-//                    }
-//
-//                    double *parrdChRealData = m_pparrdAllRealData[nCH];
-//                    for (int nNum = 0; nNum < m_nAllChRealDataLen; ++nNum)
-//                    {
-//                        stmRawDataFileOut << parrdChRealData[nNum] << "\n";
-//                    }
-//                    stmRawDataFileOut.close();
-//                    cout << "save to file: " << strDataFilePath << endl;
-//                }
-//            }
-
+            double *parrdChRealData = m_pparrdAllRealData[nCH];
+            for (int nNum = 0; nNum < m_nAllChRealDataLen; ++nNum)
+            {
+                stmRawDataFileOut << parrdChRealData[nNum] << "\n";
+            }
+            stmRawDataFileOut.close();
+            cout << "save to file: " << strDataFilePath << endl;
         }
     }
     return 0;
@@ -508,6 +478,84 @@ int CFaultAnalyzer::SaveAfterPreProcessing( double *arrdTransformRatio )
         nNumChannel = 3;
         break;
     }
+    m_bIsDefault = false;
+
+    // save default data if it is need
+    if (m_szFlagofSetDefault != 0b00000000)
+    {
+        cout << "FlagofSetDefault = 0x0" << hex << m_szFlagofSetDefault << endl;
+        int nResult = 0;
+        if (m_emTypeofAcq == Tstatic)    // static Acq
+        {
+            if (m_bisL2R)
+            {
+                if (m_szFlagofSetDefault&0b00001000)  // staticL2R
+                {
+                    m_bIsDefault = true;
+                    nResult = SaveRealData( arrdTransformRatio );
+                    if (nResult != 0)
+                    {
+                        cout << "save real data fail!" << endl;
+                        return 1;
+                    }
+                    m_szFlagofSetDefault = m_szFlagofSetDefault&0b11110111;
+                }
+            }
+            else
+            {
+                if (m_szFlagofSetDefault&0b00000100)  // staticR2L
+                {
+                    m_bIsDefault = true;
+                    nResult = SaveRealData( arrdTransformRatio );
+                    if (nResult != 0)
+                    {
+                        cout << "save real data fail!" << endl;
+                        return 1;
+                    }
+                    m_szFlagofSetDefault = m_szFlagofSetDefault&0b11111011;
+                }
+            }
+        }
+        else
+        {
+            if (m_bisL2R)
+            {
+                if (m_szFlagofSetDefault&0b00000010)  // triggerL2R
+                {
+                    m_bIsDefault = true;
+                    nResult = SaveRealData( arrdTransformRatio );
+                    if (nResult != 0)
+                    {
+                        cout << "save real data fail!" << endl;
+                        return 1;
+                    }
+                    m_szFlagofSetDefault = m_szFlagofSetDefault&0b11111101;
+                    cout << "FlagofSetDefault = 0x0" << hex << m_szFlagofSetDefault << endl;
+                }
+            }
+            else
+            {
+                if (m_szFlagofSetDefault&0b00000001)  // triggerR2L
+                {
+                    m_bIsDefault = true;
+                    nResult = SaveRealData( arrdTransformRatio );
+                    if (nResult != 0)
+                    {
+                        cout << "save real data fail!" << endl;
+                        return 1;
+                    }
+                    m_szFlagofSetDefault = m_szFlagofSetDefault&0b11111110;
+                }
+            }
+        }
+    }
+    else
+    {
+        m_bIsDefault = false;
+        cout << "m_szFlagofSetDefault=0" << endl;
+    }
+
+    // caculate data RMS and save
     vector<double> vecDataOut;
     CPreprocessor* preprocessor = new CPreprocessor();
     int nResult = -1;
@@ -728,6 +776,8 @@ void CFaultAnalyzer::GetInfo( string* strTypeofAcq, int* nIsL2R )
 void CFaultAnalyzer::SetBaseData( bool bIsDefault )
 {
     m_bIsDefault = bIsDefault;
+    m_szFlagofSetDefault = 0b00001111;
+    cout << "m_szFlagofSetDefault = 0x0" << hex << m_szFlagofSetDefault << endl;
 }
 
 void CFaultAnalyzer::__CalculatePower( void )

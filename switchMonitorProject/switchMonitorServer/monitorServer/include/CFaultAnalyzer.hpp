@@ -17,10 +17,10 @@ enum ACQUICITION_TYPE { Tstatic, Ttrigger };
 class CFaultAnalyzer
 {
 public:
-    CFaultAnalyzer( string strPath, SWITCH_TYPE emTypeofSwitch );
+    CFaultAnalyzer( void );
     ~CFaultAnalyzer();
 
-    double* GetScore( double *arrdTransformRatio );
+    double* GetScore( double *arrdTransformRatio, string strPath, SWITCH_TYPE emTypeofSwitch );
     double* GetRealData( void );
     int SaveRealData( double *arrdTransformRatio );
     int SaveAfterPreProcessing( double *arrdTransformRatio );
@@ -43,6 +43,7 @@ private:
     bool m_bisTransformed;
     double m_szdVoltageRMS[4] = {0};
     bool m_bIsDefault;
+    int m_szFlagofSetDefault;
 
     int __TransformRawData( double *parrdTranRatio );
     int __AnalyzeFault( double *parrdTranRatio );

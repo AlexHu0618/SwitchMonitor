@@ -216,9 +216,10 @@ monitorServerFrame::monitorServerFrame(wxFrame *frame, const wxString& title)
 
     m_busy = false;
     m_numClients = 0;
-    m_bIsDefault = false;
     m_sockUI = NULL;
     m_sockAcquirer = NULL;
+
+    m_pAnalyzer = new CFaultAnalyzer();
 
     //!< start analyzing
     //ZD6Analyzing();
@@ -233,6 +234,8 @@ monitorServerFrame::~monitorServerFrame()
     m_pDBCtrler = NULL;
     delete m_server;
     m_server = NULL;
+    delete m_pAnalyzer;
+    m_pAnalyzer = NULL;
 }
 
 void monitorServerFrame::OnClose(wxCloseEvent &event)
@@ -302,32 +305,32 @@ void monitorServerFrame::OnS700K(wxCommandEvent &event)
 
 void monitorServerFrame::OnZYJ7(wxCommandEvent &event)
 {
-    wxString strDataDirPath = _("/");
-    wxDirDialog dialog( this );
-    if (dialog.ShowModal() == wxID_OK)
-    {
-        strDataDirPath = dialog.GetPath();
-    }
-    else
-    {
-        return;
-    }
-    SWITCH_TYPE typeofSwitch = ZYJ7;
-    CFaultAnalyzer faultAnalyzer( std::string(strDataDirPath.mb_str()), typeofSwitch );
-    double arrdTransformRatio[] = { 600, 600, 600, 600, 40, 40, 40, 3000, 3000 };   // {v,v,v,v,i,i,i,p,p}
-    double *parrdScore = faultAnalyzer.GetScore( arrdTransformRatio );
-
-    printf("ZYJ7 fault confidences for provided data:\n\n");
-	printf("Actuating fault: %.2f %%\n", parrdScore[0]);
-	printf("Engage difficult: %.2f %%\n", parrdScore[1]);
-	printf("Indicating fault: %.2f %%\n", parrdScore[2]);
-	printf("Jam: %.2f %%\n", parrdScore[3]);
-	printf("Motor fault: %.2f %%\n", parrdScore[4]);
-	printf("Movement resistance: %.2f %%\n", parrdScore[5]);
-	printf("Power fault: %.2f %%\n", parrdScore[6]);
-	printf("Unlock difficult: %.2f %%\n", parrdScore[7]);
-
-    cout << "Analyzing is successful!" << endl;
+//    wxString strDataDirPath = _("/");
+//    wxDirDialog dialog( this );
+//    if (dialog.ShowModal() == wxID_OK)
+//    {
+//        strDataDirPath = dialog.GetPath();
+//    }
+//    else
+//    {
+//        return;
+//    }
+//    SWITCH_TYPE typeofSwitch = ZYJ7;
+//    CFaultAnalyzer faultAnalyzer( std::string(strDataDirPath.mb_str()), typeofSwitch );
+//    double arrdTransformRatio[] = { 600, 600, 600, 600, 40, 40, 40, 3000, 3000 };   // {v,v,v,v,i,i,i,p,p}
+//    double *parrdScore = faultAnalyzer.GetScore( arrdTransformRatio );
+//
+//    printf("ZYJ7 fault confidences for provided data:\n\n");
+//	printf("Actuating fault: %.2f %%\n", parrdScore[0]);
+//	printf("Engage difficult: %.2f %%\n", parrdScore[1]);
+//	printf("Indicating fault: %.2f %%\n", parrdScore[2]);
+//	printf("Jam: %.2f %%\n", parrdScore[3]);
+//	printf("Motor fault: %.2f %%\n", parrdScore[4]);
+//	printf("Movement resistance: %.2f %%\n", parrdScore[5]);
+//	printf("Power fault: %.2f %%\n", parrdScore[6]);
+//	printf("Unlock difficult: %.2f %%\n", parrdScore[7]);
+//
+//    cout << "Analyzing is successful!" << endl;
 }
 
 int monitorServerFrame::Diagnosing( SWITCH_TYPE typeofSwitch, wxString strPath )
@@ -355,7 +358,6 @@ int monitorServerFrame::Diagnosing( SWITCH_TYPE typeofSwitch, wxString strPath )
 //    }
     string strDataDirPath = strPath.ToStdString();
 
-    CFaultAnalyzer faultAnalyzer( strDataDirPath, typeofSwitch );
 //    double arrdTransformRatio[] = { 300.0, 300.0, 17.857 };    // {v1,v2,i} 3.0=300V, i=17.857A
     double arrdTransformRatioZD6[] = { 600, 600, 40 };
     double arrdTransformRatioS700K[] = { 600, 600, 600, 40, 40, 40 };  //{v,v,v,i,i,i}
@@ -371,7 +373,7 @@ int monitorServerFrame::Diagnosing( SWITCH_TYPE typeofSwitch, wxString strPath )
     }
 
     double *parrdScore = NULL;
-    parrdScore = faultAnalyzer.GetScore( parrdTransformRatio );
+    parrdScore = m_pAnalyzer->GetScore( parrdTransformRatio, strDataDirPath, typeofSwitch );
 
     printf("SWITCH fault confidences for provided data:\n\n");
     printf("Actuating fault: %.2f %%\n", parrdScore[0]);
@@ -385,21 +387,21 @@ int monitorServerFrame::Diagnosing( SWITCH_TYPE typeofSwitch, wxString strPath )
 
     cout << "Analyzing is successful!" << endl;
 
-    //!< save real data, here just save the default data
-    if( m_bIsDefault )
-    {
-        faultAnalyzer.SetBaseData( m_bIsDefault );
-        int result = faultAnalyzer.SaveRealData( parrdTransformRatio );
-        if (result != 0)
-        {
-            cout << "save real data fail!" << endl;
-            return 1;
-        }
-        m_bIsDefault = false;
-    }
+//    //!< change default data, here just save the real data not preprocess data to the default directory
+//    if( m_bIsDefault )
+//    {
+//        m_pAnalyzer->SetBaseData( true );
+////        int result = m_pAnalyzer->SaveRealData( parrdTransformRatio );
+////        if (result != 0)
+////        {
+////            cout << "save real data fail!" << endl;
+////            return 1;
+////        }
+//        m_bIsDefault = false;
+//    }
 
     //!< save preprocessing data
-    int nResult = faultAnalyzer.SaveAfterPreProcessing( parrdTransformRatio );
+    int nResult = m_pAnalyzer->SaveAfterPreProcessing( parrdTransformRatio );
     if( nResult != 0 )
     {
         cout << "Error, fail to save preprocessing data!" << endl;
@@ -413,7 +415,7 @@ int monitorServerFrame::Diagnosing( SWITCH_TYPE typeofSwitch, wxString strPath )
     //!< update DB specified column
     string strTypeofAcq = "trigger";
     int nIsL2R = 1;
-    faultAnalyzer.GetInfo( &strTypeofAcq, &nIsL2R );
+    m_pAnalyzer->GetInfo( &strTypeofAcq, &nIsL2R );
     wxString wstrIsL2R = wxString::Format(wxT("%i"), nIsL2R );
     string strIsL2R = std::string(wstrIsL2R.mbc_str());
     string arrstrScore[10] = {"0"};
@@ -558,7 +560,7 @@ void monitorServerFrame::OnSocketEvent( wxSocketEvent &event )
             cout << strSubAfter << endl;
             if( strSubBefore == "CMD" )
             {
-                m_bIsDefault = true;
+                m_pAnalyzer->SetBaseData(true);
                 m_sockUI = sock;
             }
             else if( strSubBefore == "PATH" )
@@ -606,4 +608,10 @@ void monitorServerFrame::SendMSG2UI( const void *buffer, wxUint32 nbytes )
     {
         m_sockUI->Write( buffer, nbytes );
     }
+}
+
+bool monitorServerFrame::HaveSetAllDefault( void )
+{
+    string strTypeofAcq = "";
+    int nIsL2R = 0;
 }
