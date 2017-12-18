@@ -16,7 +16,7 @@ Class ManagedDLL.DoWork: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
   Methods:
     CSharpGetScores_S700K(Double*, Double*, Double*, Double*, Double*, Double*, Int32, Double*, Double*, Double*, Double*, Double*, Double*, Int32, Double, Double*): PrivateScope, Public, HideBySig
     CSharpGetScores_ZD6(Double*, Double*, Int32, Double*, Double*, Int32, Double, Double*): PrivateScope, Public, HideBySig
-    CSharpGetScores_ZYJ7(Double*, Double*, Double*, Double*, Double*, Double*, Double*, Double*, Int32, Double*, Double*, Double*, Double*, Double*, Double*, Double*, Double*, Int32, Double, Double*): PrivateScope, Public, HideBySig
+    CSharpGetScores_ZYJ7(Double*, Double*, Double*, Double*, Double*, Double*, Int32, Double*, Double*, Double*, Double*, Double*, Double*, Int32, Double, Double*): PrivateScope, Public, HideBySig
     CSharpGetStaticScores_S700K(Double, Double, Double, Double, Double, Double, Double*): PrivateScope, Public, HideBySig
     CSharpGetStaticScores_ZD6(Double, Double, Double, Double, Double*): PrivateScope, Public, HideBySig
-    CSharpGetStaticScores_ZYJ7(Double, Double, Double, Double, Double, Double, Double*): PrivateScope, Public, HideBySig
+    CSharpGetStaticScores_ZYJ7(Double, Double, Double, Double, Double*): PrivateScope, Public, HideBySig

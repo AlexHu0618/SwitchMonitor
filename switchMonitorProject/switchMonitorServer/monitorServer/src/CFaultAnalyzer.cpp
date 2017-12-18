@@ -137,6 +137,8 @@ int CFaultAnalyzer::__AnalyzeFault( double *arrdTransformRatio )
                             dSampleInterval, m_parrdScore );
             break;
         }
+        m_parrdScore[0] = m_szdLastScore[0];
+        m_parrdScore[2] = m_szdLastScore[2];
     }
     else
     {
@@ -157,7 +159,40 @@ int CFaultAnalyzer::__AnalyzeFault( double *arrdTransformRatio )
             break;
         case S700K:
             GetStaticScores_S700K( static_base_v1, static_base_v2, static_base_v3, static_data_v1, static_data_v2, static_data_v3, m_parrdScore );
+            break;
         }
+        cout << "static score = " << m_parrdScore[0] << "\t" << m_parrdScore[2] << endl;
+        m_parrdScore[1] = m_szdLastScore[1];
+        m_parrdScore[3] = m_szdLastScore[3];
+        m_parrdScore[4] = m_szdLastScore[4];
+        m_parrdScore[5] = m_szdLastScore[5];
+        m_parrdScore[6] = m_szdLastScore[6];
+        m_parrdScore[7] = m_szdLastScore[7];
+    }
+
+    // clean the score if it is default
+    __JudgeDefault( );
+    if (m_bIsDefault)
+    {
+        if (m_emTypeofAcq == Tstatic)
+        {
+            m_parrdScore[0] = 0;
+            m_parrdScore[2] = 0;
+        }
+        else
+        {
+            m_parrdScore[1] = 0;
+            m_parrdScore[3] = 0;
+            m_parrdScore[4] = 0;
+            m_parrdScore[5] = 0;
+            m_parrdScore[6] = 0;
+            m_parrdScore[7] = 0;
+        }
+    }
+
+    for (int i=0; i<8; ++i)
+    {
+        m_szdLastScore[i] = m_parrdScore[i];
     }
 
     cout << "analyzing finished!" << endl;
@@ -466,6 +501,7 @@ int CFaultAnalyzer::SaveAfterPreProcessing( double *arrdTransformRatio )
     }
 
     int nNumChannel = 3;
+    int nResult = -1;
     switch (m_emTypeofSwitch)
     {
     case S700K:
@@ -478,87 +514,21 @@ int CFaultAnalyzer::SaveAfterPreProcessing( double *arrdTransformRatio )
         nNumChannel = 3;
         break;
     }
-    m_bIsDefault = false;
 
     // save default data if it is need
-    if (m_szFlagofSetDefault != 0b00000000)
+    if (m_bIsDefault)
     {
-        cout << "FlagofSetDefault = 0x0" << hex << m_szFlagofSetDefault << endl;
-        int nResult = 0;
-        if (m_emTypeofAcq == Tstatic)    // static Acq
+        nResult = SaveRealData( arrdTransformRatio );
+        if (nResult != 0)
         {
-            if (m_bisL2R)
-            {
-                if (m_szFlagofSetDefault&0b00001000)  // staticL2R
-                {
-                    m_bIsDefault = true;
-                    nResult = SaveRealData( arrdTransformRatio );
-                    if (nResult != 0)
-                    {
-                        cout << "save real data fail!" << endl;
-                        return 1;
-                    }
-                    m_szFlagofSetDefault = m_szFlagofSetDefault&0b11110111;
-                }
-            }
-            else
-            {
-                if (m_szFlagofSetDefault&0b00000100)  // staticR2L
-                {
-                    m_bIsDefault = true;
-                    nResult = SaveRealData( arrdTransformRatio );
-                    if (nResult != 0)
-                    {
-                        cout << "save real data fail!" << endl;
-                        return 1;
-                    }
-                    m_szFlagofSetDefault = m_szFlagofSetDefault&0b11111011;
-                }
-            }
+            cout << "save real data fail!" << endl;
+            return 1;
         }
-        else
-        {
-            if (m_bisL2R)
-            {
-                if (m_szFlagofSetDefault&0b00000010)  // triggerL2R
-                {
-                    m_bIsDefault = true;
-                    nResult = SaveRealData( arrdTransformRatio );
-                    if (nResult != 0)
-                    {
-                        cout << "save real data fail!" << endl;
-                        return 1;
-                    }
-                    m_szFlagofSetDefault = m_szFlagofSetDefault&0b11111101;
-                    cout << "FlagofSetDefault = 0x0" << hex << m_szFlagofSetDefault << endl;
-                }
-            }
-            else
-            {
-                if (m_szFlagofSetDefault&0b00000001)  // triggerR2L
-                {
-                    m_bIsDefault = true;
-                    nResult = SaveRealData( arrdTransformRatio );
-                    if (nResult != 0)
-                    {
-                        cout << "save real data fail!" << endl;
-                        return 1;
-                    }
-                    m_szFlagofSetDefault = m_szFlagofSetDefault&0b11111110;
-                }
-            }
-        }
-    }
-    else
-    {
-        m_bIsDefault = false;
-        cout << "m_szFlagofSetDefault=0" << endl;
     }
 
     // caculate data RMS and save
     vector<double> vecDataOut;
     CPreprocessor* preprocessor = new CPreprocessor();
-    int nResult = -1;
 
     for (int nCH = 0; nCH < nNumChannel; ++nCH)
     {
@@ -632,6 +602,7 @@ int CFaultAnalyzer::__JudgePosL2R( double* pszdVoltageRMS )
         int nResult = -1;
         double dSum = 0;
         vecDataOut.clear();
+        // RMS
         nResult = preprocessor->doPreprocess( parrdChRealData, &vecDataOut, m_nAllChRealDataLen, 200, "RMS" );
         if( nResult != 0 )
         {
@@ -640,13 +611,13 @@ int CFaultAnalyzer::__JudgePosL2R( double* pszdVoltageRMS )
             preprocessor = NULL;
             return -1;
         }
+        // average
         if( !vecDataOut.empty() )
         {
             for( int nNum=nNumBegin; nNum<nNumEnd; ++nNum )
             {
                 dSum += vecDataOut[nNum]*vecDataOut[nNum];
             }
-            cout << dSum << endl;
             pszdVoltageRMS[nCH] = sqrt( dSum/(nNumEnd-nNumBegin) );
             cout << "Voltage of CH" << nCH << " is: " << pszdVoltageRMS[nCH] << "V" << endl;
 
@@ -817,4 +788,58 @@ void CFaultAnalyzer::__CalculatePower( void )
 
     free( parrdPower );
     parrdPower = NULL;
+}
+
+void CFaultAnalyzer::__JudgeDefault( void )
+{
+    m_bIsDefault = false;
+    if (m_szFlagofSetDefault != 0b00000000)
+    {
+        cout << "FlagofSetDefault = 0x0" << hex << m_szFlagofSetDefault << endl;
+        int nResult = 0;
+        if (m_emTypeofAcq == Tstatic)    // static Acq
+        {
+            if (m_bisL2R)
+            {
+                if (m_szFlagofSetDefault&0b00001000)  // staticL2R
+                {
+                    m_bIsDefault = true;
+                    m_szFlagofSetDefault = m_szFlagofSetDefault&0b11110111;
+                }
+            }
+            else
+            {
+                if (m_szFlagofSetDefault&0b00000100)  // staticR2L
+                {
+                    m_bIsDefault = true;
+                    m_szFlagofSetDefault = m_szFlagofSetDefault&0b11111011;
+                }
+            }
+        }
+        else
+        {
+            if (m_bisL2R)
+            {
+                if (m_szFlagofSetDefault&0b00000010)  // triggerL2R
+                {
+                    m_bIsDefault = true;
+                    m_szFlagofSetDefault = m_szFlagofSetDefault&0b11111101;
+                    cout << "FlagofSetDefault = 0x0" << hex << m_szFlagofSetDefault << endl;
+                }
+            }
+            else
+            {
+                if (m_szFlagofSetDefault&0b00000001)  // triggerR2L
+                {
+                    m_bIsDefault = true;
+                    m_szFlagofSetDefault = m_szFlagofSetDefault&0b11111110;
+                }
+            }
+        }
+    }
+    else
+    {
+        m_bIsDefault = false;
+        cout << "m_szFlagofSetDefault=0x00" << endl;
+    }
 }

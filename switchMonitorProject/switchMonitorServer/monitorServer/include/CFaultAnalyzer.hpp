@@ -44,12 +44,14 @@ private:
     double m_szdVoltageRMS[4] = {0};
     bool m_bIsDefault;
     int m_szFlagofSetDefault;
+    double m_szdLastScore[8] = {0};
 
     int __TransformRawData( double *parrdTranRatio );
     int __AnalyzeFault( double *parrdTranRatio );
     int __JudgePosL2R( double* pdszVoltageRMS );
     int __SaveBaseData( string strFilePath );
     void __CalculatePower( void );
+    void __JudgeDefault( void );
 };
 
 #endif // CFAULTANALYZER_HPP

@@ -358,7 +358,7 @@ int monitorServerFrame::Diagnosing( SWITCH_TYPE typeofSwitch, wxString strPath )
 //    }
     string strDataDirPath = strPath.ToStdString();
 
-//    double arrdTransformRatio[] = { 300.0, 300.0, 17.857 };    // {v1,v2,i} 3.0=300V, i=17.857A
+    //double arrdTransformRatioZD6[] = { 300.0, 300.0, 17.857 };    // {v1,v2,i} 3.0=300V, i=17.857A , for before experiment data file "ZD6(old&new)"
     double arrdTransformRatioZD6[] = { 600, 600, 40 };
     double arrdTransformRatioS700K[] = { 600, 600, 600, 40, 40, 40 };  //{v,v,v,i,i,i}
     double arrdTransformRatioZYJ7[] = { 600, 600, 600, 600, 40, 40, 40, 3000, 3000 };   // {v,v,v,v,i,i,i,p,p}
@@ -549,15 +549,12 @@ void monitorServerFrame::OnSocketEvent( wxSocketEvent &event )
             }while(c!=0x0A);
             strBuf.Printf(_("%s"), buf);
             cout << "Client said: " << strBuf << endl;
-            cout << "first char: " << *buf << endl;
 
             // Write it back
             sock->Write(buf, len);
 
             strSubBefore = strBuf.Before('=');
             strSubAfter  = strBuf.After('=').BeforeLast('\r');
-            cout << strSubBefore << endl;
-            cout << strSubAfter << endl;
             if( strSubBefore == "CMD" )
             {
                 m_pAnalyzer->SetBaseData(true);
