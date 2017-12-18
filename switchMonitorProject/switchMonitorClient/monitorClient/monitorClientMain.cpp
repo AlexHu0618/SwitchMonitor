@@ -448,7 +448,7 @@ void monitorClientFrame::ZD6Work( void )
                     ++m_nAcqCounter;
                 }
             }
-            else                              // directly 1 time
+            else                              // directly once
             {
                 nResult = Acquire( DIRECT );
                 if (nResult != 0)
