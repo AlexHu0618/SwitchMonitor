@@ -107,7 +107,7 @@ monitorClientFrame::monitorClientFrame(wxFrame *frame, const wxString& title)
     m_bIsConnUDP = false;
     m_emTypeofSwitch = ZD6;
 
-    ZD6Work();
+    AcquireLoop();
 }
 
 monitorClientFrame::~monitorClientFrame()
@@ -149,7 +149,7 @@ void monitorClientFrame::OnS700K(wxCommandEvent &event)
     SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN |FOREGROUND_BLUE );
 
     int nResult = 0;
-    nResult = Acquire( TRIGGER );
+    nResult = SaveData( TRIGGER );
 }
 
 void monitorClientFrame::OnZYJ7(wxCommandEvent &event)
@@ -163,7 +163,7 @@ void monitorClientFrame::OnZYJ7(wxCommandEvent &event)
     SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN |FOREGROUND_BLUE );
 
     int nResult = 0;
-    nResult = Acquire( TRIGGER );
+    nResult = SaveData( TRIGGER );
 }
 
 /** \brief 本函数主要是等待接收下位机数据，一旦接收到数据就创建文件夹并保存数据到本地，通过TCP发送保存路径到服务器，把时间和路径写入数据库
@@ -173,7 +173,7 @@ void monitorClientFrame::OnZYJ7(wxCommandEvent &event)
  * \return int，成功返回0；不成功返回-1
  *
  */
-int monitorClientFrame::Acquire( ACQUIRE_MODE emAcqMode )
+int monitorClientFrame::SaveData( ACQUIRE_MODE emAcqMode )
 {
     //!< directly acquire or else wait for triggering
     int frameCout = 0;
@@ -239,24 +239,24 @@ int monitorClientFrame::Acquire( ACQUIRE_MODE emAcqMode )
         m_pTcpClient->Send((const char*)strSendCmd.mb_str(), strSendCmd.size());
         cout << strSendCmd << endl;
 
-        //!< insert to DB
-        str4dataDir.Replace("\\", "\\\\");
-        wxString strTYPE = (m_emTypeofSwitch == ZD6) ? "ZD6" : (m_emTypeofSwitch == S700K) ? "S700K" : "ZYJ7";
-        SYSTEMTIME tTimeofStartAcq;
-        m_pUDPServer->GetTimeofStartAcq( &tTimeofStartAcq );
-        wxString strDate = wxString::Format( wxT("%i"), tTimeofStartAcq.wYear ) + "-" + wxString::Format( wxT("%02i"), tTimeofStartAcq.wMonth ) + "-" + wxString::Format( wxT("%02i"), tTimeofStartAcq.wDay );
-        wxString strTime = wxString::Format( wxT("%02i"), tTimeofStartAcq.wHour ) + ":" + wxString::Format( wxT("%02i"), tTimeofStartAcq.wMinute ) + ":" + wxString::Format( wxT("%02i"), tTimeofStartAcq.wSecond );
-        cout << tTimeofStartAcq.wYear << "-" << tTimeofStartAcq.wMonth << "-" << tTimeofStartAcq.wDay << endl;
-        wxString strSQLCmd = "INSERT INTO tab4alldata(TYPE, DATE, TIME, PATH) VALUES ('" + strTYPE + "', '" + strDate + "', '" + strTime + "', '" + str4dataDir + "');";
-        string strCmd = string( strSQLCmd.mb_str() );
-        cout << strSQLCmd << endl;
-        cout << strCmd << endl;
-        int result = m_pDBCtrler->Insert( strCmd );
-        if( result < 0 )
-        {
-            cout << "sql insert error" << endl;
-            return -1;
-        }
+//        //!< insert to DB
+//        str4dataDir.Replace("\\", "\\\\");
+//        wxString strTYPE = (m_emTypeofSwitch == ZD6) ? "ZD6" : (m_emTypeofSwitch == S700K) ? "S700K" : "ZYJ7";
+//        SYSTEMTIME tTimeofStartAcq;
+//        m_pUDPServer->GetTimeofStartAcq( &tTimeofStartAcq );
+//        wxString strDate = wxString::Format( wxT("%i"), tTimeofStartAcq.wYear ) + "-" + wxString::Format( wxT("%02i"), tTimeofStartAcq.wMonth ) + "-" + wxString::Format( wxT("%02i"), tTimeofStartAcq.wDay );
+//        wxString strTime = wxString::Format( wxT("%02i"), tTimeofStartAcq.wHour ) + ":" + wxString::Format( wxT("%02i"), tTimeofStartAcq.wMinute ) + ":" + wxString::Format( wxT("%02i"), tTimeofStartAcq.wSecond );
+//        cout << tTimeofStartAcq.wYear << "-" << tTimeofStartAcq.wMonth << "-" << tTimeofStartAcq.wDay << endl;
+//        wxString strSQLCmd = "INSERT INTO tab4alldata(TYPE, DATE, TIME, PATH) VALUES ('" + strTYPE + "', '" + strDate + "', '" + strTime + "', '" + str4dataDir + "');";
+//        string strCmd = string( strSQLCmd.mb_str() );
+//        cout << strSQLCmd << endl;
+//        cout << strCmd << endl;
+//        int result = m_pDBCtrler->Insert( strCmd );
+//        if( result < 0 )
+//        {
+//            cout << "sql insert error" << endl;
+//            return -1;
+//        }
     }
     else
     {
@@ -276,12 +276,13 @@ int monitorClientFrame::Acquire( ACQUIRE_MODE emAcqMode )
 int monitorClientFrame::MakeDir( wxString* pstr4dataDir )
 {
     //these for built a directory and a file
-    wxDateTime DT = wxDateTime::Now();
-    wxString str4date = DT.FormatISODate();
-    wxString str4time = DT.FormatISOTime();
-    str4time.Replace(":","-");
-    wxString str4dir=_T("D:\\SwitchData\\")+str4date;
-    *pstr4dataDir = str4dir + "\\" + str4time;
+    SYSTEMTIME tTimeofStartAcq;
+    m_pUDPServer->GetTimeofStartAcq( &tTimeofStartAcq );
+    wxString strDate = wxString::Format( wxT("%i"), tTimeofStartAcq.wYear ) + "-" + wxString::Format( wxT("%02i"), tTimeofStartAcq.wMonth ) + "-" + wxString::Format( wxT("%02i"), tTimeofStartAcq.wDay );
+    wxString strTime = wxString::Format( wxT("%02i"), tTimeofStartAcq.wHour ) + "-" + wxString::Format( wxT("%02i"), tTimeofStartAcq.wMinute ) + "-" + wxString::Format( wxT("%02i"), tTimeofStartAcq.wSecond );
+
+    wxString str4dir=_T("D:\\SwitchData\\")+strDate;
+    *pstr4dataDir = str4dir + "\\" + strTime;
     wxFileName::SetCwd(_T("D:\\"));    //we should set the current working directory before build a sub-directory
     if(!wxFileName::DirExists(_T("SwitchData")))
     {
@@ -292,16 +293,16 @@ int monitorClientFrame::MakeDir( wxString* pstr4dataDir )
         }
     }
     wxFileName::SetCwd(_T("D:\\SwitchData"));
-    if(!wxFileName::DirExists(str4date))
+    if(!wxFileName::DirExists(strDate))
     {
-        if(!wxFileName::Mkdir(str4date))
+        if(!wxFileName::Mkdir(strDate))
         {
             wxMessageBox(_T("Fail to build directory by date!"),_T("Error"));
             return -1;
         }
     }
     wxFileName::SetCwd(str4dir);
-    if(!wxFileName::Mkdir(str4time))
+    if(!wxFileName::Mkdir(strTime))
     {
         wxMessageBox(_T("Fail to build directory by date!"),_T("Error"));
         return -1;
@@ -317,7 +318,7 @@ int monitorClientFrame::MakeDir( wxString* pstr4dataDir )
  * \return void
  *
  */
-void monitorClientFrame::ZD6Work( void )
+void monitorClientFrame::AcquireLoop( void )
 {
     if( !m_bIsConnUDP )
     {
@@ -402,7 +403,7 @@ void monitorClientFrame::ZD6Work( void )
         m_pUDPServer = new CUdpServer( strIP4UDP_Sev.c_str(), strIP4UDP_Clt.c_str(), (int)nPort4UDP, m_emTypeofSwitch );
     }
 
-    int nConnUDPCounter = 3;    // try 3 times if no conn
+    int nConnUDPCounter = 10;    // try 10 times if no conn
     do
     {
         //!< send command to start acquiring
@@ -421,23 +422,25 @@ void monitorClientFrame::ZD6Work( void )
         }
     }while( !m_bIsConnUDP && nConnUDPCounter>0 );
 
+    //!< acquire by cycle
     if( m_bIsConnUDP )
     {
         wxString strSendCmd = "MSG=Acquirer is working!\r\n";
         m_pTcpClient->Send((const char*)strSendCmd.mb_str(), strSendCmd.size());
         int nResult = 0;
+        string strTYPE = (m_emTypeofSwitch == ZD6) ? "ZD6" : (m_emTypeofSwitch == S700K) ? "S700K" : "ZYJ7";
         while(1)
         {
             if (nResult == 0)
             {
                 //!< set the console text color
                 SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_GREEN );
-                cout << "START A NEW TEST FOR ZD6" << endl;
+                cout << "START A NEW TEST FOR " << strTYPE << endl;
                 SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN |FOREGROUND_BLUE );
             }
-            if (m_nAcqCounter < 10)            // trigger 10 times
+            if (m_nAcqCounter < 11)            // trigger 11 times
             {
-                nResult = Acquire( TRIGGER );
+                nResult = SaveData( TRIGGER );
                 if (nResult != 0)
                 {
                     cout << "ERROR: Trigger acquire failed!" << endl;
@@ -450,7 +453,7 @@ void monitorClientFrame::ZD6Work( void )
             }
             else                              // directly once
             {
-                nResult = Acquire( DIRECT );
+                nResult = SaveData( DIRECT );
                 if (nResult != 0)
                 {
                     cout << "ERROR: Directly acquire failed!" << endl;
@@ -458,15 +461,15 @@ void monitorClientFrame::ZD6Work( void )
                 }
                 else
                 {
-                    m_nAcqCounter == 0;
+                    m_nAcqCounter = 0;
                 }
             }
-
         }
     }
     else
     {
         cout << "Please send cmd to server" << endl;
+        wxMessageBox(_T("Fail to connect FPGA, please restart software after close all opening program!"));
     }
 }
 

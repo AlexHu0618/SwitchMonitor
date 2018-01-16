@@ -55,8 +55,8 @@ class monitorClientFrame: public wxFrame
 
         int InitializeAll( void );
         int MakeDir( wxString* pstr4dataDir );
-        int Acquire( ACQUIRE_MODE emAcqMode );
-        void ZD6Work( void );
+        int SaveData( ACQUIRE_MODE emAcqMode );
+        void AcquireLoop( void );
 };
 
 
