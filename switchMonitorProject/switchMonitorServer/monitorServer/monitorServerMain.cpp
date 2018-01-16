@@ -130,7 +130,7 @@ monitorServerFrame::monitorServerFrame(wxFrame *frame, const wxString& title)
         else
         {
             //!< transform unicode to utf-8, or the raw data is 'szValue[]= '1 0 . 3 . 3 . 1 4 4'.
-            for( int i=0;i<dwSzSize;i=i+2 )
+            for( unsigned int i=0;i<dwSzSize;i=i+2 )
             {
                 sztemp[i/2] = szValue[i];
             }
@@ -148,7 +148,7 @@ monitorServerFrame::monitorServerFrame(wxFrame *frame, const wxString& title)
         else
         {
             //!< transform unicode to utf-8
-            for( int i=0;i<dwSzSize;i=i+2 )
+            for( unsigned int i=0;i<dwSzSize;i=i+2 )
             {
                 sztemp[i/2] = szValue[i];
             }
@@ -166,7 +166,7 @@ monitorServerFrame::monitorServerFrame(wxFrame *frame, const wxString& title)
         else
         {
             //!< transform unicode to utf-8
-            for( int i=0;i<dwSzSize;i=i+2 )
+            for( unsigned int i=0;i<dwSzSize;i=i+2 )
             {
                 sztemp[i/2] = szValue[i];
             }
@@ -190,15 +190,18 @@ monitorServerFrame::monitorServerFrame(wxFrame *frame, const wxString& title)
     //m_pTcpServer->Initial();
 
     m_pDBCtrler = new CSqlController( strIP4SQL, (unsigned int)nPort4SQL, strUser4SQL, strPW4SQL );
-    m_pDBCtrler->Initial("switchmonitordb", "tab4alldata" );
+    if (m_pDBCtrler->Initial("switchmonitordb", "tab4alldata" ) != 0)
+    {
+        cout << "ERROR! DB is not initialized." << endl;
+    }
 
     wxIPV4address addr;
     addr.Service(nPort4TCP);
 
-    // Create the socket
+    //!< Create the socket
     m_server = new wxSocketServer(addr);
 
-    // We use Ok() here to see if the server is really listening
+    //!< We use Ok() here to see if the server is really listening
     if (! m_server->Ok())
     {
         cout << "Could not listen at the specified port !" << endl;
@@ -218,11 +221,12 @@ monitorServerFrame::monitorServerFrame(wxFrame *frame, const wxString& title)
     m_numClients = 0;
     m_sockUI = NULL;
     m_sockAcquirer = NULL;
+    m_emTypeofSwitch = ZD6;
 
     m_pAnalyzer = new CFaultAnalyzer();
 
     //!< start analyzing
-    //ZD6Analyzing();
+    //Analyzing();
 }
 
 
@@ -335,10 +339,6 @@ void monitorServerFrame::OnZYJ7(wxCommandEvent &event)
 
 int monitorServerFrame::Diagnosing( SWITCH_TYPE typeofSwitch, wxString strPath )
 {
-    SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_GREEN );
-    cout << "START A NEW TASK" << endl;
-    SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN |FOREGROUND_BLUE );
-
 //    //!< receive block and wait for TCP
 //    char szRecvBuf[1024]={0};
 //    m_pTcpServer->Recv( szRecvBuf, 1024 );
@@ -412,7 +412,16 @@ int monitorServerFrame::Diagnosing( SWITCH_TYPE typeofSwitch, wxString strPath )
         cout << "Preprocessing data was successfully saved!" << endl;
     }
 
-    //!< update DB specified column
+    //!< insert into DB
+    cout << strPath << endl;
+    wxString wstrTime = strPath.AfterLast('\\');
+    wstrTime.Replace("-",":");
+    string strTime = string( wstrTime.mb_str() );
+    cout << strTime << endl;
+    wxString wstrDate = strPath.BeforeLast('\\').AfterLast('\\');
+    string strDate = string( wstrDate.mb_str() );
+    cout << strDate << endl;
+    string strTYPE = (m_emTypeofSwitch == ZD6) ? "ZD6" : (m_emTypeofSwitch == S700K) ? "S700K" : "ZYJ7";
     string strTypeofAcq = "trigger";
     int nIsL2R = 1;
     m_pAnalyzer->GetInfo( &strTypeofAcq, &nIsL2R );
@@ -426,30 +435,35 @@ int monitorServerFrame::Diagnosing( SWITCH_TYPE typeofSwitch, wxString strPath )
     wxString strTmp(strDataDirPath);
     strTmp.Replace("\\","\\\\");
     strDataDirPath = strTmp.mb_str();
-    string strSetValue = "ACTUATING=" + arrstrScore[0] + ",ENGAGE=" + arrstrScore[1] + ",INDICATING=" + arrstrScore[2] + ",JAM=" + arrstrScore[3]
-                        + ",MOTOR=" + arrstrScore[4] + ",MOVEMENT=" + arrstrScore[5] + ",POWERERR=" + arrstrScore[6] + ",UNLOCKERR=" + arrstrScore[7]
-                        + ",STATUS='" + strTypeofAcq + "',ISL2R=" + strIsL2R;
-    string strDBCmd = "UPDATE tab4alldata set " + strSetValue + " WHERE PATH='" + strDataDirPath + "';";
+    string strDBCmd = "INSERT INTO tab4alldata(TYPE, DATE, TIME, PATH, STATUS, ISL2R, ACTUATING, ENGAGE, \
+INDICATING, JAM, MOTOR, MOVEMENT, POWERERR, UNLOCKERR) VALUES ('" + strTYPE + "', '" + strDate + "', '"
++ strTime + "', '" + strDataDirPath + "', '" + strTypeofAcq + "', '" + strIsL2R +"', "
++ arrstrScore[0] + ", " + arrstrScore[1] + ", " + arrstrScore[2] + ", " + arrstrScore[3] + ", "
++ arrstrScore[4] + ", " + arrstrScore[5] + ", " + arrstrScore[6] + ", " + arrstrScore[7] + ");";
     cout << strDBCmd << endl;
     nResult = m_pDBCtrler->Insert( strDBCmd );
-    if( nResult != 1 )
+    if( nResult < 0 )
     {
         cout << "sql update error" << endl;
-        return 1;
+        return -1;
     }
     else
     {
+        SendMSG2UI( "MSG=UPDATE\r\n", 12);
         cout << "Database updata success!" << endl;
     }
 
     return 0;
 }
 
-void monitorServerFrame::ZD6Analyzing( wxString strPath )
+void monitorServerFrame::Analyzing( wxString strPath )
 {
-    SWITCH_TYPE typeofSwitch = ZD6;
+    SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_GREEN );
+    cout << "START A NEW TASK FOR" << endl;
+    SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN |FOREGROUND_BLUE );
+
     int nResult = 0;
-    nResult = Diagnosing( typeofSwitch, strPath );   //!<  diagnose and save data and result
+    nResult = Diagnosing( m_emTypeofSwitch, strPath );   //!<  diagnose and save data and result
     if( nResult != 0 )
     {
         cout << "Fail to analyze!" << endl;
@@ -541,7 +555,7 @@ void monitorServerFrame::OnSocketEvent( wxSocketEvent &event )
 
             char *tem = buf;
 
-            // Read the data
+            //!< Read the data
             do{
                 sock->Read(&c, 1);
                 *(tem++) = c;
@@ -550,24 +564,54 @@ void monitorServerFrame::OnSocketEvent( wxSocketEvent &event )
             strBuf.Printf(_("%s"), buf);
             cout << "Client said: " << strBuf << endl;
 
-            // Write it back
+            //!< reback the socket which received
             sock->Write(buf, len);
 
             strSubBefore = strBuf.Before('=');
             strSubAfter  = strBuf.After('=').BeforeLast('\r');
             if( strSubBefore == "CMD" )
             {
-                m_pAnalyzer->SetBaseData(true);
-                m_sockUI = sock;
+                switch(strSubAfter)
+                {
+                case "DEFAULT":
+                    m_pAnalyzer->SetBaseData(true);
+                    break;
+
+                case "STATUS":
+                    if( m_sockAcquirer != NULL )
+                    {
+                        m_sockAcquirer->Write( "CMD=STATUS\r\n", 12 );
+                        cout << "sent info to client ACQ" << endl;
+                    }
+                    else
+                    {
+                        cout << "ERROR! m_sockAcquirer == NULL" << endl;
+                    }
+                    break;
+                }
             }
             else if( strSubBefore == "PATH" )
             {
-                ZD6Analyzing(strSubAfter);
-                m_sockAcquirer = sock;
+                Analyzing(strSubAfter);
             }
             else if( strSubBefore == "MSG" )
             {
                 SendMSG2UI( buf, len );
+                if (strSubAfter == "S700K" || strSubAfter == "ZYJ7" || strSubAfter == "ZD6")
+                {
+                    m_emTypeofSwitch = (strSubAfter == "S700K") ? S700K : (strSubAfter == "ZYJ7") ? ZYJ7 : ZD6;
+                }
+            }
+            else if (strSubBefore == "ID")
+            {
+                if (strSubAfter == "UI")
+                {
+                    m_sockUI = sock;
+                }
+                else if (strSubAfter == "ACQ")
+                {
+                    m_sockAcquirer = sock;
+                }
             }
             else
             {
@@ -604,11 +648,16 @@ void monitorServerFrame::SendMSG2UI( const void *buffer, wxUint32 nbytes )
     if( m_sockUI != NULL )
     {
         m_sockUI->Write( buffer, nbytes );
+        cout << "sent info to UI" << endl;
+    }
+    else
+    {
+        cout << "ERROR! m_sockUI == NULL" << endl;
     }
 }
 
 bool monitorServerFrame::HaveSetAllDefault( void )
 {
     string strTypeofAcq = "";
-    int nIsL2R = 0;
+    return 0;
 }

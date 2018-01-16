@@ -2,6 +2,7 @@
 #define CFAULTANALYZER_HPP
 
 #include <string>
+#include <vector>
 
 using namespace std;
 enum SWITCH_TYPE { ZD6, S700K, ZYJ7 };
@@ -50,7 +51,7 @@ private:
     int __AnalyzeFault( double *parrdTranRatio );
     int __JudgePosL2R( double* pdszVoltageRMS );
     int __SaveBaseData( string strFilePath );
-    void __CalculatePower( void );
+    int __CalculatePower( vector<double>* pvecPowerData );
     void __JudgeDefault( void );
 };
 

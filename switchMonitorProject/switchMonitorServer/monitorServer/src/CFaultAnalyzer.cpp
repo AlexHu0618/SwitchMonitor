@@ -113,6 +113,7 @@ int CFaultAnalyzer::__AnalyzeFault( double *arrdTransformRatio )
     //!< analyzing the fault result
 //    m_parrdScore = (double *)malloc( 10*sizeof(double) );
     double dSampleInterval = SAMPLE_INTERVAL;
+    //!< trigger score
     if( m_emTypeofAcq == Ttrigger )
     {
         switch (m_emTypeofSwitch)
@@ -137,9 +138,11 @@ int CFaultAnalyzer::__AnalyzeFault( double *arrdTransformRatio )
                             dSampleInterval, m_parrdScore );
             break;
         }
+        //!< copy the last static score to trigger score
         m_parrdScore[0] = m_szdLastScore[0];
         m_parrdScore[2] = m_szdLastScore[2];
     }
+    //!< static score
     else
     {
         double static_base_v1 = arrdStaticData[0];
@@ -162,6 +165,7 @@ int CFaultAnalyzer::__AnalyzeFault( double *arrdTransformRatio )
             break;
         }
         cout << "static score = " << m_parrdScore[0] << "\t" << m_parrdScore[2] << endl;
+        //!< copy the last trigger score to static score
         m_parrdScore[1] = m_szdLastScore[1];
         m_parrdScore[3] = m_szdLastScore[3];
         m_parrdScore[4] = m_szdLastScore[4];
@@ -569,6 +573,41 @@ int CFaultAnalyzer::SaveAfterPreProcessing( double *arrdTransformRatio )
         cout << "save to file: " << strDataFilePath << endl;
     }
 
+    //!< save power for S700K
+    if (m_emTypeofSwitch == S700K)
+    {
+        vector<double> vecPowerData;
+        vecPowerData.clear();
+        if (__CalculatePower( &vecPowerData) != 0)
+        {
+            cout << "ERROR in function __CalculatePower(), no save power data!" << endl;
+            return -1;
+        }
+        string strPowerFilePath = m_strPath + "\\Power.txt";
+        ofstream stmPowerDataFileOut( strPowerFilePath, ios_base::out );
+        if( !stmPowerDataFileOut.is_open() )
+        {
+            cerr << "Fail to open the file Power.txt!" << endl;
+            return -1;
+        }
+        if( !vecPowerData.empty() )
+        {
+            vector<double>::iterator it;
+            for( it=vecPowerData.begin(); it!=vecPowerData.end(); ++it )
+            {
+                stmPowerDataFileOut << *it << "\n";
+            }
+        }
+        else
+        {
+            cout << "vector of power is empty" << endl;
+            return -1;
+        }
+
+        stmPowerDataFileOut.close();
+        cout << "save to file: " << strPowerFilePath << endl;
+    }
+
     delete preprocessor;
     preprocessor = NULL;
     return 0;
@@ -621,7 +660,7 @@ int CFaultAnalyzer::__JudgePosL2R( double* pszdVoltageRMS )
             pszdVoltageRMS[nCH] = sqrt( dSum/(nNumEnd-nNumBegin) );
             cout << "Voltage of CH" << nCH << " is: " << pszdVoltageRMS[nCH] << "V" << endl;
 
-            //!< just for S700K judging whether is L2R
+            //!< just for S700K judging whether is L2R in static
             if( m_emTypeofSwitch == S700K )
             {
                 double dSum1000=0;
@@ -647,8 +686,9 @@ int CFaultAnalyzer::__JudgePosL2R( double* pszdVoltageRMS )
     switch (m_emTypeofSwitch)
     {
     case S700K:
+        //!< static, sample 20000~21000
         if( ( pszdVoltageRMS[0] + pszdVoltageRMS[1] + pszdVoltageRMS[2]) < 300 )
-        {//static
+        {
             cout << "It is Static!" << endl;
             m_emTypeofAcq = Tstatic;
             if( pszdVoltageRMS[0]>pszdVoltageRMS[1] && pszdVoltageRMS[2]>pszdVoltageRMS[1] )
@@ -665,8 +705,9 @@ int CFaultAnalyzer::__JudgePosL2R( double* pszdVoltageRMS )
             m_szdVoltageRMS[1] = pszdVoltageRMS[1];
             m_szdVoltageRMS[2] = pszdVoltageRMS[2];
         }
+        //!< trigger, sample 1000~2000
         else
-        {//Trigger
+        {
             cout << "It is Trigger!" << endl;
             m_emTypeofAcq = Ttrigger;
             cout << "The value of position 1000 is: " << szdVS700K1000[0] << " " << szdVS700K1000[1] << " " << szdVS700K1000[2] << endl;
@@ -751,9 +792,9 @@ void CFaultAnalyzer::SetBaseData( bool bIsDefault )
     cout << "m_szFlagofSetDefault = 0x0" << hex << m_szFlagofSetDefault << endl;
 }
 
-void CFaultAnalyzer::__CalculatePower( void )
+int CFaultAnalyzer::__CalculatePower( vector<double>* pvecPowerData )
 {
-    int nChVol = 0;
+    int nChVol = 2;
     switch( m_emTypeofSwitch )
     {
     case ZD6:
@@ -781,6 +822,12 @@ void CFaultAnalyzer::__CalculatePower( void )
         nTem = 0;
     }
     CPreprocessor* preprocessor = new CPreprocessor();
+    int nResult = preprocessor->doPreprocess( parrdPower, pvecPowerData, m_nAllChRealDataLen, 200, "RMS" );
+    if( nResult != 0 )
+    {
+        cout << "caculate power doPreprocess() error!" << endl;
+        return -1;
+    }
 
     delete preprocessor;
     preprocessor = NULL;
@@ -788,6 +835,8 @@ void CFaultAnalyzer::__CalculatePower( void )
 
     free( parrdPower );
     parrdPower = NULL;
+
+    return 0;
 }
 
 void CFaultAnalyzer::__JudgeDefault( void )

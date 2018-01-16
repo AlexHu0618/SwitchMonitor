@@ -45,9 +45,10 @@ class monitorServerFrame: public wxFrame
         wxSocketBase *m_sockAcquirer;
         bool m_busy;
         int m_numClients;
+        SWITCH_TYPE m_emTypeofSwitch;
 
         int Diagnosing( SWITCH_TYPE typeofSwitch, wxString strPath );
-        void ZD6Analyzing( wxString strPath );
+        void Analyzing( wxString strPath );
         void SendMSG2UI( const void *buffer, wxUint32 nbytes );
         bool HaveSetAllDefault( void );
 

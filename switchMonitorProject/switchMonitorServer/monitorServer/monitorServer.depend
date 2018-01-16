@@ -2962,7 +2962,7 @@
 1489055695 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorserver\monitorserver\monitorserverapp.h
 	<wx/app.h>
 
-1513495373 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorserver\monitorserver\monitorservermain.h
+1516092453 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorserver\monitorserver\monitorservermain.h
 	<wx/wx.h>
 	<wx/socket.h>
 	<wx/string.h>
@@ -2971,7 +2971,7 @@
 	"CSqlController.h"
 	"CFaultAnalyzer.hpp"
 
-1513520786 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorserver\monitorserver\monitorservermain.cpp
+1514285602 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorserver\monitorserver\monitorservermain.cpp
 	"wx_pch.h"
 	"monitorServerMain.h"
 	<wx/dirdlg.h>
@@ -2981,7 +2981,7 @@
 1385316876 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorserver\monitorserver\resource.rc
 	"wx/msw/wx.rc"
 
-1513595397 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorserver\monitorserver\src\cfaultanalyzer.cpp
+1516092911 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorserver\monitorserver\src\cfaultanalyzer.cpp
 	"CFaultAnalyzer.hpp"
 	"CPreprocessor.h"
 	<fstream>
@@ -2990,8 +2990,9 @@
 	<math.h>
 	<sstream>
 
-1513512988 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorserver\monitorserver\include\cfaultanalyzer.hpp
+1516092847 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorserver\monitorserver\include\cfaultanalyzer.hpp
 	<string>
+	<vector>
 
 1497234391 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorserver\monitorserver\include\cnetcontroller.h
 	<string>
@@ -3011,7 +3012,7 @@
 	<malloc.h>
 	<math.h>
 
-1496916992 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorserver\monitorserver\include\csqlcontroller.h
+1516092848 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorserver\monitorserver\include\csqlcontroller.h
 	<string>
 	<mysql.h>
 	<errmsg.h>
@@ -3065,7 +3066,7 @@
 
 1492761152 e:\mysql conncetor\mysql-connector-c-6.1.10-win32\mysql-connector-c-6.1.10-win32\include\errmsg.h
 
-1498116576 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorserver\monitorserver\src\csqlcontroller.cpp
+1516092910 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorserver\monitorserver\src\csqlcontroller.cpp
 	"CSqlController.h"
 	<stdio.h>
 	<iostream>
