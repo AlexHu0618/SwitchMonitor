@@ -51,6 +51,7 @@
 					<Add library="libwxpng.a" />
 					<Add library="libwxzlib.a" />
 					<Add library="..\..\..\..\..\..\..\mysql conncetor\mysql-connector-c-6.1.10-win32\mysql-connector-c-6.1.10-win32\lib\libmysql.lib" />
+					<Add library="libwxbase30u_net.a" />
 					<Add directory="D:/wxWidgets-3.0.2/lib/gcc_lib" />
 					<Add directory="../../../../../../../mysql conncetor/mysql-connector-c-6.1.10-win32/mysql-connector-c-6.1.10-win32/lib" />
 				</Linker>

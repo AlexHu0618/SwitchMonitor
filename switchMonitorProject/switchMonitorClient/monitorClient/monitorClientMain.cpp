@@ -58,6 +58,7 @@ BEGIN_EVENT_TABLE(monitorClientFrame, wxFrame)
     EVT_MENU(idMenuZD6, monitorClientFrame::OnZD6)
     EVT_MENU(idMenuS700K, monitorClientFrame::OnS700K)
     EVT_MENU(idMenuZYJ7, monitorClientFrame::OnZYJ7)
+    EVT_SOCKET(SOCKET_ID, monitorClientFrame::OnSocketEvent)
 END_EVENT_TABLE()
 
 /** \brief 主窗体构造函数，负责窗体创建，通信连接初始化，并发送指令到下位机开始触发采集
@@ -357,7 +358,7 @@ void monitorClientFrame::AcquireLoop( void )
             else
             {
                 //!< transform unicode to utf-8, or the raw data is 'szValue[]= '1 0 . 3 . 3 . 1 4 4'.
-                for( int i=0;i<dwSzSize;i=i+2 )
+                for( unsigned int i=0;i<dwSzSize;i=i+2 )
                 {
                     sztemp[i/2] = szValue[i];
                 }
@@ -375,7 +376,7 @@ void monitorClientFrame::AcquireLoop( void )
             else
             {
                 //!< transform unicode to utf-8
-                for( int i=0;i<dwSzSize;i=i+2 )
+                for( unsigned int i=0;i<dwSzSize;i=i+2 )
                 {
                     sztemp[i/2] = szValue[i];
                 }
@@ -544,7 +545,7 @@ int monitorClientFrame::InitializeAll( void )
         else
         {
             //!< transform unicode to utf-8, or the raw data is 'szValue[]= '1 0 . 3 . 3 . 1 4 4'.
-            for( int i=0;i<dwSzSize;i=i+2 )
+            for( unsigned int i=0;i<dwSzSize;i=i+2 )
             {
                 sztemp[i/2] = szValue[i];
             }
@@ -563,7 +564,7 @@ int monitorClientFrame::InitializeAll( void )
         else
         {
             //!< transform unicode to utf-8
-            for( int i=0;i<dwSzSize;i=i+2 )
+            for( unsigned int i=0;i<dwSzSize;i=i+2 )
             {
                 sztemp[i/2] = szValue[i];
             }
@@ -582,7 +583,7 @@ int monitorClientFrame::InitializeAll( void )
         else
         {
             //!< transform unicode to utf-8
-            for( int i=0;i<dwSzSize;i=i+2 )
+            for( unsigned int i=0;i<dwSzSize;i=i+2 )
             {
                 sztemp[i/2] = szValue[i];
             }
@@ -612,6 +613,16 @@ int monitorClientFrame::InitializeAll( void )
     {
         return -1;
     }
+    else
+    {
+        int nresult = 0;
+        nresult = m_pTcpClient->Send( "ID=ACQ\r\n", 8);
+        if (nresult != 8)
+        {
+            cout << "Fail to send cmd \"ID=ACQ\"!" << endl;
+            return -1;
+        }
+    }
 
     //!< initial DB
     m_pDBCtrler = new CSqlController( strIP4SQL, (unsigned int)nPort4SQL, strUser4SQL, strPW4SQL );
@@ -623,3 +634,77 @@ int monitorClientFrame::InitializeAll( void )
     return 0;
 }
 
+void monitorClientFrame::OnSocketEvent( wxSocketEvent &event )
+{
+    wxString s = _("OnSocketEvent: ");
+    wxSocketBase *sock = event.GetSocket();
+
+    // First, print a message
+    switch(event.GetSocketEvent())
+    {
+        case wxSOCKET_INPUT : s.Append(_("wxSOCKET_INPUT\n")); break;
+        case wxSOCKET_LOST  : s.Append(_("wxSOCKET_LOST\n")); break;
+        default             : s.Append(_("Unexpected event !\n")); break;
+    }
+
+    cout << s << endl;
+
+    // Now we process the event
+    switch(event.GetSocketEvent())
+    {
+        case wxSOCKET_INPUT:
+        {
+            // We disable input events, so that the test doesn't trigger
+            // wxSocketEvent again.
+            sock->SetNotify(wxSOCKET_LOST_FLAG);
+
+            // Which test are we going to run?
+            unsigned char c;
+            unsigned char len=0;
+//            char *buf;
+            wxString strBuf, strSubBefore, strSubAfter;
+
+            // Receive data from socket and send it back. We will first
+            // get a byte with the buffer size, so we can specify the
+            // exact size and use the wxSOCKET_WAITALL flag. Also, we
+            // disabled input events so we won't have unwanted reentrance.
+            // This way we can avoid the infamous wxSOCKET_BLOCK flag.
+
+            sock->SetFlags(wxSOCKET_WAITALL);
+
+            char buf[128]={0};
+
+            char *tem = buf;
+
+            //!< Read the data
+            do{
+                sock->Read(&c, 1);
+                *(tem++) = c;
+                len++;
+            }while(c!=0x0A);
+            strBuf.Printf(_("%s"), buf);
+            cout << "Server said: " << strBuf << endl;
+
+            strSubBefore = strBuf.Before('=');
+            strSubAfter  = strBuf.After('=').BeforeLast('\r');
+            if( strSubBefore == "CMD" )
+            {
+                if (strSubAfter == "STATUS")
+                {
+                    //!< reback the socket which received
+                    char rebackBuf[] = "MSG=RUNNING\r\n";
+                    sock->Write(rebackBuf, 13);
+                }
+            }
+            else
+            {
+                cout << "unknow CMD or PATH" << endl;
+            }
+
+            // Enable input events again.
+            sock->SetNotify(wxSOCKET_LOST_FLAG | wxSOCKET_INPUT_FLAG);
+            break;
+        }
+        default: ;
+    }
+}

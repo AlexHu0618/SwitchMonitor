@@ -28,3 +28,8 @@ bool monitorClientApp::OnInit()
 
     return true;
 }
+
+void monitorClientApp::OnUnhandledException()
+{
+    system("restart.bat");
+}

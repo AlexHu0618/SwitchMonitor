@@ -16,6 +16,7 @@ class monitorClientApp : public wxApp
 {
     public:
         virtual bool OnInit();
+        virtual void OnUnhandledException();
 };
 
 #endif // MONITORCLIENTAPP_H

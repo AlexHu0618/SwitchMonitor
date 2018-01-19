@@ -14,6 +14,7 @@
     #include <wx/wx.h>
 #endif
 
+#include <wx/socket.h>
 #include "monitorClientApp.h"
 #include "CNetController.h"
 #include "CSqlController.h"
@@ -36,7 +37,10 @@ class monitorClientFrame: public wxFrame
             idMenuZD6,
             idMenuS700K,
             idMenuZYJ7,
-            idMenuDefault
+            idMenuDefault,
+            // id for sockets
+            SOCKET_ID = 100
+
         };
         wxMenuItem* m_MenuItemDefault;
         CNetController* m_pTcpClient;
@@ -51,6 +55,7 @@ class monitorClientFrame: public wxFrame
         void OnZD6(wxCommandEvent& event);
         void OnS700K(wxCommandEvent& event);
         void OnZYJ7(wxCommandEvent& event);
+        void OnSocketEvent(wxSocketEvent& event);
         DECLARE_EVENT_TABLE()
 
         int InitializeAll( void );

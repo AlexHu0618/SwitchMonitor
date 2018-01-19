@@ -1,10 +1,10 @@
 # depslib dependency file v1.0
-1510725899 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\monitorclientapp.cpp
+1516354620 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\monitorclientapp.cpp
 	"wx_pch.h"
 	"monitorClientApp.h"
 	"monitorClientMain.h"
 
-1492066836 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\monitorclientapp.h
+1516354620 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\monitorclientapp.h
 	<wx/app.h>
 
 1412609642 d:\wxwidgets-3.0.2\include\wx\app.h
@@ -1690,8 +1690,9 @@
 1412609644 d:\wxwidgets-3.0.2\include\wx\univ\theme.h
 	"wx/string.h"
 
-1514255083 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\monitorclientmain.h
+1516198765 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\monitorclientmain.h
 	<wx/wx.h>
+	<wx/socket.h>
 	"monitorClientApp.h"
 	"CNetController.h"
 	"CSqlController.h"
@@ -2933,7 +2934,7 @@
 1412609642 d:\wxwidgets-3.0.2\include\wx\cocoa\mdi.h
 	"wx/frame.h"
 
-1511833009 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\monitorclientmain.cpp
+1516200600 source:e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\monitorclientmain.cpp
 	"wx_pch.h"
 	"monitorClientMain.h"
 	<wx/timer.h>
@@ -3054,4 +3055,14 @@
 	"CAcquirer.h"
 
 1500970967 e:\project\gzmetro\switch\softwaredesign\switchmonitorproject\switchmonitorclient\monitorclient\include\cacquirer.h
+
+1412609644 d:\wxwidgets-3.0.2\include\wx\socket.h
+	"wx/defs.h"
+	"wx/event.h"
+	"wx/sckaddr.h"
+	"wx/list.h"
+
+1412609644 d:\wxwidgets-3.0.2\include\wx\sckaddr.h
+	"wx/defs.h"
+	"wx/string.h"
 
