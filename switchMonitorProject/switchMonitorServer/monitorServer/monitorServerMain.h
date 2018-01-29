@@ -16,6 +16,7 @@
 
 #include <wx/socket.h>
 #include <wx/string.h>
+#include <wx/thread.h>
 #include "monitorServerApp.h"
 #include "CNetController.h"
 #include "CSqlController.h"
@@ -35,7 +36,8 @@ class monitorServerFrame: public wxFrame
             idMenuZYJ7,
             // id for sockets
             SERVER_ID = 100,
-            SOCKET_ID
+            SOCKET_ID,
+            TIMER_ID
         };
         CNetController* m_pTcpServer;
         CSqlController* m_pDBCtrler;
@@ -43,14 +45,17 @@ class monitorServerFrame: public wxFrame
         wxSocketServer* m_server;
         wxSocketBase *m_sockUI;
         wxSocketBase *m_sockAcquirer;
+        wxSocketBase *m_sockDTU;
+        wxTimer m_timer;
+        bool m_bACQIsRunning;
         bool m_busy;
         int m_numClients;
         SWITCH_TYPE m_emTypeofSwitch;
 
-        int Diagnosing( SWITCH_TYPE typeofSwitch, wxString strPath );
-        void Analyzing( wxString strPath );
         void SendMSG2UI( const void *buffer, wxUint32 nbytes );
+        void SendERR2DTU(const void *buffer, wxUint32 nbytes);
         bool HaveSetAllDefault( void );
+        int CheckACQ( void );
 
         void OnClose(wxCloseEvent& event);
         void OnQuit(wxCommandEvent& event);
@@ -59,8 +64,24 @@ class monitorServerFrame: public wxFrame
         void OnZYJ7(wxCommandEvent& event);
         void OnServerEvent(wxSocketEvent& event);
         void OnSocketEvent(wxSocketEvent& event);
+        void OnAnalyzeFinishEvent(wxCommandEvent& event);
+        void OnTimer(wxTimerEvent& event);
         DECLARE_EVENT_TABLE()
 };
 
+class CAnalyzeThread: public wxThread
+{
+public:
+    CAnalyzeThread(monitorServerFrame *pFrame, CFaultAnalyzer *pAnalyzer, wxString strPath):
+        m_pFrame(pFrame), m_pAnalyzer(pAnalyzer), m_strPath(strPath) {}
+    virtual void *Entry();
 
+private:
+    monitorServerFrame* m_pFrame;
+    CFaultAnalyzer* m_pAnalyzer;
+    wxString m_strPath;
+};
+#define ANALYZE_FINISH_ID 144
+
+DECLARE_APP(monitorServerApp);
 #endif // MONITORSERVERMAIN_H

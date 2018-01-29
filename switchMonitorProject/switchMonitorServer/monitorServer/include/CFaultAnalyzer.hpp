@@ -3,6 +3,8 @@
 
 #include <string>
 #include <vector>
+#include <wx/string.h>
+#include "CSqlController.h"
 
 using namespace std;
 enum SWITCH_TYPE { ZD6, S700K, ZYJ7 };
@@ -18,7 +20,7 @@ enum ACQUICITION_TYPE { Tstatic, Ttrigger };
 class CFaultAnalyzer
 {
 public:
-    CFaultAnalyzer( void );
+    CFaultAnalyzer(CSqlController *pDBCtrler);
     ~CFaultAnalyzer();
 
     double* GetScore( double *arrdTransformRatio, string strPath, SWITCH_TYPE emTypeofSwitch );
@@ -27,6 +29,7 @@ public:
     int SaveAfterPreProcessing( double *arrdTransformRatio );
     void GetInfo( string* strTypeofAcq, int* nIsL2R );
     void SetBaseData( bool bIsDefault );
+    int Diagnosing( SWITCH_TYPE emTypeofSwitch, wxString strPath );
 
 private:
     string m_strPath;
@@ -36,6 +39,7 @@ private:
     int m_nAllChRealDataLen;
     double* m_parrdV1RealData;
     double* m_parrdI1RealData;
+    CSqlController* m_pDBCtrler;
     SWITCH_TYPE m_emTypeofSwitch;
     ACQUICITION_TYPE m_emTypeofAcq;
     double* m_parrdScore;

@@ -326,11 +326,12 @@ int CFaultAnalyzer::__TransformRawData( double *parrdTranRatio )
   *
   * (documentation goes here)
   */
- CFaultAnalyzer::CFaultAnalyzer( void )
+ CFaultAnalyzer::CFaultAnalyzer( CSqlController *pDBCtrler )
 {
     m_bisL2R = true;
     m_bisTransformed = false;
     m_emTypeofAcq = Ttrigger;
+    m_pDBCtrler = pDBCtrler;
     m_bIsDefault = false;
     m_szFlagofSetDefault = 0b00000000;    // bits: 0 0 0 0 staticL2R staticR2L triggerL2R triggerR2L, 0--normal;1--should set
     m_parrdScore = (double *)malloc( 10*sizeof(double) );
@@ -891,4 +892,106 @@ void CFaultAnalyzer::__JudgeDefault( void )
         m_bIsDefault = false;
         cout << "m_szFlagofSetDefault=0x00" << endl;
     }
+}
+
+int CFaultAnalyzer::Diagnosing( SWITCH_TYPE emTypeofSwitch, wxString strPath )
+{
+    string strDataDirPath = strPath.ToStdString();
+
+    //double arrdTransformRatioZD6[] = { 300.0, 300.0, 17.857 };    // {v1,v2,i} 3.0=300V, i=17.857A , for before experiment data file "ZD6(old&new)"
+    double arrdTransformRatioZD6[] = { 600, 600, 40 };
+    double arrdTransformRatioS700K[] = { 600, 600, 600, 40, 40, 40 };  //{v,v,v,i,i,i}
+    double arrdTransformRatioZYJ7[] = { 600, 600, 600, 600, 40, 40, 40, 3000, 3000 };   // {v,v,v,v,i,i,i,p,p}
+    double *parrdTransformRatio = arrdTransformRatioZD6;
+    if( emTypeofSwitch == S700K )
+    {
+        parrdTransformRatio = arrdTransformRatioS700K;
+    }
+    if( emTypeofSwitch == ZYJ7 )
+    {
+        parrdTransformRatio = arrdTransformRatioZYJ7;
+    }
+
+    double *parrdScore = NULL;
+    parrdScore = this->GetScore( parrdTransformRatio, strDataDirPath, emTypeofSwitch );
+
+    printf("SWITCH fault confidences for provided data:\n\n");
+    printf("Actuating fault: %.2f %%\n", parrdScore[0]);
+    printf("Engage difficult: %.2f %%\n", parrdScore[1]);
+    printf("Indicating fault: %.2f %%\n", parrdScore[2]);
+    printf("Jam: %.2f %%\n", parrdScore[3]);
+    printf("Motor fault: %.2f %%\n", parrdScore[4]);
+    printf("Movement resistance: %.2f %%\n", parrdScore[5]);
+    printf("Power fault: %.2f %%\n", parrdScore[6]);
+    printf("Unlock difficult: %.2f %%\n", parrdScore[7]);
+
+    cout << "Analyzing is successful!" << endl;
+
+//    //!< change default data, here just save the real data not preprocess data to the default directory
+//    if( m_bIsDefault )
+//    {
+//        m_pAnalyzer->SetBaseData( true );
+////        int result = m_pAnalyzer->SaveRealData( parrdTransformRatio );
+////        if (result != 0)
+////        {
+////            cout << "save real data fail!" << endl;
+////            return 1;
+////        }
+//        m_bIsDefault = false;
+//    }
+
+    //!< save preprocessing data
+    int nResult = this->SaveAfterPreProcessing( parrdTransformRatio );
+    if( nResult != 0 )
+    {
+        cout << "Error, fail to save preprocessing data!" << endl;
+        return 1;
+    }
+    else
+    {
+        cout << "Preprocessing data was successfully saved!" << endl;
+    }
+
+    //!< insert into DB
+    cout << strPath << endl;
+    wxString wstrTime = strPath.AfterLast('\\');
+    wstrTime.Replace("-",":");
+    string strTime = string( wstrTime.mb_str() );
+    cout << strTime << endl;
+    wxString wstrDate = strPath.BeforeLast('\\').AfterLast('\\');
+    string strDate = string( wstrDate.mb_str() );
+    cout << strDate << endl;
+    string strTYPE = (m_emTypeofSwitch == ZD6) ? "ZD6" : (m_emTypeofSwitch == S700K) ? "S700K" : "ZYJ7";
+    string strTypeofAcq = "trigger";
+    int nIsL2R = 1;
+    this->GetInfo( &strTypeofAcq, &nIsL2R );
+    wxString wstrIsL2R = wxString::Format(wxT("%i"), nIsL2R );
+    string strIsL2R = std::string(wstrIsL2R.mbc_str());
+    string arrstrScore[10] = {"0"};
+    for( int i=0;i<8;++i )
+    {
+        arrstrScore[i] = wxString::Format(wxT("%f"), parrdScore[i]);
+    }
+    wxString strTmp(strDataDirPath);
+    strTmp.Replace("\\","\\\\");
+    strDataDirPath = strTmp.mb_str();
+    string strDBCmd = "INSERT INTO tab4alldata(TYPE, DATE, TIME, PATH, STATUS, ISL2R, ACTUATING, ENGAGE, \
+INDICATING, JAM, MOTOR, MOVEMENT, POWERERR, UNLOCKERR) VALUES ('" + strTYPE + "', '" + strDate + "', '"
++ strTime + "', '" + strDataDirPath + "', '" + strTypeofAcq + "', '" + strIsL2R +"', "
++ arrstrScore[0] + ", " + arrstrScore[1] + ", " + arrstrScore[2] + ", " + arrstrScore[3] + ", "
++ arrstrScore[4] + ", " + arrstrScore[5] + ", " + arrstrScore[6] + ", " + arrstrScore[7] + ");";
+    cout << strDBCmd << endl;
+    nResult = m_pDBCtrler->Insert( strDBCmd );
+    if( nResult < 0 )
+    {
+        cout << "sql update error" << endl;
+        return -1;
+    }
+    else
+    {
+//        SendMSG2UI( "MSG=UPDATE\r\n", 12);
+        cout << "Database updata success!" << endl;
+    }
+
+    return 0;
 }

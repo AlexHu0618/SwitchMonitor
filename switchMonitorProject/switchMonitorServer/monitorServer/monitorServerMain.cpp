@@ -56,6 +56,8 @@ BEGIN_EVENT_TABLE(monitorServerFrame, wxFrame)
     EVT_MENU(idMenuZYJ7, monitorServerFrame::OnZYJ7)
     EVT_SOCKET(SERVER_ID,  monitorServerFrame::OnServerEvent)
     EVT_SOCKET(SOCKET_ID,  monitorServerFrame::OnSocketEvent)
+    EVT_MENU(ANALYZE_FINISH_ID, monitorServerFrame::OnAnalyzeFinishEvent)
+    EVT_TIMER(TIMER_ID, monitorServerFrame::OnTimer)
 END_EVENT_TABLE()
 
 monitorServerFrame::monitorServerFrame(wxFrame *frame, const wxString& title)
@@ -218,15 +220,15 @@ monitorServerFrame::monitorServerFrame(wxFrame *frame, const wxString& title)
     m_server->Notify(true);
 
     m_busy = false;
+    m_bACQIsRunning = false;
     m_numClients = 0;
     m_sockUI = NULL;
     m_sockAcquirer = NULL;
+    m_sockDTU = NULL;
     m_emTypeofSwitch = ZD6;
 
-    m_pAnalyzer = new CFaultAnalyzer();
+    m_pAnalyzer = new CFaultAnalyzer(m_pDBCtrler);
 
-    //!< start analyzing
-    //Analyzing();
 }
 
 
@@ -337,145 +339,6 @@ void monitorServerFrame::OnZYJ7(wxCommandEvent &event)
 //    cout << "Analyzing is successful!" << endl;
 }
 
-int monitorServerFrame::Diagnosing( SWITCH_TYPE typeofSwitch, wxString strPath )
-{
-//    //!< receive block and wait for TCP
-//    char szRecvBuf[1024]={0};
-//    m_pTcpServer->Recv( szRecvBuf, 1024 );
-//    cout << szRecvBuf << endl;
-//    string strDataDirPath = szRecvBuf;
-//
-//    if( szRecvBuf[0] == 'Q' )
-//    {
-//        //return -1;
-//        Close(true);
-//    }
-//    bool bIsDefault = false;
-//    if( strDataDirPath.substr(strDataDirPath.length()-8) == "_default" )
-//    {
-//        bIsDefault = true;
-//        strDataDirPath.erase( strDataDirPath.length()-8, 8 );
-//    }
-    string strDataDirPath = strPath.ToStdString();
-
-    //double arrdTransformRatioZD6[] = { 300.0, 300.0, 17.857 };    // {v1,v2,i} 3.0=300V, i=17.857A , for before experiment data file "ZD6(old&new)"
-    double arrdTransformRatioZD6[] = { 600, 600, 40 };
-    double arrdTransformRatioS700K[] = { 600, 600, 600, 40, 40, 40 };  //{v,v,v,i,i,i}
-    double arrdTransformRatioZYJ7[] = { 600, 600, 600, 600, 40, 40, 40, 3000, 3000 };   // {v,v,v,v,i,i,i,p,p}
-    double *parrdTransformRatio = arrdTransformRatioZD6;
-    if( typeofSwitch == S700K )
-    {
-        parrdTransformRatio = arrdTransformRatioS700K;
-    }
-    if( typeofSwitch == ZYJ7 )
-    {
-        parrdTransformRatio = arrdTransformRatioZYJ7;
-    }
-
-    double *parrdScore = NULL;
-    parrdScore = m_pAnalyzer->GetScore( parrdTransformRatio, strDataDirPath, typeofSwitch );
-
-    printf("SWITCH fault confidences for provided data:\n\n");
-    printf("Actuating fault: %.2f %%\n", parrdScore[0]);
-    printf("Engage difficult: %.2f %%\n", parrdScore[1]);
-    printf("Indicating fault: %.2f %%\n", parrdScore[2]);
-    printf("Jam: %.2f %%\n", parrdScore[3]);
-    printf("Motor fault: %.2f %%\n", parrdScore[4]);
-    printf("Movement resistance: %.2f %%\n", parrdScore[5]);
-    printf("Power fault: %.2f %%\n", parrdScore[6]);
-    printf("Unlock difficult: %.2f %%\n", parrdScore[7]);
-
-    cout << "Analyzing is successful!" << endl;
-
-//    //!< change default data, here just save the real data not preprocess data to the default directory
-//    if( m_bIsDefault )
-//    {
-//        m_pAnalyzer->SetBaseData( true );
-////        int result = m_pAnalyzer->SaveRealData( parrdTransformRatio );
-////        if (result != 0)
-////        {
-////            cout << "save real data fail!" << endl;
-////            return 1;
-////        }
-//        m_bIsDefault = false;
-//    }
-
-    //!< save preprocessing data
-    int nResult = m_pAnalyzer->SaveAfterPreProcessing( parrdTransformRatio );
-    if( nResult != 0 )
-    {
-        cout << "Error, fail to save preprocessing data!" << endl;
-        return 1;
-    }
-    else
-    {
-        cout << "Preprocessing data was successfully saved!" << endl;
-    }
-
-    //!< insert into DB
-    cout << strPath << endl;
-    wxString wstrTime = strPath.AfterLast('\\');
-    wstrTime.Replace("-",":");
-    string strTime = string( wstrTime.mb_str() );
-    cout << strTime << endl;
-    wxString wstrDate = strPath.BeforeLast('\\').AfterLast('\\');
-    string strDate = string( wstrDate.mb_str() );
-    cout << strDate << endl;
-    string strTYPE = (m_emTypeofSwitch == ZD6) ? "ZD6" : (m_emTypeofSwitch == S700K) ? "S700K" : "ZYJ7";
-    string strTypeofAcq = "trigger";
-    int nIsL2R = 1;
-    m_pAnalyzer->GetInfo( &strTypeofAcq, &nIsL2R );
-    wxString wstrIsL2R = wxString::Format(wxT("%i"), nIsL2R );
-    string strIsL2R = std::string(wstrIsL2R.mbc_str());
-    string arrstrScore[10] = {"0"};
-    for( int i=0;i<8;++i )
-    {
-        arrstrScore[i] = wxString::Format(wxT("%f"), parrdScore[i]);
-    }
-    wxString strTmp(strDataDirPath);
-    strTmp.Replace("\\","\\\\");
-    strDataDirPath = strTmp.mb_str();
-    string strDBCmd = "INSERT INTO tab4alldata(TYPE, DATE, TIME, PATH, STATUS, ISL2R, ACTUATING, ENGAGE, \
-INDICATING, JAM, MOTOR, MOVEMENT, POWERERR, UNLOCKERR) VALUES ('" + strTYPE + "', '" + strDate + "', '"
-+ strTime + "', '" + strDataDirPath + "', '" + strTypeofAcq + "', '" + strIsL2R +"', "
-+ arrstrScore[0] + ", " + arrstrScore[1] + ", " + arrstrScore[2] + ", " + arrstrScore[3] + ", "
-+ arrstrScore[4] + ", " + arrstrScore[5] + ", " + arrstrScore[6] + ", " + arrstrScore[7] + ");";
-    cout << strDBCmd << endl;
-    nResult = m_pDBCtrler->Insert( strDBCmd );
-    if( nResult < 0 )
-    {
-        cout << "sql update error" << endl;
-        return -1;
-    }
-    else
-    {
-        SendMSG2UI( "MSG=UPDATE\r\n", 12);
-        cout << "Database updata success!" << endl;
-    }
-
-    return 0;
-}
-
-void monitorServerFrame::Analyzing( wxString strPath )
-{
-    SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_GREEN );
-    cout << "START A NEW TASK FOR" << endl;
-    SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN |FOREGROUND_BLUE );
-
-    int nResult = 0;
-    nResult = Diagnosing( m_emTypeofSwitch, strPath );   //!<  diagnose and save data and result
-    if( nResult != 0 )
-    {
-        cout << "Fail to analyze!" << endl;
-    }
-    else
-    {
-        SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_GREEN );
-        cout << "WAITTING FOR NEXT TASK" << endl;
-        SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN |FOREGROUND_BLUE );
-    }
-}
-
 void monitorServerFrame::OnServerEvent( wxSocketEvent &event )
 {
     wxString s = _("OnServerEvent: ");
@@ -571,36 +434,48 @@ void monitorServerFrame::OnSocketEvent( wxSocketEvent &event )
             strSubAfter  = strBuf.After('=').BeforeLast('\r');
             if( strSubBefore == "CMD" )
             {
-                switch(strSubAfter)
-                {
-                case "DEFAULT":
-                    m_pAnalyzer->SetBaseData(true);
-                    break;
-
-                case "STATUS":
-                    if( m_sockAcquirer != NULL )
-                    {
-                        m_sockAcquirer->Write( "CMD=STATUS\r\n", 12 );
-                        cout << "sent info to client ACQ" << endl;
-                    }
-                    else
-                    {
-                        cout << "ERROR! m_sockAcquirer == NULL" << endl;
-                    }
-                    break;
-                }
+                m_pAnalyzer->SetBaseData(true);
+//                switch(strSubAfter)
+//                {
+//                case "DEFAULT":
+//                    m_pAnalyzer->SetBaseData(true);
+//                    break;
+//
+//                case "STATUS":
+//                    if (CheckACQ() !=0 )
+//                    {
+//                        cout << "ERROR! CheckACQ()." << endl;
+//                    }
+//                    break;
+//
+//                default:
+//                    break;
+//                }
             }
             else if( strSubBefore == "PATH" )
             {
-                Analyzing(strSubAfter);
+                CAnalyzeThread *pAnalyzeThread = new CAnalyzeThread(this, m_pAnalyzer, strSubAfter);
+                if (pAnalyzeThread->Create() != wxTHREAD_NO_ERROR)
+                {
+                    cout << "ERROR! Fail to create thread to analyze." << endl;
+                }
+                pAnalyzeThread->Run();
             }
-            else if( strSubBefore == "MSG" )
+            else if (strSubBefore == "MSG")
             {
-                SendMSG2UI( buf, len );
+//                SendMSG2UI( buf, len );
                 if (strSubAfter == "S700K" || strSubAfter == "ZYJ7" || strSubAfter == "ZD6")
                 {
                     m_emTypeofSwitch = (strSubAfter == "S700K") ? S700K : (strSubAfter == "ZYJ7") ? ZYJ7 : ZD6;
                 }
+                else if (strSubAfter == "RUNNING")
+                {
+                    m_bACQIsRunning = true;
+                }
+            }
+            else if (strSubBefore == "ERR")
+            {
+                SendERR2DTU(buf, len);
             }
             else if (strSubBefore == "ID")
             {
@@ -611,6 +486,11 @@ void monitorServerFrame::OnSocketEvent( wxSocketEvent &event )
                 else if (strSubAfter == "ACQ")
                 {
                     m_sockAcquirer = sock;
+                    m_timer.Start(36000);    //10min
+                }
+                else if (strSubAfter == "DTU")
+                {
+                    m_sockDTU = sock;
                 }
             }
             else
@@ -637,10 +517,32 @@ void monitorServerFrame::OnSocketEvent( wxSocketEvent &event )
 
             cout << "Deleting socket." << endl;
             sock->Destroy();
+            SendERR2DTU("ERR=ACQLOST\r\n", 13);
             break;
         }
         default: ;
     }
+}
+
+void monitorServerFrame::OnAnalyzeFinishEvent(wxCommandEvent& event)
+{
+    cout << "send to UI" << endl;
+    SendMSG2UI("MSG=UPDATE\r\n", 12);
+    cout << "have sent to UI" << endl;
+}
+
+void monitorServerFrame::OnTimer(wxTimerEvent& event)
+{
+    if (m_bACQIsRunning)
+    {
+        m_bACQIsRunning = false;
+        m_sockAcquirer->Write("CMD=STATUS\r\n", 12);
+    }
+    else
+    {
+        SendERR2DTU("ERR=ACQLOST\r\n", 13);
+    }
+
 }
 
 void monitorServerFrame::SendMSG2UI( const void *buffer, wxUint32 nbytes )
@@ -656,8 +558,63 @@ void monitorServerFrame::SendMSG2UI( const void *buffer, wxUint32 nbytes )
     }
 }
 
+void monitorServerFrame::SendERR2DTU( const void *buffer, wxUint32 nbytes )
+{
+    if( m_sockDTU != NULL )
+    {
+        m_sockDTU->Write( buffer, nbytes );
+        cout << "sent info to DTU" << endl;
+    }
+    else
+    {
+        cout << "ERROR! m_sockDTU == NULL" << endl;
+    }
+}
+
 bool monitorServerFrame::HaveSetAllDefault( void )
 {
     string strTypeofAcq = "";
     return 0;
+}
+
+int monitorServerFrame::CheckACQ( void )
+{
+    if( m_sockAcquirer != NULL )
+    {
+        m_sockAcquirer->Write( "CMD=STATUS\r\n", 12 );
+        cout << "sent info to client ACQ" << endl;
+        return 0;
+    }
+    else
+    {
+        cout << "ERROR! m_sockAcquirer == NULL" << endl;
+        return -1;
+    }
+}
+
+void *CAnalyzeThread::Entry()
+{
+    SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_GREEN );
+    cout << "START A NEW TASK FOR" << endl;
+    SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN |FOREGROUND_BLUE );
+
+    int nResult = 0;
+    nResult = m_pAnalyzer->Diagnosing( ZD6, m_strPath );   //!<  diagnose and save data and result
+    if( nResult != 0 )
+    {
+        cout << "Fail to analyze!" << endl;
+    }
+    else
+    {
+        //!< send event to main thread
+        wxCommandEvent event(wxEVT_COMMAND_MENU_SELECTED, ANALYZE_FINISH_ID);
+//        wxGetApp().AddPendingEvent(event);
+        wxPostEvent(m_pFrame, event);
+
+        SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_GREEN );
+        cout << "WAITTING FOR NEXT TASK" << endl;
+        SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN |FOREGROUND_BLUE );
+    }
+
+    return NULL;
 }
