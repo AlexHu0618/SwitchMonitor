@@ -232,9 +232,9 @@ bool CUdpServer::__FrameAnalysis( void )
     int nAreaFrameCounter = 0;
     for (int nFrameNum = 0; nFrameNum < m_nFrameCounter; nFrameNum++)
     {
-        if (m_ppszDataBuf[nFrameNum][0]&0xFF == nAreaNum)      // all the frames in the same area
+        if ((m_ppszDataBuf[nFrameNum][0]&0xFF) == nAreaNum)      // all the frames in the same area
         {
-            nAreaFrameNum = m_ppszDataBuf[0][2]&0xFF | m_ppszDataBuf[0][3]<<8&0xFF00;
+            nAreaFrameNum = (m_ppszDataBuf[0][2]&0xFF) | (m_ppszDataBuf[0][3]<<8&0xFF00);
             if (nAreaFrameNum != nAreaFrameCounter)
             {
                 cout << "miss frame in the air(frmaNum): " << nAreaNum  << "(" << nAreaFrameNum << ")" << endl;
@@ -249,7 +249,7 @@ bool CUdpServer::__FrameAnalysis( void )
         }
     }
     //caculate the start acquiring time
-    int nSecondofAcq = round((int)(m_ppszDataBuf[0][4]&0xFF | m_ppszDataBuf[0][5]<<8&0xFF00 | m_ppszDataBuf[0][6]&0xFF0000 | m_ppszDataBuf[0][7]<<8&0xFF000000)/FREQ);
+    int nSecondofAcq = round((int)((m_ppszDataBuf[0][4]&0xFF) | (m_ppszDataBuf[0][5]<<8&0xFF00) | (m_ppszDataBuf[0][6]&0xFF0000) | ((m_ppszDataBuf[0][7]<<8&0xFF000000)/FREQ)));
     m_tTimeofStartAcq = m_tTimeofFirstRecv;
     if( m_tTimeofFirstRecv.wSecond < nSecondofAcq )
     {
@@ -285,7 +285,7 @@ void CUdpServer::__ExtractRawData( void )
         break;
     }
 
-    m_nSizeofEveryChannelRawData = (m_ppszDataBuf[0][4]&0xFF | m_ppszDataBuf[0][5]<<8&0xFF00 | m_ppszDataBuf[0][6]&0xFF0000 | m_ppszDataBuf[0][7]<<8&0xFF000000);
+    m_nSizeofEveryChannelRawData = (m_ppszDataBuf[0][4]&0xFF) | (m_ppszDataBuf[0][5]<<8&0xFF00) | (m_ppszDataBuf[0][6]&0xFF0000) | (m_ppszDataBuf[0][7]<<8&0xFF000000);
 
     for (int i = 0; i < m_nFrameCounter; i++)
     {

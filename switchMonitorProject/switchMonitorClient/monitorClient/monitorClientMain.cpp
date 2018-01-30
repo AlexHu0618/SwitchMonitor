@@ -98,7 +98,7 @@ monitorClientFrame::monitorClientFrame(wxFrame *frame, const wxString& title)
     SetStatusText(wxbuildinfo(short_f), 1);
 #endif // wxUSE_STATUSBAR
 
-    //!< initial config
+    //!< initial config     TCP->DB->UDP
     if( InitializeAll() < 0 )
     {
         return;
@@ -141,30 +141,30 @@ void monitorClientFrame::OnZD6(wxCommandEvent &event)
 
 void monitorClientFrame::OnS700K(wxCommandEvent &event)
 {
-    //!< connect to UDP client
-    SWITCH_TYPE typeofSwitch = S700K;
-    m_pUDPServer = new CUdpServer( "192.168.1.106", "192.168.1.154", 1024, typeofSwitch );
-
-    SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_GREEN );
-    cout << "START A NEW TEST FOR S700K" << endl;
-    SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN |FOREGROUND_BLUE );
-
-    int nResult = 0;
-    nResult = SaveData( TRIGGER );
+//    //!< connect to UDP client
+//    SWITCH_TYPE typeofSwitch = S700K;
+//    m_pUDPServer = new CUdpServer( "192.168.1.106", "192.168.1.154", 1024, typeofSwitch );
+//
+//    SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_GREEN );
+//    cout << "START A NEW TEST FOR S700K" << endl;
+//    SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN |FOREGROUND_BLUE );
+//
+//    int nResult = 0;
+//    nResult = SaveData( TRIGGER );
 }
 
 void monitorClientFrame::OnZYJ7(wxCommandEvent &event)
 {
-    //!< connect to UDP client
-    SWITCH_TYPE typeofSwitch = ZYJ7;
-    m_pUDPServer = new CUdpServer( "192.168.1.106", "192.168.1.154", 1024, typeofSwitch );
-
-    SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_GREEN );
-    cout << "START A NEW TEST FOR ZYJ7" << endl;
-    SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN |FOREGROUND_BLUE );
-
-    int nResult = 0;
-    nResult = SaveData( TRIGGER );
+//    //!< connect to UDP client
+//    SWITCH_TYPE typeofSwitch = ZYJ7;
+//    m_pUDPServer = new CUdpServer( "192.168.1.106", "192.168.1.154", 1024, typeofSwitch );
+//
+//    SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_GREEN );
+//    cout << "START A NEW TEST FOR ZYJ7" << endl;
+//    SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN |FOREGROUND_BLUE );
+//
+//    int nResult = 0;
+//    nResult = SaveData( TRIGGER );
 }
 
 /** \brief 本函数主要是等待接收下位机数据，一旦接收到数据就创建文件夹并保存数据到本地，通过TCP发送保存路径到服务器，把时间和路径写入数据库
@@ -692,8 +692,16 @@ void monitorClientFrame::OnSocketEvent( wxSocketEvent &event )
                 if (strSubAfter == "STATUS")
                 {
                     //!< reback the socket which received
-                    char rebackBuf[] = "MSG=RUNNING\r\n";
-                    sock->Write(rebackBuf, 13);
+                    if (m_bIsConnUDP)
+                    {
+                        char szMSGBuf[] = "MSG=RUNNING\r\n";
+                        sock->Write(szMSGBuf, 13);
+                    }
+                    else
+                    {
+                        char szMSGBuf[] = "ERR=UDPLOST\r\n";
+                        sock->Write(szMSGBuf, 13);
+                    }
                 }
             }
             else
