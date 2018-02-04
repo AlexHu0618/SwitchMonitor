@@ -142,15 +142,16 @@ int CFaultAnalyzer::__AnalyzeFault( double *arrdTransformRatio )
         m_parrdScore[0] = m_szdLastScore[0];
         m_parrdScore[2] = m_szdLastScore[2];
     }
-    //!< static score
+    //!< static score, we calculate all data by RMS, but the static voltage is just the DC value
+    //!< measured by multimeter, so the RMS value should multiply 0.65
     else
     {
-        double static_base_v1 = arrdStaticData[0];
-        double static_base_v2 = arrdStaticData[1];
-        double static_base_v3 = arrdStaticData[2];
-        double static_data_v1 = -szdVoltageRMS[0];
-        double static_data_v2 = -szdVoltageRMS[1];
-        double static_data_v3 = -szdVoltageRMS[2];
+        double static_base_v1 = arrdStaticData[0]*0.65;
+        double static_base_v2 = arrdStaticData[1]*0.65;
+        double static_base_v3 = arrdStaticData[2]*0.65;
+        double static_data_v1 = -szdVoltageRMS[0]*0.65;
+        double static_data_v2 = -szdVoltageRMS[1]*0.65;
+        double static_data_v3 = -szdVoltageRMS[2]*0.65;
 
         cout << "the staticVol: baseV1=" << static_base_v1 << "; baseV2=" << static_base_v2 << "; baseV3=" << static_base_v3 << endl;
         cout << "the staticVOl: dataV1=" << static_data_v1 << "; dataV2=" << static_data_v2 << "; dataV3=" << static_data_v3 << endl;
