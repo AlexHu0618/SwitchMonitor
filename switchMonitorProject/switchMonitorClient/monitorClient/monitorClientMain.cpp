@@ -428,6 +428,10 @@ void monitorClientFrame::AcquireLoop( void )
     {
         wxString strSendCmd = "MSG=Acquirer is working!\r\n";
         m_pTcpClient->Send((const char*)strSendCmd.mb_str(), strSendCmd.size());
+        wxString strCmdRunning = "MSG=RUNNING\r\n";
+        m_pTcpClient->Send((const char*)strCmdRunning.mb_str(), strCmdRunning.size());
+        cout << "sent \"MSG=RUNNING\" to Server" << endl;
+
         int nResult = 0;
         string strTYPE = (m_emTypeofSwitch == ZD6) ? "ZD6" : (m_emTypeofSwitch == S700K) ? "S700K" : "ZYJ7";
         while(1)
@@ -469,8 +473,11 @@ void monitorClientFrame::AcquireLoop( void )
     }
     else
     {
-        cout << "Please send cmd to server" << endl;
-        wxMessageBox(_T("Fail to connect FPGA, please restart software after close all opening program!"));
+        SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_RED );
+        cout << "*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*" << endl;
+        cout << "* ERROR! Fail to connect FPGA *" << endl;
+        cout << "*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*" << endl;
+        SetConsoleTextAttribute( GetStdHandle( STD_OUTPUT_HANDLE ), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN |FOREGROUND_BLUE );
     }
 }
 
