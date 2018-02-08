@@ -226,6 +226,7 @@ monitorServerFrame::monitorServerFrame(wxFrame *frame, const wxString& title)
     m_sockAcquirer = NULL;
     m_sockDTU = NULL;
     m_emTypeofSwitch = ZD6;
+    m_timer.SetOwner(this, TIMER_ID);
 
     m_pAnalyzer = new CFaultAnalyzer(m_pDBCtrler);
 
@@ -486,7 +487,7 @@ void monitorServerFrame::OnSocketEvent( wxSocketEvent &event )
                 else if (strSubAfter == "ACQ")
                 {
                     m_sockAcquirer = sock;
-                    m_timer.Start(36000);    //10min
+                    m_timer.Start(120000, true);    // 2min, oneshot
                 }
                 else if (strSubAfter == "DTU")
                 {
@@ -533,16 +534,19 @@ void monitorServerFrame::OnAnalyzeFinishEvent(wxCommandEvent& event)
 
 void monitorServerFrame::OnTimer(wxTimerEvent& event)
 {
-    if (m_bACQIsRunning)
-    {
-        m_bACQIsRunning = false;
-        m_sockAcquirer->Write("CMD=STATUS\r\n", 12);
-    }
-    else
+//    if (m_bACQIsRunning)
+//    {
+//        m_bACQIsRunning = false;
+//        m_sockAcquirer->Write("CMD=STATUS\r\n", 12);
+//    }
+//    else
+//    {
+//        SendERR2DTU("ERR=ACQLOST\r\n", 13);
+//    }
+    if (!m_bACQIsRunning)
     {
         SendERR2DTU("ERR=ACQLOST\r\n", 13);
     }
-
 }
 
 void monitorServerFrame::SendMSG2UI( const void *buffer, wxUint32 nbytes )
