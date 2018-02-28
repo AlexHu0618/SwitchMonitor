@@ -1,0 +1,513 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.13"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>monitorClient: CNetController类 参考</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">monitorClient
+   &#160;<span id="projectnumber">V1.0</span>
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.8.13 -->
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',false,false,'search.php','搜索');
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public 成员函数</a> &#124;
+<a href="#pri-methods">Private 成员函数</a> &#124;
+<a href="#pri-attribs">Private 属性</a> &#124;
+<a href="class_c_net_controller-members.html">所有成员列表</a>  </div>
+  <div class="headertitle">
+<div class="title">CNetController类 参考</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>本类主要是负责TCP通信，包含功能为：连接初始化、发送、接收  
+ <a href="class_c_net_controller.html#details">更多...</a></p>
+
+<p><code>#include &lt;<a class="el" href="_c_net_controller_8h_source.html">CNetController.h</a>&gt;</code></p>
+<div class="dynheader">
+CNetController 的协作图:</div>
+<div class="dyncontent">
+<div class="center"><img src="class_c_net_controller__coll__graph.png" border="0" usemap="#_c_net_controller_coll__map" alt="Collaboration graph"/></div>
+</div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public 成员函数</h2></td></tr>
+<tr class="memitem:a3648c7b399e2e252b8bd04d23a3c3c03"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_net_controller.html#a3648c7b399e2e252b8bd04d23a3c3c03">CNetController</a> (string strIPAddr, unsigned int nPort, <a class="el" href="_c_net_controller_8h.html#aa5667d9d3fb7d8d8f6293e70f99fd81d">eTypeCS</a> <a class="el" href="_c_net_controller_8h.html#a12f8ec8f0e7a4584b9fe481bb53fa60e">eType</a>)</td></tr>
+<tr class="memdesc:a3648c7b399e2e252b8bd04d23a3c3c03"><td class="mdescLeft">&#160;</td><td class="mdescRight">构造函数  <a href="#a3648c7b399e2e252b8bd04d23a3c3c03">更多...</a><br /></td></tr>
+<tr class="separator:a3648c7b399e2e252b8bd04d23a3c3c03"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27201190f2a9821379921627ab66a52d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_net_controller.html#a27201190f2a9821379921627ab66a52d">~CNetController</a> ()</td></tr>
+<tr class="separator:a27201190f2a9821379921627ab66a52d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afeccfc8409078f390fe6e7b8c7e9b4b6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_net_controller.html#afeccfc8409078f390fe6e7b8c7e9b4b6">Initial</a> ()</td></tr>
+<tr class="memdesc:afeccfc8409078f390fe6e7b8c7e9b4b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">本函数主要是用于初始化TCP连接，如果是server对象则开始自动监听，如果是client则自动获取本机IP并进行连接到本机server，在创建对象后必须人工调用  <a href="#afeccfc8409078f390fe6e7b8c7e9b4b6">更多...</a><br /></td></tr>
+<tr class="separator:afeccfc8409078f390fe6e7b8c7e9b4b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac413c9924a1093308dbfdac68ce4bbc4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_net_controller.html#ac413c9924a1093308dbfdac68ce4bbc4">Send</a> (const char *pszBuf, int nLength)</td></tr>
+<tr class="memdesc:ac413c9924a1093308dbfdac68ce4bbc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">本函数主要是发送指定字节长度的TCP数据  <a href="#ac413c9924a1093308dbfdac68ce4bbc4">更多...</a><br /></td></tr>
+<tr class="separator:ac413c9924a1093308dbfdac68ce4bbc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d08826c3ea2a87cf17990318fab9dd3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_net_controller.html#a9d08826c3ea2a87cf17990318fab9dd3">Recv</a> (char *pszBuf, int nLength)</td></tr>
+<tr class="memdesc:a9d08826c3ea2a87cf17990318fab9dd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">本函数主要是接收指定长度的TCP数据  <a href="#a9d08826c3ea2a87cf17990318fab9dd3">更多...</a><br /></td></tr>
+<tr class="separator:a9d08826c3ea2a87cf17990318fab9dd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private 成员函数</h2></td></tr>
+<tr class="memitem:aa231c51362064abdd6bce973f73dca8e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_net_controller.html#aa231c51362064abdd6bce973f73dca8e">__GetLocalIP</a> (WSADATA wsaData, char *pszIP)</td></tr>
+<tr class="separator:aa231c51362064abdd6bce973f73dca8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private 属性</h2></td></tr>
+<tr class="memitem:a526584cace9de3af7249af094c380da3"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_net_controller.html#a526584cace9de3af7249af094c380da3">m_strIPAddr</a></td></tr>
+<tr class="separator:a526584cace9de3af7249af094c380da3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00d4c1a5f4a0e9c3f9292e253f9d2617"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_net_controller.html#a00d4c1a5f4a0e9c3f9292e253f9d2617">m_nPort</a></td></tr>
+<tr class="separator:a00d4c1a5f4a0e9c3f9292e253f9d2617"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f4de383cd91d024dfe0e89430d4384d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_c_net_controller_8h.html#aa5667d9d3fb7d8d8f6293e70f99fd81d">eTypeCS</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_net_controller.html#a9f4de383cd91d024dfe0e89430d4384d">m_eType</a></td></tr>
+<tr class="separator:a9f4de383cd91d024dfe0e89430d4384d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af29cf4fecb51308d282cdf6ef664144c"><td class="memItemLeft" align="right" valign="top">SOCKADDR_IN&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_net_controller.html#af29cf4fecb51308d282cdf6ef664144c">m_addrClient</a></td></tr>
+<tr class="separator:af29cf4fecb51308d282cdf6ef664144c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99565a48431b9ecb2cd96e0107e87593"><td class="memItemLeft" align="right" valign="top">SOCKET&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_net_controller.html#a99565a48431b9ecb2cd96e0107e87593">m_sock</a></td></tr>
+<tr class="separator:a99565a48431b9ecb2cd96e0107e87593"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d49308d38eac082f57ad3b52ca12eef"><td class="memItemLeft" align="right" valign="top">SOCKET&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_net_controller.html#a7d49308d38eac082f57ad3b52ca12eef">m_sockConn</a></td></tr>
+<tr class="separator:a7d49308d38eac082f57ad3b52ca12eef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a815c57677b937b126963c6021e8b9ed2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_net_controller.html#a815c57677b937b126963c6021e8b9ed2">m_bConnected</a></td></tr>
+<tr class="separator:a815c57677b937b126963c6021e8b9ed2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">详细描述</h2>
+<div class="textblock"><p>本类主要是负责TCP通信，包含功能为：连接初始化、发送、接收 </p>
+
+<p class="definition">在文件 <a class="el" href="_c_net_controller_8h_source.html">CNetController.h</a> 第 <a class="el" href="_c_net_controller_8h_source.html#l00023">23</a> 行定义.</p>
+</div><h2 class="groupheader">构造及析构函数说明</h2>
+<a id="a3648c7b399e2e252b8bd04d23a3c3c03"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3648c7b399e2e252b8bd04d23a3c3c03">&#9670;&nbsp;</a></span>CNetController()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_c_net_controller.html">CNetController</a> </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>strIPAddr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>nPort</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="_c_net_controller_8h.html#aa5667d9d3fb7d8d8f6293e70f99fd81d">eTypeCS</a>&#160;</td>
+          <td class="paramname"><em>eType</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>构造函数 </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">strIPAddr,IP地址;</td><td>nPort, 端口号； eType, 对象类型（server or client）</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd>无 </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="_c_net_controller_8cpp_source.html">CNetController.cpp</a> 第 <a class="el" href="_c_net_controller_8cpp_source.html#l00020">20</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a27201190f2a9821379921627ab66a52d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a27201190f2a9821379921627ab66a52d">&#9670;&nbsp;</a></span>~CNetController()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">~<a class="el" href="class_c_net_controller.html">CNetController</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="_c_net_controller_8cpp_source.html">CNetController.cpp</a> 第 <a class="el" href="_c_net_controller_8cpp_source.html#l00028">28</a> 行定义.</p>
+
+</div>
+</div>
+<h2 class="groupheader">成员函数说明</h2>
+<a id="aa231c51362064abdd6bce973f73dca8e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa231c51362064abdd6bce973f73dca8e">&#9670;&nbsp;</a></span>__GetLocalIP()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool __GetLocalIP </td>
+          <td>(</td>
+          <td class="paramtype">WSADATA&#160;</td>
+          <td class="paramname"><em>wsaData</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>pszIP</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="_c_net_controller_8cpp_source.html">CNetController.cpp</a> 第 <a class="el" href="_c_net_controller_8cpp_source.html#l00127">127</a> 行定义.</p>
+<div class="dynheader">
+这是这个函数的调用关系图:</div>
+<div class="dyncontent">
+<div class="center"><img src="class_c_net_controller_aa231c51362064abdd6bce973f73dca8e_icgraph.png" border="0" usemap="#class_c_net_controller_aa231c51362064abdd6bce973f73dca8e_icgraph" alt=""/></div>
+<map name="class_c_net_controller_aa231c51362064abdd6bce973f73dca8e_icgraph" id="class_c_net_controller_aa231c51362064abdd6bce973f73dca8e_icgraph">
+<area shape="rect" id="node2" href="class_c_net_controller.html#afeccfc8409078f390fe6e7b8c7e9b4b6" title="本函数主要是用于初始化TCP连接，如果是server对象则开始自动监听，如果是client则自动获取本机IP并进行连接..." alt="" coords="153,5,205,32"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="afeccfc8409078f390fe6e7b8c7e9b4b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afeccfc8409078f390fe6e7b8c7e9b4b6">&#9670;&nbsp;</a></span>Initial()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Initial </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>本函数主要是用于初始化TCP连接，如果是server对象则开始自动监听，如果是client则自动获取本机IP并进行连接到本机server，在创建对象后必须人工调用 </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">无</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd>成功返回0；不成功返回-1 </dd></dl>
+<p>&lt; bind and listen</p>
+<p>&lt; connect to server </p>
+
+<p class="definition">在文件 <a class="el" href="_c_net_controller_8cpp_source.html">CNetController.cpp</a> 第 <a class="el" href="_c_net_controller_8cpp_source.html#l00046">46</a> 行定义.</p>
+<div class="dynheader">
+函数调用图:</div>
+<div class="dyncontent">
+<div class="center"><img src="class_c_net_controller_afeccfc8409078f390fe6e7b8c7e9b4b6_cgraph.png" border="0" usemap="#class_c_net_controller_afeccfc8409078f390fe6e7b8c7e9b4b6_cgraph" alt=""/></div>
+<map name="class_c_net_controller_afeccfc8409078f390fe6e7b8c7e9b4b6_cgraph" id="class_c_net_controller_afeccfc8409078f390fe6e7b8c7e9b4b6_cgraph">
+<area shape="rect" id="node2" href="class_c_net_controller.html#aa231c51362064abdd6bce973f73dca8e" title="__GetLocalIP" alt="" coords="105,5,205,32"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a9d08826c3ea2a87cf17990318fab9dd3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d08826c3ea2a87cf17990318fab9dd3">&#9670;&nbsp;</a></span>Recv()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Recv </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>pszBuf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>nLength</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>本函数主要是接收指定长度的TCP数据 </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pszBuf,接收缓冲区指针;</td><td>nLength, 要接收的数据长度</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd>成功返回已接收的数据长度; 不成功返回-1 </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="_c_net_controller_8cpp_source.html">CNetController.cpp</a> 第 <a class="el" href="_c_net_controller_8cpp_source.html#l00189">189</a> 行定义.</p>
+
+</div>
+</div>
+<a id="ac413c9924a1093308dbfdac68ce4bbc4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac413c9924a1093308dbfdac68ce4bbc4">&#9670;&nbsp;</a></span>Send()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Send </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>pszBuf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>nLength</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>本函数主要是发送指定字节长度的TCP数据 </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pszBuf,发送数据缓冲区指针;</td><td>nLength, 发送数据长度</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd>成功返回已发送的数据长度; 不成功返回-1 </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="_c_net_controller_8cpp_source.html">CNetController.cpp</a> 第 <a class="el" href="_c_net_controller_8cpp_source.html#l00154">154</a> 行定义.</p>
+
+</div>
+</div>
+<h2 class="groupheader">类成员变量说明</h2>
+<a id="af29cf4fecb51308d282cdf6ef664144c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af29cf4fecb51308d282cdf6ef664144c">&#9670;&nbsp;</a></span>m_addrClient</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SOCKADDR_IN m_addrClient</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="_c_net_controller_8h_source.html">CNetController.h</a> 第 <a class="el" href="_c_net_controller_8h_source.html#l00029">29</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a815c57677b937b126963c6021e8b9ed2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a815c57677b937b126963c6021e8b9ed2">&#9670;&nbsp;</a></span>m_bConnected</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool m_bConnected</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="_c_net_controller_8h_source.html">CNetController.h</a> 第 <a class="el" href="_c_net_controller_8h_source.html#l00032">32</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a9f4de383cd91d024dfe0e89430d4384d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f4de383cd91d024dfe0e89430d4384d">&#9670;&nbsp;</a></span>m_eType</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="_c_net_controller_8h.html#aa5667d9d3fb7d8d8f6293e70f99fd81d">eTypeCS</a> m_eType</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="_c_net_controller_8h_source.html">CNetController.h</a> 第 <a class="el" href="_c_net_controller_8h_source.html#l00028">28</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a00d4c1a5f4a0e9c3f9292e253f9d2617"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a00d4c1a5f4a0e9c3f9292e253f9d2617">&#9670;&nbsp;</a></span>m_nPort</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int m_nPort</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="_c_net_controller_8h_source.html">CNetController.h</a> 第 <a class="el" href="_c_net_controller_8h_source.html#l00027">27</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a99565a48431b9ecb2cd96e0107e87593"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99565a48431b9ecb2cd96e0107e87593">&#9670;&nbsp;</a></span>m_sock</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SOCKET m_sock</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="_c_net_controller_8h_source.html">CNetController.h</a> 第 <a class="el" href="_c_net_controller_8h_source.html#l00030">30</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a7d49308d38eac082f57ad3b52ca12eef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d49308d38eac082f57ad3b52ca12eef">&#9670;&nbsp;</a></span>m_sockConn</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SOCKET m_sockConn</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="_c_net_controller_8h_source.html">CNetController.h</a> 第 <a class="el" href="_c_net_controller_8h_source.html#l00031">31</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a526584cace9de3af7249af094c380da3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a526584cace9de3af7249af094c380da3">&#9670;&nbsp;</a></span>m_strIPAddr</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string m_strIPAddr</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="_c_net_controller_8h_source.html">CNetController.h</a> 第 <a class="el" href="_c_net_controller_8h_source.html#l00026">26</a> 行定义.</p>
+
+</div>
+</div>
+<hr/>该类的文档由以下文件生成:<ul>
+<li>E:/Project/GZMetro/Switch/softwareDesign/switchMonitorProject/switchMonitorClient/monitorClient/include/<a class="el" href="_c_net_controller_8h_source.html">CNetController.h</a></li>
+<li>E:/Project/GZMetro/Switch/softwareDesign/switchMonitorProject/switchMonitorClient/monitorClient/src/<a class="el" href="_c_net_controller_8cpp_source.html">CNetController.cpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+制作者 &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.13
+</small></address>
+</body>
+</html>

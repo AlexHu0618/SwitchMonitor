@@ -1,0 +1,448 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.13"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>monitorClient: CSqlController类 参考</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">monitorClient
+   &#160;<span id="projectnumber">V1.0</span>
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.8.13 -->
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',false,false,'search.php','搜索');
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public 成员函数</a> &#124;
+<a href="#pri-methods">Private 成员函数</a> &#124;
+<a href="#pri-attribs">Private 属性</a> &#124;
+<a href="class_c_sql_controller-members.html">所有成员列表</a>  </div>
+  <div class="headertitle">
+<div class="title">CSqlController类 参考</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>本类主要是负责MySQL数据库通信，包含功能为：连接初始化、插入数据  
+ <a href="class_c_sql_controller.html#details">更多...</a></p>
+
+<p><code>#include &lt;<a class="el" href="_c_sql_controller_8h_source.html">CSqlController.h</a>&gt;</code></p>
+<div class="dynheader">
+CSqlController 的协作图:</div>
+<div class="dyncontent">
+<div class="center"><img src="class_c_sql_controller__coll__graph.png" border="0" usemap="#_c_sql_controller_coll__map" alt="Collaboration graph"/></div>
+</div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public 成员函数</h2></td></tr>
+<tr class="memitem:af2913bc783bcdd1a27d112d11a033357"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_sql_controller.html#af2913bc783bcdd1a27d112d11a033357">CSqlController</a> (string strIpAddr, unsigned int nPort, string strUser, string strPassWord)</td></tr>
+<tr class="memdesc:af2913bc783bcdd1a27d112d11a033357"><td class="mdescLeft">&#160;</td><td class="mdescRight">构造函数  <a href="#af2913bc783bcdd1a27d112d11a033357">更多...</a><br /></td></tr>
+<tr class="separator:af2913bc783bcdd1a27d112d11a033357"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add361c4b54568fcfe57fce584859ee84"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_sql_controller.html#add361c4b54568fcfe57fce584859ee84">~CSqlController</a> ()</td></tr>
+<tr class="separator:add361c4b54568fcfe57fce584859ee84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6c3849769a0952315f847c7f97653e3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_sql_controller.html#ac6c3849769a0952315f847c7f97653e3">Insert</a> (string strSqlCmd)</td></tr>
+<tr class="memdesc:ac6c3849769a0952315f847c7f97653e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">本函数主要是插入数据到MySQL数据库  <a href="#ac6c3849769a0952315f847c7f97653e3">更多...</a><br /></td></tr>
+<tr class="separator:ac6c3849769a0952315f847c7f97653e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b36332a2db91884ebeda56a1e5bc654"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_sql_controller.html#a6b36332a2db91884ebeda56a1e5bc654">Initial</a> (string DBname, string tabName)</td></tr>
+<tr class="memdesc:a6b36332a2db91884ebeda56a1e5bc654"><td class="mdescLeft">&#160;</td><td class="mdescRight">本函数主要是初始化数据库连接，包括数据库连接；检查指定的数据库是否存在，不存在就报错；检查指定的表是否存在，不存在则报错  <a href="#a6b36332a2db91884ebeda56a1e5bc654">更多...</a><br /></td></tr>
+<tr class="separator:a6b36332a2db91884ebeda56a1e5bc654"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private 成员函数</h2></td></tr>
+<tr class="memitem:a6a5d2a26bd4ff8c3b04b2d4c21c73d56"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_sql_controller.html#a6a5d2a26bd4ff8c3b04b2d4c21c73d56">__CheckDB</a> (MYSQL *pMysql, string DBname)</td></tr>
+<tr class="separator:a6a5d2a26bd4ff8c3b04b2d4c21c73d56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac686b574fbd9a942df7c96902470d4f1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_sql_controller.html#ac686b574fbd9a942df7c96902470d4f1">__CheckTab</a> (MYSQL *mysql, string TabName)</td></tr>
+<tr class="separator:ac686b574fbd9a942df7c96902470d4f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private 属性</h2></td></tr>
+<tr class="memitem:a519b317c415c5332553625ddddbaf086"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_sql_controller.html#a519b317c415c5332553625ddddbaf086">m_strIpAddr</a></td></tr>
+<tr class="separator:a519b317c415c5332553625ddddbaf086"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00d4c1a5f4a0e9c3f9292e253f9d2617"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_sql_controller.html#a00d4c1a5f4a0e9c3f9292e253f9d2617">m_nPort</a></td></tr>
+<tr class="separator:a00d4c1a5f4a0e9c3f9292e253f9d2617"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a720e2a21c33ace233a00d372fd1d8c4b"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_sql_controller.html#a720e2a21c33ace233a00d372fd1d8c4b">m_strUser</a></td></tr>
+<tr class="separator:a720e2a21c33ace233a00d372fd1d8c4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b14166e046098135ce342f5c43f90c9"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_sql_controller.html#a2b14166e046098135ce342f5c43f90c9">m_strPassWord</a></td></tr>
+<tr class="separator:a2b14166e046098135ce342f5c43f90c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4ecd58f7fad1363f67f517c5b525324"><td class="memItemLeft" align="right" valign="top">MYSQL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_sql_controller.html#ab4ecd58f7fad1363f67f517c5b525324">m_mysql</a></td></tr>
+<tr class="separator:ab4ecd58f7fad1363f67f517c5b525324"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">详细描述</h2>
+<div class="textblock"><p>本类主要是负责MySQL数据库通信，包含功能为：连接初始化、插入数据 </p>
+
+<p class="definition">在文件 <a class="el" href="_c_sql_controller_8h_source.html">CSqlController.h</a> 第 <a class="el" href="_c_sql_controller_8h_source.html#l00029">29</a> 行定义.</p>
+</div><h2 class="groupheader">构造及析构函数说明</h2>
+<a id="af2913bc783bcdd1a27d112d11a033357"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2913bc783bcdd1a27d112d11a033357">&#9670;&nbsp;</a></span>CSqlController()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_c_sql_controller.html">CSqlController</a> </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>strIpAddr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>nPort</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>strUser</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>strPassWord</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>构造函数 </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">strIPAddr,数据库IP地址;</td><td>nPort, 端口号； strUser, 用户名; strPassWord, 登录密码</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd>无 </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="_c_sql_controller_8cpp_source.html">CSqlController.cpp</a> 第 <a class="el" href="_c_sql_controller_8cpp_source.html#l00021">21</a> 行定义.</p>
+
+</div>
+</div>
+<a id="add361c4b54568fcfe57fce584859ee84"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add361c4b54568fcfe57fce584859ee84">&#9670;&nbsp;</a></span>~CSqlController()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">~<a class="el" href="class_c_sql_controller.html">CSqlController</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="_c_sql_controller_8cpp_source.html">CSqlController.cpp</a> 第 <a class="el" href="_c_sql_controller_8cpp_source.html#l00029">29</a> 行定义.</p>
+
+</div>
+</div>
+<h2 class="groupheader">成员函数说明</h2>
+<a id="a6a5d2a26bd4ff8c3b04b2d4c21c73d56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a5d2a26bd4ff8c3b04b2d4c21c73d56">&#9670;&nbsp;</a></span>__CheckDB()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int __CheckDB </td>
+          <td>(</td>
+          <td class="paramtype">MYSQL *&#160;</td>
+          <td class="paramname"><em>pMysql</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>DBname</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="_c_sql_controller_8cpp_source.html">CSqlController.cpp</a> 第 <a class="el" href="_c_sql_controller_8cpp_source.html#l00081">81</a> 行定义.</p>
+
+</div>
+</div>
+<a id="ac686b574fbd9a942df7c96902470d4f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac686b574fbd9a942df7c96902470d4f1">&#9670;&nbsp;</a></span>__CheckTab()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int __CheckTab </td>
+          <td>(</td>
+          <td class="paramtype">MYSQL *&#160;</td>
+          <td class="paramname"><em>mysql</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>TabName</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="_c_sql_controller_8cpp_source.html">CSqlController.cpp</a> 第 <a class="el" href="_c_sql_controller_8cpp_source.html#l00118">118</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a6b36332a2db91884ebeda56a1e5bc654"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b36332a2db91884ebeda56a1e5bc654">&#9670;&nbsp;</a></span>Initial()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Initial </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>strDBname</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>strTabName</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>本函数主要是初始化数据库连接，包括数据库连接；检查指定的数据库是否存在，不存在就报错；检查指定的表是否存在，不存在则报错 </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">strDBname,数据库名;</td><td>strTabName, 表名</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd>成功返回0；不成功返回-1 </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="_c_sql_controller_8cpp_source.html">CSqlController.cpp</a> 第 <a class="el" href="_c_sql_controller_8cpp_source.html#l00041">41</a> 行定义.</p>
+
+</div>
+</div>
+<a id="ac6c3849769a0952315f847c7f97653e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac6c3849769a0952315f847c7f97653e3">&#9670;&nbsp;</a></span>Insert()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Insert </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>strSqlCmd</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>本函数主要是插入数据到MySQL数据库 </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">strSqlCmd,数据库操作指令串</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd>成功返回0；不成功返回-1 </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="_c_sql_controller_8cpp_source.html">CSqlController.cpp</a> 第 <a class="el" href="_c_sql_controller_8cpp_source.html#l00166">166</a> 行定义.</p>
+
+</div>
+</div>
+<h2 class="groupheader">类成员变量说明</h2>
+<a id="ab4ecd58f7fad1363f67f517c5b525324"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab4ecd58f7fad1363f67f517c5b525324">&#9670;&nbsp;</a></span>m_mysql</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">MYSQL m_mysql</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="_c_sql_controller_8h_source.html">CSqlController.h</a> 第 <a class="el" href="_c_sql_controller_8h_source.html#l00036">36</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a00d4c1a5f4a0e9c3f9292e253f9d2617"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a00d4c1a5f4a0e9c3f9292e253f9d2617">&#9670;&nbsp;</a></span>m_nPort</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int m_nPort</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="_c_sql_controller_8h_source.html">CSqlController.h</a> 第 <a class="el" href="_c_sql_controller_8h_source.html#l00033">33</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a519b317c415c5332553625ddddbaf086"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a519b317c415c5332553625ddddbaf086">&#9670;&nbsp;</a></span>m_strIpAddr</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string m_strIpAddr</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="_c_sql_controller_8h_source.html">CSqlController.h</a> 第 <a class="el" href="_c_sql_controller_8h_source.html#l00032">32</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a2b14166e046098135ce342f5c43f90c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b14166e046098135ce342f5c43f90c9">&#9670;&nbsp;</a></span>m_strPassWord</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string m_strPassWord</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="_c_sql_controller_8h_source.html">CSqlController.h</a> 第 <a class="el" href="_c_sql_controller_8h_source.html#l00035">35</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a720e2a21c33ace233a00d372fd1d8c4b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a720e2a21c33ace233a00d372fd1d8c4b">&#9670;&nbsp;</a></span>m_strUser</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string m_strUser</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="_c_sql_controller_8h_source.html">CSqlController.h</a> 第 <a class="el" href="_c_sql_controller_8h_source.html#l00034">34</a> 行定义.</p>
+
+</div>
+</div>
+<hr/>该类的文档由以下文件生成:<ul>
+<li>E:/Project/GZMetro/Switch/softwareDesign/switchMonitorProject/switchMonitorClient/monitorClient/include/<a class="el" href="_c_sql_controller_8h_source.html">CSqlController.h</a></li>
+<li>E:/Project/GZMetro/Switch/softwareDesign/switchMonitorProject/switchMonitorClient/monitorClient/src/<a class="el" href="_c_sql_controller_8cpp_source.html">CSqlController.cpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+制作者 &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.13
+</small></address>
+</body>
+</html>

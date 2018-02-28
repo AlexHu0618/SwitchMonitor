@@ -1,0 +1,452 @@
+\hypertarget{class_c_udp_server}{}\section{C\+Udp\+Server类 参考}
+\label{class_c_udp_server}\index{C\+Udp\+Server@{C\+Udp\+Server}}
+
+
+本类主要是负责\+U\+D\+P通信，包含功能为：发送、接收、保存源数据、获取(/设置)接收缓冲区大小、获取下位机开始采集的时间  
+
+
+
+
+{\ttfamily \#include $<$C\+Udp\+Server.\+h$>$}
+
+
+
+C\+Udp\+Server 的协作图\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=247pt]{class_c_udp_server__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public 成员函数}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_c_udp_server_a19041db501fb138a97d3b492f8f2ab10}{C\+Udp\+Server} (const char $\ast$server\+Address, const char $\ast$client\+Address, int port, \hyperlink{_c_udp_server_8h_a41273fdeb63230b3a5c360d8c7c11b82}{S\+W\+I\+T\+C\+H\+\_\+\+T\+Y\+PE} Typeof\+Switch)
+\item 
+virtual \hyperlink{class_c_udp_server_a541cb9eac44794602e78217e636910b6}{$\sim$\+C\+Udp\+Server} ()
+\item 
+unsigned int \hyperlink{class_c_udp_server_aea22b4acc50416dd8048f42b54ec6d5d}{Getrecv\+Buf\+Size} ()
+\item 
+void \hyperlink{class_c_udp_server_ad3678f42d43bec018b78eab515d572d2}{Setrecv\+Buf\+Size} (unsigned int val)
+\item 
+int \hyperlink{class_c_udp_server_a7372271e50c6806763777245c6a0a2b8}{Send\+Data} (char $\ast$psz\+Data)
+\begin{DoxyCompactList}\small\item\em 本函数主要是发送数据，其中指令0x03与0x04发送后被直接返回判断下位机是否接收指令成功，1秒超时； \end{DoxyCompactList}\item 
+int \hyperlink{class_c_udp_server_a21fbbdcc6e88473bae9488405dcc9b95}{Recv\+Data} (int n\+Time\+Up\+Sec)
+\begin{DoxyCompactList}\small\item\em 本函数主要是接收下位机数据，在第一帧到达时获取本机时间，接收完成后分析是否有漏帧 \end{DoxyCompactList}\item 
+void \hyperlink{class_c_udp_server_a47ad892f309e7274cc2938c7cee7ba1f}{Saving\+Raw\+Data} (char $\ast$sz\+Dir\+Path)
+\begin{DoxyCompactList}\small\item\em 本函数主要是保存大缓冲区中抽取的源数据 \end{DoxyCompactList}\item 
+void \hyperlink{class_c_udp_server_ae64df8898d87418be839fed707cebe57}{Get\+Timeof\+Start\+Acq} (S\+Y\+S\+T\+E\+M\+T\+I\+ME $\ast$t\+Timeof\+Start\+Acq)
+\begin{DoxyCompactList}\small\item\em 本函数主要是获取下位机触发采集的时间 \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private 成员函数}
+\begin{DoxyCompactItemize}
+\item 
+bool \hyperlink{class_c_udp_server_ae0c29c53c86376894a6879fae8e4d6b1}{\+\_\+\+\_\+\+Frame\+Analysis} (void)
+\begin{DoxyCompactList}\small\item\em 本函数主要是分析是否漏帧，并根据总数据量计算下位机采集触发的时间 \end{DoxyCompactList}\item 
+void \hyperlink{class_c_udp_server_a1cedc8de6419884c89f5731d189175c8}{\+\_\+\+\_\+\+Extract\+Raw\+Data} (void)
+\begin{DoxyCompactList}\small\item\em 本函数主要是从每一帧中抽取每一个采样值（32bit表示）到大缓冲区 \end{DoxyCompactList}\item 
+bool \hyperlink{class_c_udp_server_af82f718355e3341a4b59dc5ecccb2fc0}{\+\_\+\+\_\+\+Is\+O\+K\+Cmd\+Back} (S\+O\+C\+K\+ET sock\+Fd, char $\ast$psz\+Sent\+Cmd, int n\+Time\+Out\+Ms)
+\begin{DoxyCompactList}\small\item\em 本函数主要是判断下位机是否接收指令成功 \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private 属性}
+\begin{DoxyCompactItemize}
+\item 
+unsigned int \hyperlink{class_c_udp_server_ad1366d54462c24ed2f0156311d71a378}{m\+\_\+un\+Recv\+Buf\+Size}
+\item 
+\hyperlink{_c_udp_server_8h_a41273fdeb63230b3a5c360d8c7c11b82}{S\+W\+I\+T\+C\+H\+\_\+\+T\+Y\+PE} \hyperlink{class_c_udp_server_a3474dde8431418b65afdd6dd13f20e4b}{m\+\_\+em\+Typeof\+Switch}
+\item 
+char($\ast$ \hyperlink{class_c_udp_server_a57438bdfb49bff7554c247c509eb261b}{m\+\_\+ppsz\+Data\+Buf} )\mbox{[}1470\mbox{]}
+\item 
+int($\ast$ \hyperlink{class_c_udp_server_a4203d95ecbe66da8c6965c49692fd8b0}{m\+\_\+ppnarr\+Raw\+Data} )\mbox{[}370\mbox{]}
+\item 
+int \hyperlink{class_c_udp_server_ac984961f2a410078bd0b2bd9f3fc86e2}{m\+\_\+n\+Frame\+Counter}
+\item 
+int \hyperlink{class_c_udp_server_abab4eee91459d8fe9adaf442a2cc0d0e}{m\+\_\+n\+Sizeof\+Every\+Channel\+Raw\+Data}
+\item 
+W\+S\+A\+D\+A\+TA \hyperlink{class_c_udp_server_a99d916e8fd71179b86cd135c2a27a905}{wsa\+Data}
+\item 
+S\+O\+C\+K\+ET \hyperlink{class_c_udp_server_a8161985c5b83878068a0e6ce4c8bcfd7}{Recv\+Socket}
+\item 
+sockaddr\+\_\+in \hyperlink{class_c_udp_server_a72b80c70fe65c0d70d3af3c2f9c38a3d}{Recv\+Addr}
+\item 
+char \hyperlink{class_c_udp_server_aa36e5573cde44b5eb5a5705b746c388f}{Recv\+Buf} \mbox{[}1500\mbox{]}
+\item 
+int \hyperlink{class_c_udp_server_af05b43787c7193d9ba50e9fa87f44675}{m\+\_\+n\+Buf\+Len}
+\item 
+sockaddr\+\_\+in \hyperlink{class_c_udp_server_afa4f2f8a24a79e3423d13b07a005f387}{Sender\+Addr}
+\end{DoxyCompactItemize}
+
+
+\subsection{详细描述}
+本类主要是负责\+U\+D\+P通信，包含功能为：发送、接收、保存源数据、获取(/设置)接收缓冲区大小、获取下位机开始采集的时间 
+
+在文件 C\+Udp\+Server.\+h 第 20 行定义.
+
+
+
+\subsection{构造及析构函数说明}
+\mbox{\Hypertarget{class_c_udp_server_a19041db501fb138a97d3b492f8f2ab10}\label{class_c_udp_server_a19041db501fb138a97d3b492f8f2ab10}} 
+\index{C\+Udp\+Server@{C\+Udp\+Server}!C\+Udp\+Server@{C\+Udp\+Server}}
+\index{C\+Udp\+Server@{C\+Udp\+Server}!C\+Udp\+Server@{C\+Udp\+Server}}
+\subsubsection{\texorpdfstring{C\+Udp\+Server()}{CUdpServer()}}
+{\footnotesize\ttfamily \hyperlink{class_c_udp_server}{C\+Udp\+Server} (\begin{DoxyParamCaption}\item[{const char $\ast$}]{server\+Address,  }\item[{const char $\ast$}]{client\+Address,  }\item[{int}]{port,  }\item[{\hyperlink{_c_udp_server_8h_a41273fdeb63230b3a5c360d8c7c11b82}{S\+W\+I\+T\+C\+H\+\_\+\+T\+Y\+PE}}]{Typeof\+Switch }\end{DoxyParamCaption})}
+
+
+
+在文件 C\+Udp\+Server.\+cpp 第 29 行定义.
+
+\mbox{\Hypertarget{class_c_udp_server_a541cb9eac44794602e78217e636910b6}\label{class_c_udp_server_a541cb9eac44794602e78217e636910b6}} 
+\index{C\+Udp\+Server@{C\+Udp\+Server}!````~C\+Udp\+Server@{$\sim$\+C\+Udp\+Server}}
+\index{````~C\+Udp\+Server@{$\sim$\+C\+Udp\+Server}!C\+Udp\+Server@{C\+Udp\+Server}}
+\subsubsection{\texorpdfstring{$\sim$\+C\+Udp\+Server()}{~CUdpServer()}}
+{\footnotesize\ttfamily $\sim$\hyperlink{class_c_udp_server}{C\+Udp\+Server} (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+在文件 C\+Udp\+Server.\+cpp 第 49 行定义.
+
+
+
+\subsection{成员函数说明}
+\mbox{\Hypertarget{class_c_udp_server_a1cedc8de6419884c89f5731d189175c8}\label{class_c_udp_server_a1cedc8de6419884c89f5731d189175c8}} 
+\index{C\+Udp\+Server@{C\+Udp\+Server}!\+\_\+\+\_\+\+Extract\+Raw\+Data@{\+\_\+\+\_\+\+Extract\+Raw\+Data}}
+\index{\+\_\+\+\_\+\+Extract\+Raw\+Data@{\+\_\+\+\_\+\+Extract\+Raw\+Data}!C\+Udp\+Server@{C\+Udp\+Server}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+Extract\+Raw\+Data()}{\_\_ExtractRawData()}}
+{\footnotesize\ttfamily void \+\_\+\+\_\+\+Extract\+Raw\+Data (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+本函数主要是从每一帧中抽取每一个采样值（32bit表示）到大缓冲区 
+
+
+\begin{DoxyParams}{参数}
+{\em void} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{返回}
+void 
+\end{DoxyReturn}
+
+
+在文件 C\+Udp\+Server.\+cpp 第 272 行定义.
+
+\mbox{\Hypertarget{class_c_udp_server_ae0c29c53c86376894a6879fae8e4d6b1}\label{class_c_udp_server_ae0c29c53c86376894a6879fae8e4d6b1}} 
+\index{C\+Udp\+Server@{C\+Udp\+Server}!\+\_\+\+\_\+\+Frame\+Analysis@{\+\_\+\+\_\+\+Frame\+Analysis}}
+\index{\+\_\+\+\_\+\+Frame\+Analysis@{\+\_\+\+\_\+\+Frame\+Analysis}!C\+Udp\+Server@{C\+Udp\+Server}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+Frame\+Analysis()}{\_\_FrameAnalysis()}}
+{\footnotesize\ttfamily bool \+\_\+\+\_\+\+Frame\+Analysis (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+本函数主要是分析是否漏帧，并根据总数据量计算下位机采集触发的时间 
+
+
+\begin{DoxyParams}{参数}
+{\em void} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{返回}
+bool，成功返回true；不成功返回false 
+\end{DoxyReturn}
+
+
+在文件 C\+Udp\+Server.\+cpp 第 228 行定义.
+
+\mbox{\Hypertarget{class_c_udp_server_af82f718355e3341a4b59dc5ecccb2fc0}\label{class_c_udp_server_af82f718355e3341a4b59dc5ecccb2fc0}} 
+\index{C\+Udp\+Server@{C\+Udp\+Server}!\+\_\+\+\_\+\+Is\+O\+K\+Cmd\+Back@{\+\_\+\+\_\+\+Is\+O\+K\+Cmd\+Back}}
+\index{\+\_\+\+\_\+\+Is\+O\+K\+Cmd\+Back@{\+\_\+\+\_\+\+Is\+O\+K\+Cmd\+Back}!C\+Udp\+Server@{C\+Udp\+Server}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+Is\+O\+K\+Cmd\+Back()}{\_\_IsOKCmdBack()}}
+{\footnotesize\ttfamily bool \+\_\+\+\_\+\+Is\+O\+K\+Cmd\+Back (\begin{DoxyParamCaption}\item[{S\+O\+C\+K\+ET}]{sock\+Fd,  }\item[{char $\ast$}]{psz\+Sent\+Cmd,  }\item[{int}]{n\+Time\+Out\+Ms }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+本函数主要是判断下位机是否接收指令成功 
+
+
+\begin{DoxyParams}{参数}
+{\em sock\+Fd} & S\+O\+C\+K\+E\+T，socket文件符 \\
+\hline
+{\em psz\+Sent\+Cmd} & char$\ast$，要发送的指令缓冲区指针 \\
+\hline
+{\em n\+Time\+Out\+Ms} & int，超时时间 \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{返回}
+bool，成功返回0；不成功返回-\/1 
+\end{DoxyReturn}
+
+
+在文件 C\+Udp\+Server.\+cpp 第 99 行定义.
+
+\mbox{\Hypertarget{class_c_udp_server_aea22b4acc50416dd8048f42b54ec6d5d}\label{class_c_udp_server_aea22b4acc50416dd8048f42b54ec6d5d}} 
+\index{C\+Udp\+Server@{C\+Udp\+Server}!Getrecv\+Buf\+Size@{Getrecv\+Buf\+Size}}
+\index{Getrecv\+Buf\+Size@{Getrecv\+Buf\+Size}!C\+Udp\+Server@{C\+Udp\+Server}}
+\subsubsection{\texorpdfstring{Getrecv\+Buf\+Size()}{GetrecvBufSize()}}
+{\footnotesize\ttfamily unsigned int Getrecv\+Buf\+Size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+在文件 C\+Udp\+Server.\+h 第 26 行定义.
+
+\mbox{\Hypertarget{class_c_udp_server_ae64df8898d87418be839fed707cebe57}\label{class_c_udp_server_ae64df8898d87418be839fed707cebe57}} 
+\index{C\+Udp\+Server@{C\+Udp\+Server}!Get\+Timeof\+Start\+Acq@{Get\+Timeof\+Start\+Acq}}
+\index{Get\+Timeof\+Start\+Acq@{Get\+Timeof\+Start\+Acq}!C\+Udp\+Server@{C\+Udp\+Server}}
+\subsubsection{\texorpdfstring{Get\+Timeof\+Start\+Acq()}{GetTimeofStartAcq()}}
+{\footnotesize\ttfamily void Get\+Timeof\+Start\+Acq (\begin{DoxyParamCaption}\item[{S\+Y\+S\+T\+E\+M\+T\+I\+ME $\ast$}]{t\+Timeof\+Start\+Acq }\end{DoxyParamCaption})}
+
+
+
+本函数主要是获取下位机触发采集的时间 
+
+
+\begin{DoxyParams}{参数}
+{\em t\+Timeof\+Start\+Acq} & S\+Y\+S\+T\+E\+M\+T\+I\+M\+E$\ast$，保存时间的结构体 \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{返回}
+void 
+\end{DoxyReturn}
+
+
+在文件 C\+Udp\+Server.\+cpp 第 394 行定义.
+
+这是这个函数的调用关系图\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=298pt]{class_c_udp_server_ae64df8898d87418be839fed707cebe57_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_c_udp_server_a21fbbdcc6e88473bae9488405dcc9b95}\label{class_c_udp_server_a21fbbdcc6e88473bae9488405dcc9b95}} 
+\index{C\+Udp\+Server@{C\+Udp\+Server}!Recv\+Data@{Recv\+Data}}
+\index{Recv\+Data@{Recv\+Data}!C\+Udp\+Server@{C\+Udp\+Server}}
+\subsubsection{\texorpdfstring{Recv\+Data()}{RecvData()}}
+{\footnotesize\ttfamily int Recv\+Data (\begin{DoxyParamCaption}\item[{int}]{n\+Time\+Up\+Sec }\end{DoxyParamCaption})}
+
+
+
+本函数主要是接收下位机数据，在第一帧到达时获取本机时间，接收完成后分析是否有漏帧 
+
+
+\begin{DoxyParams}{参数}
+{\em n\+Time\+Up\+Sec} & int，超时时间 \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{返回}
+int，成功返回接收的总帧数；不成功返回0 
+\end{DoxyReturn}
+$<$ analyzing frame 
+
+在文件 C\+Udp\+Server.\+cpp 第 141 行定义.
+
+这是这个函数的调用关系图\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=257pt]{class_c_udp_server_a21fbbdcc6e88473bae9488405dcc9b95_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_c_udp_server_a47ad892f309e7274cc2938c7cee7ba1f}\label{class_c_udp_server_a47ad892f309e7274cc2938c7cee7ba1f}} 
+\index{C\+Udp\+Server@{C\+Udp\+Server}!Saving\+Raw\+Data@{Saving\+Raw\+Data}}
+\index{Saving\+Raw\+Data@{Saving\+Raw\+Data}!C\+Udp\+Server@{C\+Udp\+Server}}
+\subsubsection{\texorpdfstring{Saving\+Raw\+Data()}{SavingRawData()}}
+{\footnotesize\ttfamily void Saving\+Raw\+Data (\begin{DoxyParamCaption}\item[{char $\ast$}]{sz\+Dir\+Path }\end{DoxyParamCaption})}
+
+
+
+本函数主要是保存大缓冲区中抽取的源数据 
+
+
+\begin{DoxyParams}{参数}
+{\em sz\+Dir\+Path} & char$\ast$，要保存的文件夹名称指针 \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{返回}
+void 
+\end{DoxyReturn}
+$<$ whether is the last frame of CH
+
+$<$ show data 
+
+在文件 C\+Udp\+Server.\+cpp 第 308 行定义.
+
+这是这个函数的调用关系图\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=283pt]{class_c_udp_server_a47ad892f309e7274cc2938c7cee7ba1f_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_c_udp_server_a7372271e50c6806763777245c6a0a2b8}\label{class_c_udp_server_a7372271e50c6806763777245c6a0a2b8}} 
+\index{C\+Udp\+Server@{C\+Udp\+Server}!Send\+Data@{Send\+Data}}
+\index{Send\+Data@{Send\+Data}!C\+Udp\+Server@{C\+Udp\+Server}}
+\subsubsection{\texorpdfstring{Send\+Data()}{SendData()}}
+{\footnotesize\ttfamily int Send\+Data (\begin{DoxyParamCaption}\item[{char $\ast$}]{psz\+Data }\end{DoxyParamCaption})}
+
+
+
+本函数主要是发送数据，其中指令0x03与0x04发送后被直接返回判断下位机是否接收指令成功，1秒超时； 
+
+
+\begin{DoxyParams}{参数}
+{\em psz\+Data,数据缓冲区指针} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{返回}
+成功返回0；不成功返回-\/1 
+\end{DoxyReturn}
+
+
+在文件 C\+Udp\+Server.\+cpp 第 66 行定义.
+
+这是这个函数的调用关系图\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=258pt]{class_c_udp_server_a7372271e50c6806763777245c6a0a2b8_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_c_udp_server_ad3678f42d43bec018b78eab515d572d2}\label{class_c_udp_server_ad3678f42d43bec018b78eab515d572d2}} 
+\index{C\+Udp\+Server@{C\+Udp\+Server}!Setrecv\+Buf\+Size@{Setrecv\+Buf\+Size}}
+\index{Setrecv\+Buf\+Size@{Setrecv\+Buf\+Size}!C\+Udp\+Server@{C\+Udp\+Server}}
+\subsubsection{\texorpdfstring{Setrecv\+Buf\+Size()}{SetrecvBufSize()}}
+{\footnotesize\ttfamily void Setrecv\+Buf\+Size (\begin{DoxyParamCaption}\item[{unsigned int}]{val }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+在文件 C\+Udp\+Server.\+h 第 27 行定义.
+
+函数调用图\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=298pt]{class_c_udp_server_ad3678f42d43bec018b78eab515d572d2_cgraph}
+\end{center}
+\end{figure}
+
+
+\subsection{类成员变量说明}
+\mbox{\Hypertarget{class_c_udp_server_a3474dde8431418b65afdd6dd13f20e4b}\label{class_c_udp_server_a3474dde8431418b65afdd6dd13f20e4b}} 
+\index{C\+Udp\+Server@{C\+Udp\+Server}!m\+\_\+em\+Typeof\+Switch@{m\+\_\+em\+Typeof\+Switch}}
+\index{m\+\_\+em\+Typeof\+Switch@{m\+\_\+em\+Typeof\+Switch}!C\+Udp\+Server@{C\+Udp\+Server}}
+\subsubsection{\texorpdfstring{m\+\_\+em\+Typeof\+Switch}{m\_emTypeofSwitch}}
+{\footnotesize\ttfamily \hyperlink{_c_udp_server_8h_a41273fdeb63230b3a5c360d8c7c11b82}{S\+W\+I\+T\+C\+H\+\_\+\+T\+Y\+PE} m\+\_\+em\+Typeof\+Switch\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 C\+Udp\+Server.\+h 第 35 行定义.
+
+\mbox{\Hypertarget{class_c_udp_server_af05b43787c7193d9ba50e9fa87f44675}\label{class_c_udp_server_af05b43787c7193d9ba50e9fa87f44675}} 
+\index{C\+Udp\+Server@{C\+Udp\+Server}!m\+\_\+n\+Buf\+Len@{m\+\_\+n\+Buf\+Len}}
+\index{m\+\_\+n\+Buf\+Len@{m\+\_\+n\+Buf\+Len}!C\+Udp\+Server@{C\+Udp\+Server}}
+\subsubsection{\texorpdfstring{m\+\_\+n\+Buf\+Len}{m\_nBufLen}}
+{\footnotesize\ttfamily int m\+\_\+n\+Buf\+Len\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 C\+Udp\+Server.\+h 第 48 行定义.
+
+\mbox{\Hypertarget{class_c_udp_server_ac984961f2a410078bd0b2bd9f3fc86e2}\label{class_c_udp_server_ac984961f2a410078bd0b2bd9f3fc86e2}} 
+\index{C\+Udp\+Server@{C\+Udp\+Server}!m\+\_\+n\+Frame\+Counter@{m\+\_\+n\+Frame\+Counter}}
+\index{m\+\_\+n\+Frame\+Counter@{m\+\_\+n\+Frame\+Counter}!C\+Udp\+Server@{C\+Udp\+Server}}
+\subsubsection{\texorpdfstring{m\+\_\+n\+Frame\+Counter}{m\_nFrameCounter}}
+{\footnotesize\ttfamily int m\+\_\+n\+Frame\+Counter\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 C\+Udp\+Server.\+h 第 38 行定义.
+
+\mbox{\Hypertarget{class_c_udp_server_abab4eee91459d8fe9adaf442a2cc0d0e}\label{class_c_udp_server_abab4eee91459d8fe9adaf442a2cc0d0e}} 
+\index{C\+Udp\+Server@{C\+Udp\+Server}!m\+\_\+n\+Sizeof\+Every\+Channel\+Raw\+Data@{m\+\_\+n\+Sizeof\+Every\+Channel\+Raw\+Data}}
+\index{m\+\_\+n\+Sizeof\+Every\+Channel\+Raw\+Data@{m\+\_\+n\+Sizeof\+Every\+Channel\+Raw\+Data}!C\+Udp\+Server@{C\+Udp\+Server}}
+\subsubsection{\texorpdfstring{m\+\_\+n\+Sizeof\+Every\+Channel\+Raw\+Data}{m\_nSizeofEveryChannelRawData}}
+{\footnotesize\ttfamily int m\+\_\+n\+Sizeof\+Every\+Channel\+Raw\+Data\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 C\+Udp\+Server.\+h 第 39 行定义.
+
+\mbox{\Hypertarget{class_c_udp_server_a4203d95ecbe66da8c6965c49692fd8b0}\label{class_c_udp_server_a4203d95ecbe66da8c6965c49692fd8b0}} 
+\index{C\+Udp\+Server@{C\+Udp\+Server}!m\+\_\+ppnarr\+Raw\+Data@{m\+\_\+ppnarr\+Raw\+Data}}
+\index{m\+\_\+ppnarr\+Raw\+Data@{m\+\_\+ppnarr\+Raw\+Data}!C\+Udp\+Server@{C\+Udp\+Server}}
+\subsubsection{\texorpdfstring{m\+\_\+ppnarr\+Raw\+Data}{m\_ppnarrRawData}}
+{\footnotesize\ttfamily int($\ast$ m\+\_\+ppnarr\+Raw\+Data)\mbox{[}370\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 C\+Udp\+Server.\+h 第 37 行定义.
+
+\mbox{\Hypertarget{class_c_udp_server_a57438bdfb49bff7554c247c509eb261b}\label{class_c_udp_server_a57438bdfb49bff7554c247c509eb261b}} 
+\index{C\+Udp\+Server@{C\+Udp\+Server}!m\+\_\+ppsz\+Data\+Buf@{m\+\_\+ppsz\+Data\+Buf}}
+\index{m\+\_\+ppsz\+Data\+Buf@{m\+\_\+ppsz\+Data\+Buf}!C\+Udp\+Server@{C\+Udp\+Server}}
+\subsubsection{\texorpdfstring{m\+\_\+ppsz\+Data\+Buf}{m\_ppszDataBuf}}
+{\footnotesize\ttfamily char($\ast$ m\+\_\+ppsz\+Data\+Buf)\mbox{[}1470\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 C\+Udp\+Server.\+h 第 36 行定义.
+
+\mbox{\Hypertarget{class_c_udp_server_ad1366d54462c24ed2f0156311d71a378}\label{class_c_udp_server_ad1366d54462c24ed2f0156311d71a378}} 
+\index{C\+Udp\+Server@{C\+Udp\+Server}!m\+\_\+un\+Recv\+Buf\+Size@{m\+\_\+un\+Recv\+Buf\+Size}}
+\index{m\+\_\+un\+Recv\+Buf\+Size@{m\+\_\+un\+Recv\+Buf\+Size}!C\+Udp\+Server@{C\+Udp\+Server}}
+\subsubsection{\texorpdfstring{m\+\_\+un\+Recv\+Buf\+Size}{m\_unRecvBufSize}}
+{\footnotesize\ttfamily unsigned int m\+\_\+un\+Recv\+Buf\+Size\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 C\+Udp\+Server.\+h 第 34 行定义.
+
+\mbox{\Hypertarget{class_c_udp_server_a72b80c70fe65c0d70d3af3c2f9c38a3d}\label{class_c_udp_server_a72b80c70fe65c0d70d3af3c2f9c38a3d}} 
+\index{C\+Udp\+Server@{C\+Udp\+Server}!Recv\+Addr@{Recv\+Addr}}
+\index{Recv\+Addr@{Recv\+Addr}!C\+Udp\+Server@{C\+Udp\+Server}}
+\subsubsection{\texorpdfstring{Recv\+Addr}{RecvAddr}}
+{\footnotesize\ttfamily sockaddr\+\_\+in Recv\+Addr\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 C\+Udp\+Server.\+h 第 46 行定义.
+
+\mbox{\Hypertarget{class_c_udp_server_aa36e5573cde44b5eb5a5705b746c388f}\label{class_c_udp_server_aa36e5573cde44b5eb5a5705b746c388f}} 
+\index{C\+Udp\+Server@{C\+Udp\+Server}!Recv\+Buf@{Recv\+Buf}}
+\index{Recv\+Buf@{Recv\+Buf}!C\+Udp\+Server@{C\+Udp\+Server}}
+\subsubsection{\texorpdfstring{Recv\+Buf}{RecvBuf}}
+{\footnotesize\ttfamily char Recv\+Buf\mbox{[}1500\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 C\+Udp\+Server.\+h 第 47 行定义.
+
+\mbox{\Hypertarget{class_c_udp_server_a8161985c5b83878068a0e6ce4c8bcfd7}\label{class_c_udp_server_a8161985c5b83878068a0e6ce4c8bcfd7}} 
+\index{C\+Udp\+Server@{C\+Udp\+Server}!Recv\+Socket@{Recv\+Socket}}
+\index{Recv\+Socket@{Recv\+Socket}!C\+Udp\+Server@{C\+Udp\+Server}}
+\subsubsection{\texorpdfstring{Recv\+Socket}{RecvSocket}}
+{\footnotesize\ttfamily S\+O\+C\+K\+ET Recv\+Socket\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 C\+Udp\+Server.\+h 第 45 行定义.
+
+\mbox{\Hypertarget{class_c_udp_server_afa4f2f8a24a79e3423d13b07a005f387}\label{class_c_udp_server_afa4f2f8a24a79e3423d13b07a005f387}} 
+\index{C\+Udp\+Server@{C\+Udp\+Server}!Sender\+Addr@{Sender\+Addr}}
+\index{Sender\+Addr@{Sender\+Addr}!C\+Udp\+Server@{C\+Udp\+Server}}
+\subsubsection{\texorpdfstring{Sender\+Addr}{SenderAddr}}
+{\footnotesize\ttfamily sockaddr\+\_\+in Sender\+Addr\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 C\+Udp\+Server.\+h 第 49 行定义.
+
+\mbox{\Hypertarget{class_c_udp_server_a99d916e8fd71179b86cd135c2a27a905}\label{class_c_udp_server_a99d916e8fd71179b86cd135c2a27a905}} 
+\index{C\+Udp\+Server@{C\+Udp\+Server}!wsa\+Data@{wsa\+Data}}
+\index{wsa\+Data@{wsa\+Data}!C\+Udp\+Server@{C\+Udp\+Server}}
+\subsubsection{\texorpdfstring{wsa\+Data}{wsaData}}
+{\footnotesize\ttfamily W\+S\+A\+D\+A\+TA wsa\+Data\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 C\+Udp\+Server.\+h 第 44 行定义.
+
+
+
+该类的文档由以下文件生成\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Project/\+G\+Z\+Metro/\+Switch/software\+Design/switch\+Monitor\+Project/switch\+Monitor\+Client/monitor\+Client/include/\hyperlink{_c_udp_server_8h}{C\+Udp\+Server.\+h}\item 
+E\+:/\+Project/\+G\+Z\+Metro/\+Switch/software\+Design/switch\+Monitor\+Project/switch\+Monitor\+Client/monitor\+Client/src/\hyperlink{_c_udp_server_8cpp}{C\+Udp\+Server.\+cpp}\end{DoxyCompactItemize}

@@ -1,0 +1,6 @@
+<map id="SetrecvBufSize" name="SetrecvBufSize">
+<area shape="rect" id="node2" href="$class_c_udp_server.html#a7372271e50c6806763777245c6a0a2b8" title="本函数主要是发送数据，其中指令0x03与0x04发送后被直接返回判断下位机是否接收指令成功，1秒超时； ..." alt="" coords="191,5,269,32"/>
+<area shape="rect" id="node3" href="$class_c_udp_server.html#a21fbbdcc6e88473bae9488405dcc9b95" title="本函数主要是接收下位机数据，在第一帧到达时获取本机时间，接收完成后分析是否有漏帧 " alt="" coords="191,56,269,83"/>
+<area shape="rect" id="node4" href="$class_c_udp_server.html#a47ad892f309e7274cc2938c7cee7ba1f" title="本函数主要是保存大缓冲区中抽取的源数据 " alt="" coords="174,107,286,133"/>
+<area shape="rect" id="node5" href="$class_c_udp_server.html#ae64df8898d87418be839fed707cebe57" title="本函数主要是获取下位机触发采集的时间 " alt="" coords="164,157,296,184"/>
+</map>

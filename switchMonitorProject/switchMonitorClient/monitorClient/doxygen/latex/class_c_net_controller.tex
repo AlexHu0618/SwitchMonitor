@@ -1,0 +1,271 @@
+\hypertarget{class_c_net_controller}{}\section{C\+Net\+Controller类 参考}
+\label{class_c_net_controller}\index{C\+Net\+Controller@{C\+Net\+Controller}}
+
+
+本类主要是负责\+T\+C\+P通信，包含功能为：连接初始化、发送、接收  
+
+
+
+
+{\ttfamily \#include $<$C\+Net\+Controller.\+h$>$}
+
+
+
+C\+Net\+Controller 的协作图\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=181pt]{class_c_net_controller__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public 成员函数}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_c_net_controller_a3648c7b399e2e252b8bd04d23a3c3c03}{C\+Net\+Controller} (string str\+I\+P\+Addr, unsigned int n\+Port, \hyperlink{_c_net_controller_8h_aa5667d9d3fb7d8d8f6293e70f99fd81d}{e\+Type\+CS} \hyperlink{_c_net_controller_8h_a12f8ec8f0e7a4584b9fe481bb53fa60e}{e\+Type})
+\begin{DoxyCompactList}\small\item\em 构造函数 \end{DoxyCompactList}\item 
+\hyperlink{class_c_net_controller_a27201190f2a9821379921627ab66a52d}{$\sim$\+C\+Net\+Controller} ()
+\item 
+int \hyperlink{class_c_net_controller_afeccfc8409078f390fe6e7b8c7e9b4b6}{Initial} ()
+\begin{DoxyCompactList}\small\item\em 本函数主要是用于初始化\+T\+C\+P连接，如果是server对象则开始自动监听，如果是client则自动获取本机\+I\+P并进行连接到本机server，在创建对象后必须人工调用 \end{DoxyCompactList}\item 
+int \hyperlink{class_c_net_controller_ac413c9924a1093308dbfdac68ce4bbc4}{Send} (const char $\ast$psz\+Buf, int n\+Length)
+\begin{DoxyCompactList}\small\item\em 本函数主要是发送指定字节长度的\+T\+C\+P数据 \end{DoxyCompactList}\item 
+int \hyperlink{class_c_net_controller_a9d08826c3ea2a87cf17990318fab9dd3}{Recv} (char $\ast$psz\+Buf, int n\+Length)
+\begin{DoxyCompactList}\small\item\em 本函数主要是接收指定长度的\+T\+C\+P数据 \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private 成员函数}
+\begin{DoxyCompactItemize}
+\item 
+bool \hyperlink{class_c_net_controller_aa231c51362064abdd6bce973f73dca8e}{\+\_\+\+\_\+\+Get\+Local\+IP} (W\+S\+A\+D\+A\+TA wsa\+Data, char $\ast$psz\+IP)
+\end{DoxyCompactItemize}
+\subsection*{Private 属性}
+\begin{DoxyCompactItemize}
+\item 
+string \hyperlink{class_c_net_controller_a526584cace9de3af7249af094c380da3}{m\+\_\+str\+I\+P\+Addr}
+\item 
+unsigned int \hyperlink{class_c_net_controller_a00d4c1a5f4a0e9c3f9292e253f9d2617}{m\+\_\+n\+Port}
+\item 
+\hyperlink{_c_net_controller_8h_aa5667d9d3fb7d8d8f6293e70f99fd81d}{e\+Type\+CS} \hyperlink{class_c_net_controller_a9f4de383cd91d024dfe0e89430d4384d}{m\+\_\+e\+Type}
+\item 
+S\+O\+C\+K\+A\+D\+D\+R\+\_\+\+IN \hyperlink{class_c_net_controller_af29cf4fecb51308d282cdf6ef664144c}{m\+\_\+addr\+Client}
+\item 
+S\+O\+C\+K\+ET \hyperlink{class_c_net_controller_a99565a48431b9ecb2cd96e0107e87593}{m\+\_\+sock}
+\item 
+S\+O\+C\+K\+ET \hyperlink{class_c_net_controller_a7d49308d38eac082f57ad3b52ca12eef}{m\+\_\+sock\+Conn}
+\item 
+bool \hyperlink{class_c_net_controller_a815c57677b937b126963c6021e8b9ed2}{m\+\_\+b\+Connected}
+\end{DoxyCompactItemize}
+
+
+\subsection{详细描述}
+本类主要是负责\+T\+C\+P通信，包含功能为：连接初始化、发送、接收 
+
+在文件 C\+Net\+Controller.\+h 第 23 行定义.
+
+
+
+\subsection{构造及析构函数说明}
+\mbox{\Hypertarget{class_c_net_controller_a3648c7b399e2e252b8bd04d23a3c3c03}\label{class_c_net_controller_a3648c7b399e2e252b8bd04d23a3c3c03}} 
+\index{C\+Net\+Controller@{C\+Net\+Controller}!C\+Net\+Controller@{C\+Net\+Controller}}
+\index{C\+Net\+Controller@{C\+Net\+Controller}!C\+Net\+Controller@{C\+Net\+Controller}}
+\subsubsection{\texorpdfstring{C\+Net\+Controller()}{CNetController()}}
+{\footnotesize\ttfamily \hyperlink{class_c_net_controller}{C\+Net\+Controller} (\begin{DoxyParamCaption}\item[{string}]{str\+I\+P\+Addr,  }\item[{unsigned int}]{n\+Port,  }\item[{\hyperlink{_c_net_controller_8h_aa5667d9d3fb7d8d8f6293e70f99fd81d}{e\+Type\+CS}}]{e\+Type }\end{DoxyParamCaption})}
+
+
+
+构造函数 
+
+
+\begin{DoxyParams}{参数}
+{\em str\+I\+P\+Addr,I\+P地址;} & n\+Port, 端口号； e\+Type, 对象类型（server or client）\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{返回}
+无 
+\end{DoxyReturn}
+
+
+在文件 C\+Net\+Controller.\+cpp 第 20 行定义.
+
+\mbox{\Hypertarget{class_c_net_controller_a27201190f2a9821379921627ab66a52d}\label{class_c_net_controller_a27201190f2a9821379921627ab66a52d}} 
+\index{C\+Net\+Controller@{C\+Net\+Controller}!````~C\+Net\+Controller@{$\sim$\+C\+Net\+Controller}}
+\index{````~C\+Net\+Controller@{$\sim$\+C\+Net\+Controller}!C\+Net\+Controller@{C\+Net\+Controller}}
+\subsubsection{\texorpdfstring{$\sim$\+C\+Net\+Controller()}{~CNetController()}}
+{\footnotesize\ttfamily $\sim$\hyperlink{class_c_net_controller}{C\+Net\+Controller} (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+在文件 C\+Net\+Controller.\+cpp 第 28 行定义.
+
+
+
+\subsection{成员函数说明}
+\mbox{\Hypertarget{class_c_net_controller_aa231c51362064abdd6bce973f73dca8e}\label{class_c_net_controller_aa231c51362064abdd6bce973f73dca8e}} 
+\index{C\+Net\+Controller@{C\+Net\+Controller}!\+\_\+\+\_\+\+Get\+Local\+IP@{\+\_\+\+\_\+\+Get\+Local\+IP}}
+\index{\+\_\+\+\_\+\+Get\+Local\+IP@{\+\_\+\+\_\+\+Get\+Local\+IP}!C\+Net\+Controller@{C\+Net\+Controller}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+Get\+Local\+I\+P()}{\_\_GetLocalIP()}}
+{\footnotesize\ttfamily bool \+\_\+\+\_\+\+Get\+Local\+IP (\begin{DoxyParamCaption}\item[{W\+S\+A\+D\+A\+TA}]{wsa\+Data,  }\item[{char $\ast$}]{psz\+IP }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 C\+Net\+Controller.\+cpp 第 127 行定义.
+
+这是这个函数的调用关系图\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=230pt]{class_c_net_controller_aa231c51362064abdd6bce973f73dca8e_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_c_net_controller_afeccfc8409078f390fe6e7b8c7e9b4b6}\label{class_c_net_controller_afeccfc8409078f390fe6e7b8c7e9b4b6}} 
+\index{C\+Net\+Controller@{C\+Net\+Controller}!Initial@{Initial}}
+\index{Initial@{Initial}!C\+Net\+Controller@{C\+Net\+Controller}}
+\subsubsection{\texorpdfstring{Initial()}{Initial()}}
+{\footnotesize\ttfamily int Initial (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+本函数主要是用于初始化\+T\+C\+P连接，如果是server对象则开始自动监听，如果是client则自动获取本机\+I\+P并进行连接到本机server，在创建对象后必须人工调用 
+
+
+\begin{DoxyParams}{参数}
+{\em 无} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{返回}
+成功返回0；不成功返回-\/1 
+\end{DoxyReturn}
+$<$ bind and listen
+
+$<$ connect to server 
+
+在文件 C\+Net\+Controller.\+cpp 第 46 行定义.
+
+函数调用图\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=230pt]{class_c_net_controller_afeccfc8409078f390fe6e7b8c7e9b4b6_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_c_net_controller_a9d08826c3ea2a87cf17990318fab9dd3}\label{class_c_net_controller_a9d08826c3ea2a87cf17990318fab9dd3}} 
+\index{C\+Net\+Controller@{C\+Net\+Controller}!Recv@{Recv}}
+\index{Recv@{Recv}!C\+Net\+Controller@{C\+Net\+Controller}}
+\subsubsection{\texorpdfstring{Recv()}{Recv()}}
+{\footnotesize\ttfamily int Recv (\begin{DoxyParamCaption}\item[{char $\ast$}]{psz\+Buf,  }\item[{int}]{n\+Length }\end{DoxyParamCaption})}
+
+
+
+本函数主要是接收指定长度的\+T\+C\+P数据 
+
+
+\begin{DoxyParams}{参数}
+{\em psz\+Buf,接收缓冲区指针;} & n\+Length, 要接收的数据长度\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{返回}
+成功返回已接收的数据长度; 不成功返回-\/1 
+\end{DoxyReturn}
+
+
+在文件 C\+Net\+Controller.\+cpp 第 189 行定义.
+
+\mbox{\Hypertarget{class_c_net_controller_ac413c9924a1093308dbfdac68ce4bbc4}\label{class_c_net_controller_ac413c9924a1093308dbfdac68ce4bbc4}} 
+\index{C\+Net\+Controller@{C\+Net\+Controller}!Send@{Send}}
+\index{Send@{Send}!C\+Net\+Controller@{C\+Net\+Controller}}
+\subsubsection{\texorpdfstring{Send()}{Send()}}
+{\footnotesize\ttfamily int Send (\begin{DoxyParamCaption}\item[{const char $\ast$}]{psz\+Buf,  }\item[{int}]{n\+Length }\end{DoxyParamCaption})}
+
+
+
+本函数主要是发送指定字节长度的\+T\+C\+P数据 
+
+
+\begin{DoxyParams}{参数}
+{\em psz\+Buf,发送数据缓冲区指针;} & n\+Length, 发送数据长度\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{返回}
+成功返回已发送的数据长度; 不成功返回-\/1 
+\end{DoxyReturn}
+
+
+在文件 C\+Net\+Controller.\+cpp 第 154 行定义.
+
+
+
+\subsection{类成员变量说明}
+\mbox{\Hypertarget{class_c_net_controller_af29cf4fecb51308d282cdf6ef664144c}\label{class_c_net_controller_af29cf4fecb51308d282cdf6ef664144c}} 
+\index{C\+Net\+Controller@{C\+Net\+Controller}!m\+\_\+addr\+Client@{m\+\_\+addr\+Client}}
+\index{m\+\_\+addr\+Client@{m\+\_\+addr\+Client}!C\+Net\+Controller@{C\+Net\+Controller}}
+\subsubsection{\texorpdfstring{m\+\_\+addr\+Client}{m\_addrClient}}
+{\footnotesize\ttfamily S\+O\+C\+K\+A\+D\+D\+R\+\_\+\+IN m\+\_\+addr\+Client\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 C\+Net\+Controller.\+h 第 29 行定义.
+
+\mbox{\Hypertarget{class_c_net_controller_a815c57677b937b126963c6021e8b9ed2}\label{class_c_net_controller_a815c57677b937b126963c6021e8b9ed2}} 
+\index{C\+Net\+Controller@{C\+Net\+Controller}!m\+\_\+b\+Connected@{m\+\_\+b\+Connected}}
+\index{m\+\_\+b\+Connected@{m\+\_\+b\+Connected}!C\+Net\+Controller@{C\+Net\+Controller}}
+\subsubsection{\texorpdfstring{m\+\_\+b\+Connected}{m\_bConnected}}
+{\footnotesize\ttfamily bool m\+\_\+b\+Connected\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 C\+Net\+Controller.\+h 第 32 行定义.
+
+\mbox{\Hypertarget{class_c_net_controller_a9f4de383cd91d024dfe0e89430d4384d}\label{class_c_net_controller_a9f4de383cd91d024dfe0e89430d4384d}} 
+\index{C\+Net\+Controller@{C\+Net\+Controller}!m\+\_\+e\+Type@{m\+\_\+e\+Type}}
+\index{m\+\_\+e\+Type@{m\+\_\+e\+Type}!C\+Net\+Controller@{C\+Net\+Controller}}
+\subsubsection{\texorpdfstring{m\+\_\+e\+Type}{m\_eType}}
+{\footnotesize\ttfamily \hyperlink{_c_net_controller_8h_aa5667d9d3fb7d8d8f6293e70f99fd81d}{e\+Type\+CS} m\+\_\+e\+Type\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 C\+Net\+Controller.\+h 第 28 行定义.
+
+\mbox{\Hypertarget{class_c_net_controller_a00d4c1a5f4a0e9c3f9292e253f9d2617}\label{class_c_net_controller_a00d4c1a5f4a0e9c3f9292e253f9d2617}} 
+\index{C\+Net\+Controller@{C\+Net\+Controller}!m\+\_\+n\+Port@{m\+\_\+n\+Port}}
+\index{m\+\_\+n\+Port@{m\+\_\+n\+Port}!C\+Net\+Controller@{C\+Net\+Controller}}
+\subsubsection{\texorpdfstring{m\+\_\+n\+Port}{m\_nPort}}
+{\footnotesize\ttfamily unsigned int m\+\_\+n\+Port\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 C\+Net\+Controller.\+h 第 27 行定义.
+
+\mbox{\Hypertarget{class_c_net_controller_a99565a48431b9ecb2cd96e0107e87593}\label{class_c_net_controller_a99565a48431b9ecb2cd96e0107e87593}} 
+\index{C\+Net\+Controller@{C\+Net\+Controller}!m\+\_\+sock@{m\+\_\+sock}}
+\index{m\+\_\+sock@{m\+\_\+sock}!C\+Net\+Controller@{C\+Net\+Controller}}
+\subsubsection{\texorpdfstring{m\+\_\+sock}{m\_sock}}
+{\footnotesize\ttfamily S\+O\+C\+K\+ET m\+\_\+sock\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 C\+Net\+Controller.\+h 第 30 行定义.
+
+\mbox{\Hypertarget{class_c_net_controller_a7d49308d38eac082f57ad3b52ca12eef}\label{class_c_net_controller_a7d49308d38eac082f57ad3b52ca12eef}} 
+\index{C\+Net\+Controller@{C\+Net\+Controller}!m\+\_\+sock\+Conn@{m\+\_\+sock\+Conn}}
+\index{m\+\_\+sock\+Conn@{m\+\_\+sock\+Conn}!C\+Net\+Controller@{C\+Net\+Controller}}
+\subsubsection{\texorpdfstring{m\+\_\+sock\+Conn}{m\_sockConn}}
+{\footnotesize\ttfamily S\+O\+C\+K\+ET m\+\_\+sock\+Conn\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 C\+Net\+Controller.\+h 第 31 行定义.
+
+\mbox{\Hypertarget{class_c_net_controller_a526584cace9de3af7249af094c380da3}\label{class_c_net_controller_a526584cace9de3af7249af094c380da3}} 
+\index{C\+Net\+Controller@{C\+Net\+Controller}!m\+\_\+str\+I\+P\+Addr@{m\+\_\+str\+I\+P\+Addr}}
+\index{m\+\_\+str\+I\+P\+Addr@{m\+\_\+str\+I\+P\+Addr}!C\+Net\+Controller@{C\+Net\+Controller}}
+\subsubsection{\texorpdfstring{m\+\_\+str\+I\+P\+Addr}{m\_strIPAddr}}
+{\footnotesize\ttfamily string m\+\_\+str\+I\+P\+Addr\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 C\+Net\+Controller.\+h 第 26 行定义.
+
+
+
+该类的文档由以下文件生成\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Project/\+G\+Z\+Metro/\+Switch/software\+Design/switch\+Monitor\+Project/switch\+Monitor\+Client/monitor\+Client/include/\hyperlink{_c_net_controller_8h}{C\+Net\+Controller.\+h}\item 
+E\+:/\+Project/\+G\+Z\+Metro/\+Switch/software\+Design/switch\+Monitor\+Project/switch\+Monitor\+Client/monitor\+Client/src/\hyperlink{_c_net_controller_8cpp}{C\+Net\+Controller.\+cpp}\end{DoxyCompactItemize}

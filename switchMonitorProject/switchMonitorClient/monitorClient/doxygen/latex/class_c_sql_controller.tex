@@ -1,0 +1,219 @@
+\hypertarget{class_c_sql_controller}{}\section{C\+Sql\+Controller类 参考}
+\label{class_c_sql_controller}\index{C\+Sql\+Controller@{C\+Sql\+Controller}}
+
+
+本类主要是负责\+My\+S\+Q\+L数据库通信，包含功能为：连接初始化、插入数据  
+
+
+
+
+{\ttfamily \#include $<$C\+Sql\+Controller.\+h$>$}
+
+
+
+C\+Sql\+Controller 的协作图\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=180pt]{class_c_sql_controller__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public 成员函数}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_c_sql_controller_af2913bc783bcdd1a27d112d11a033357}{C\+Sql\+Controller} (string str\+Ip\+Addr, unsigned int n\+Port, string str\+User, string str\+Pass\+Word)
+\begin{DoxyCompactList}\small\item\em 构造函数 \end{DoxyCompactList}\item 
+\hyperlink{class_c_sql_controller_add361c4b54568fcfe57fce584859ee84}{$\sim$\+C\+Sql\+Controller} ()
+\item 
+int \hyperlink{class_c_sql_controller_ac6c3849769a0952315f847c7f97653e3}{Insert} (string str\+Sql\+Cmd)
+\begin{DoxyCompactList}\small\item\em 本函数主要是插入数据到\+My\+S\+Q\+L数据库 \end{DoxyCompactList}\item 
+int \hyperlink{class_c_sql_controller_a6b36332a2db91884ebeda56a1e5bc654}{Initial} (string D\+Bname, string tab\+Name)
+\begin{DoxyCompactList}\small\item\em 本函数主要是初始化数据库连接，包括数据库连接；检查指定的数据库是否存在，不存在就报错；检查指定的表是否存在，不存在则报错 \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private 成员函数}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{class_c_sql_controller_a6a5d2a26bd4ff8c3b04b2d4c21c73d56}{\+\_\+\+\_\+\+Check\+DB} (M\+Y\+S\+QL $\ast$p\+Mysql, string D\+Bname)
+\item 
+int \hyperlink{class_c_sql_controller_ac686b574fbd9a942df7c96902470d4f1}{\+\_\+\+\_\+\+Check\+Tab} (M\+Y\+S\+QL $\ast$mysql, string Tab\+Name)
+\end{DoxyCompactItemize}
+\subsection*{Private 属性}
+\begin{DoxyCompactItemize}
+\item 
+string \hyperlink{class_c_sql_controller_a519b317c415c5332553625ddddbaf086}{m\+\_\+str\+Ip\+Addr}
+\item 
+unsigned int \hyperlink{class_c_sql_controller_a00d4c1a5f4a0e9c3f9292e253f9d2617}{m\+\_\+n\+Port}
+\item 
+string \hyperlink{class_c_sql_controller_a720e2a21c33ace233a00d372fd1d8c4b}{m\+\_\+str\+User}
+\item 
+string \hyperlink{class_c_sql_controller_a2b14166e046098135ce342f5c43f90c9}{m\+\_\+str\+Pass\+Word}
+\item 
+M\+Y\+S\+QL \hyperlink{class_c_sql_controller_ab4ecd58f7fad1363f67f517c5b525324}{m\+\_\+mysql}
+\end{DoxyCompactItemize}
+
+
+\subsection{详细描述}
+本类主要是负责\+My\+S\+Q\+L数据库通信，包含功能为：连接初始化、插入数据 
+
+在文件 C\+Sql\+Controller.\+h 第 29 行定义.
+
+
+
+\subsection{构造及析构函数说明}
+\mbox{\Hypertarget{class_c_sql_controller_af2913bc783bcdd1a27d112d11a033357}\label{class_c_sql_controller_af2913bc783bcdd1a27d112d11a033357}} 
+\index{C\+Sql\+Controller@{C\+Sql\+Controller}!C\+Sql\+Controller@{C\+Sql\+Controller}}
+\index{C\+Sql\+Controller@{C\+Sql\+Controller}!C\+Sql\+Controller@{C\+Sql\+Controller}}
+\subsubsection{\texorpdfstring{C\+Sql\+Controller()}{CSqlController()}}
+{\footnotesize\ttfamily \hyperlink{class_c_sql_controller}{C\+Sql\+Controller} (\begin{DoxyParamCaption}\item[{string}]{str\+Ip\+Addr,  }\item[{unsigned int}]{n\+Port,  }\item[{string}]{str\+User,  }\item[{string}]{str\+Pass\+Word }\end{DoxyParamCaption})}
+
+
+
+构造函数 
+
+
+\begin{DoxyParams}{参数}
+{\em str\+I\+P\+Addr,数据库\+I\+P地址;} & n\+Port, 端口号； str\+User, 用户名; str\+Pass\+Word, 登录密码\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{返回}
+无 
+\end{DoxyReturn}
+
+
+在文件 C\+Sql\+Controller.\+cpp 第 21 行定义.
+
+\mbox{\Hypertarget{class_c_sql_controller_add361c4b54568fcfe57fce584859ee84}\label{class_c_sql_controller_add361c4b54568fcfe57fce584859ee84}} 
+\index{C\+Sql\+Controller@{C\+Sql\+Controller}!````~C\+Sql\+Controller@{$\sim$\+C\+Sql\+Controller}}
+\index{````~C\+Sql\+Controller@{$\sim$\+C\+Sql\+Controller}!C\+Sql\+Controller@{C\+Sql\+Controller}}
+\subsubsection{\texorpdfstring{$\sim$\+C\+Sql\+Controller()}{~CSqlController()}}
+{\footnotesize\ttfamily $\sim$\hyperlink{class_c_sql_controller}{C\+Sql\+Controller} (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+在文件 C\+Sql\+Controller.\+cpp 第 29 行定义.
+
+
+
+\subsection{成员函数说明}
+\mbox{\Hypertarget{class_c_sql_controller_a6a5d2a26bd4ff8c3b04b2d4c21c73d56}\label{class_c_sql_controller_a6a5d2a26bd4ff8c3b04b2d4c21c73d56}} 
+\index{C\+Sql\+Controller@{C\+Sql\+Controller}!\+\_\+\+\_\+\+Check\+DB@{\+\_\+\+\_\+\+Check\+DB}}
+\index{\+\_\+\+\_\+\+Check\+DB@{\+\_\+\+\_\+\+Check\+DB}!C\+Sql\+Controller@{C\+Sql\+Controller}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+Check\+D\+B()}{\_\_CheckDB()}}
+{\footnotesize\ttfamily int \+\_\+\+\_\+\+Check\+DB (\begin{DoxyParamCaption}\item[{M\+Y\+S\+QL $\ast$}]{p\+Mysql,  }\item[{string}]{D\+Bname }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 C\+Sql\+Controller.\+cpp 第 81 行定义.
+
+\mbox{\Hypertarget{class_c_sql_controller_ac686b574fbd9a942df7c96902470d4f1}\label{class_c_sql_controller_ac686b574fbd9a942df7c96902470d4f1}} 
+\index{C\+Sql\+Controller@{C\+Sql\+Controller}!\+\_\+\+\_\+\+Check\+Tab@{\+\_\+\+\_\+\+Check\+Tab}}
+\index{\+\_\+\+\_\+\+Check\+Tab@{\+\_\+\+\_\+\+Check\+Tab}!C\+Sql\+Controller@{C\+Sql\+Controller}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+\+Check\+Tab()}{\_\_CheckTab()}}
+{\footnotesize\ttfamily int \+\_\+\+\_\+\+Check\+Tab (\begin{DoxyParamCaption}\item[{M\+Y\+S\+QL $\ast$}]{mysql,  }\item[{string}]{Tab\+Name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 C\+Sql\+Controller.\+cpp 第 118 行定义.
+
+\mbox{\Hypertarget{class_c_sql_controller_a6b36332a2db91884ebeda56a1e5bc654}\label{class_c_sql_controller_a6b36332a2db91884ebeda56a1e5bc654}} 
+\index{C\+Sql\+Controller@{C\+Sql\+Controller}!Initial@{Initial}}
+\index{Initial@{Initial}!C\+Sql\+Controller@{C\+Sql\+Controller}}
+\subsubsection{\texorpdfstring{Initial()}{Initial()}}
+{\footnotesize\ttfamily int Initial (\begin{DoxyParamCaption}\item[{string}]{str\+D\+Bname,  }\item[{string}]{str\+Tab\+Name }\end{DoxyParamCaption})}
+
+
+
+本函数主要是初始化数据库连接，包括数据库连接；检查指定的数据库是否存在，不存在就报错；检查指定的表是否存在，不存在则报错 
+
+
+\begin{DoxyParams}{参数}
+{\em str\+D\+Bname,数据库名;} & str\+Tab\+Name, 表名\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{返回}
+成功返回0；不成功返回-\/1 
+\end{DoxyReturn}
+
+
+在文件 C\+Sql\+Controller.\+cpp 第 41 行定义.
+
+\mbox{\Hypertarget{class_c_sql_controller_ac6c3849769a0952315f847c7f97653e3}\label{class_c_sql_controller_ac6c3849769a0952315f847c7f97653e3}} 
+\index{C\+Sql\+Controller@{C\+Sql\+Controller}!Insert@{Insert}}
+\index{Insert@{Insert}!C\+Sql\+Controller@{C\+Sql\+Controller}}
+\subsubsection{\texorpdfstring{Insert()}{Insert()}}
+{\footnotesize\ttfamily int Insert (\begin{DoxyParamCaption}\item[{string}]{str\+Sql\+Cmd }\end{DoxyParamCaption})}
+
+
+
+本函数主要是插入数据到\+My\+S\+Q\+L数据库 
+
+
+\begin{DoxyParams}{参数}
+{\em str\+Sql\+Cmd,数据库操作指令串} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{返回}
+成功返回0；不成功返回-\/1 
+\end{DoxyReturn}
+
+
+在文件 C\+Sql\+Controller.\+cpp 第 166 行定义.
+
+
+
+\subsection{类成员变量说明}
+\mbox{\Hypertarget{class_c_sql_controller_ab4ecd58f7fad1363f67f517c5b525324}\label{class_c_sql_controller_ab4ecd58f7fad1363f67f517c5b525324}} 
+\index{C\+Sql\+Controller@{C\+Sql\+Controller}!m\+\_\+mysql@{m\+\_\+mysql}}
+\index{m\+\_\+mysql@{m\+\_\+mysql}!C\+Sql\+Controller@{C\+Sql\+Controller}}
+\subsubsection{\texorpdfstring{m\+\_\+mysql}{m\_mysql}}
+{\footnotesize\ttfamily M\+Y\+S\+QL m\+\_\+mysql\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 C\+Sql\+Controller.\+h 第 36 行定义.
+
+\mbox{\Hypertarget{class_c_sql_controller_a00d4c1a5f4a0e9c3f9292e253f9d2617}\label{class_c_sql_controller_a00d4c1a5f4a0e9c3f9292e253f9d2617}} 
+\index{C\+Sql\+Controller@{C\+Sql\+Controller}!m\+\_\+n\+Port@{m\+\_\+n\+Port}}
+\index{m\+\_\+n\+Port@{m\+\_\+n\+Port}!C\+Sql\+Controller@{C\+Sql\+Controller}}
+\subsubsection{\texorpdfstring{m\+\_\+n\+Port}{m\_nPort}}
+{\footnotesize\ttfamily unsigned int m\+\_\+n\+Port\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 C\+Sql\+Controller.\+h 第 33 行定义.
+
+\mbox{\Hypertarget{class_c_sql_controller_a519b317c415c5332553625ddddbaf086}\label{class_c_sql_controller_a519b317c415c5332553625ddddbaf086}} 
+\index{C\+Sql\+Controller@{C\+Sql\+Controller}!m\+\_\+str\+Ip\+Addr@{m\+\_\+str\+Ip\+Addr}}
+\index{m\+\_\+str\+Ip\+Addr@{m\+\_\+str\+Ip\+Addr}!C\+Sql\+Controller@{C\+Sql\+Controller}}
+\subsubsection{\texorpdfstring{m\+\_\+str\+Ip\+Addr}{m\_strIpAddr}}
+{\footnotesize\ttfamily string m\+\_\+str\+Ip\+Addr\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 C\+Sql\+Controller.\+h 第 32 行定义.
+
+\mbox{\Hypertarget{class_c_sql_controller_a2b14166e046098135ce342f5c43f90c9}\label{class_c_sql_controller_a2b14166e046098135ce342f5c43f90c9}} 
+\index{C\+Sql\+Controller@{C\+Sql\+Controller}!m\+\_\+str\+Pass\+Word@{m\+\_\+str\+Pass\+Word}}
+\index{m\+\_\+str\+Pass\+Word@{m\+\_\+str\+Pass\+Word}!C\+Sql\+Controller@{C\+Sql\+Controller}}
+\subsubsection{\texorpdfstring{m\+\_\+str\+Pass\+Word}{m\_strPassWord}}
+{\footnotesize\ttfamily string m\+\_\+str\+Pass\+Word\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 C\+Sql\+Controller.\+h 第 35 行定义.
+
+\mbox{\Hypertarget{class_c_sql_controller_a720e2a21c33ace233a00d372fd1d8c4b}\label{class_c_sql_controller_a720e2a21c33ace233a00d372fd1d8c4b}} 
+\index{C\+Sql\+Controller@{C\+Sql\+Controller}!m\+\_\+str\+User@{m\+\_\+str\+User}}
+\index{m\+\_\+str\+User@{m\+\_\+str\+User}!C\+Sql\+Controller@{C\+Sql\+Controller}}
+\subsubsection{\texorpdfstring{m\+\_\+str\+User}{m\_strUser}}
+{\footnotesize\ttfamily string m\+\_\+str\+User\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 C\+Sql\+Controller.\+h 第 34 行定义.
+
+
+
+该类的文档由以下文件生成\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Project/\+G\+Z\+Metro/\+Switch/software\+Design/switch\+Monitor\+Project/switch\+Monitor\+Client/monitor\+Client/include/\hyperlink{_c_sql_controller_8h}{C\+Sql\+Controller.\+h}\item 
+E\+:/\+Project/\+G\+Z\+Metro/\+Switch/software\+Design/switch\+Monitor\+Project/switch\+Monitor\+Client/monitor\+Client/src/\hyperlink{_c_sql_controller_8cpp}{C\+Sql\+Controller.\+cpp}\end{DoxyCompactItemize}

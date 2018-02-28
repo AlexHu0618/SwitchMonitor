@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.13"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>monitorClient: E:/Project/GZMetro/Switch/softwareDesign/switchMonitorProject/switchMonitorClient/monitorClient/src/CPreprocessor.cpp 源文件</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">monitorClient
+   &#160;<span id="projectnumber">V1.0</span>
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.8.13 -->
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',false,false,'search.php','搜索');
+});
+</script>
+<div id="main-nav"></div>
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">CPreprocessor.cpp</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="_c_preprocessor_8cpp.html">浏览该文件的文档.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div><div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_c_preprocessor_8h.html">CPreprocessor.h</a>&quot;</span></div><div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;iostream&gt;</span></div><div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;malloc.h&gt;</span></div><div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;math.h&gt;</span></div><div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div><div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="class_c_preprocessor.html#a717b5ebb25759e4b25a2caef6e8ebceb">   14</a></span>&#160;<a class="code" href="class_c_preprocessor.html#a717b5ebb25759e4b25a2caef6e8ebceb">CPreprocessor::CPreprocessor</a>()</div><div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;{</div><div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;</div><div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;}</div><div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;</div><div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="class_c_preprocessor.html#ab669c61dd49b3533163393e3f2f5aba1">   19</a></span>&#160;<a class="code" href="class_c_preprocessor.html#ab669c61dd49b3533163393e3f2f5aba1">CPreprocessor::~CPreprocessor</a>()</div><div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;{</div><div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div><div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;}</div><div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div><div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="class_c_preprocessor.html#a0ecc6ebcfa0004ea81b419f5e052265a">   24</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="class_c_preprocessor.html#a0ecc6ebcfa0004ea81b419f5e052265a">CPreprocessor::__RMS</a>( <span class="keywordtype">double</span>* parrdDataIn, vector&lt;double&gt;* pvecdDataOut, <span class="keywordtype">int</span> nLength, <span class="keywordtype">int</span> nSubLength )</div><div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;{</div><div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordtype">double</span> dSum = 0;</div><div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordtype">double</span> dRmsVal = 0;</div><div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordflow">for</span>( <span class="keywordtype">int</span> nNum = nSubLength; nNum &lt; nLength-nSubLength; ++nNum )   <span class="comment">//nSubLength is the caculating interval</span></div><div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    {</div><div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        dSum = 0;</div><div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keywordflow">for</span>( <span class="keywordtype">int</span> i = nNum-nSubLength; i &lt; nNum+nSubLength; ++i )</div><div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        {</div><div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;            dSum += (parrdDataIn[i] * parrdDataIn[i]);</div><div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        }</div><div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        dRmsVal = sqrt( dSum/(nSubLength&lt;&lt;1) );</div><div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        (*pvecdDataOut).push_back( dRmsVal );</div><div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    }</div><div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordflow">return</span> 0;</div><div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;}</div><div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div><div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="class_c_preprocessor.html#ab3442e434eabf48db4bc6b86b915e985">   48</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="class_c_preprocessor.html#ab3442e434eabf48db4bc6b86b915e985">CPreprocessor::doPreprocess</a>( <span class="keywordtype">double</span>* parrdDataIn, vector&lt;double&gt;* pvecdDataOut, <span class="keywordtype">int</span> nLength, <span class="keywordtype">string</span> strAlgorithm )</div><div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;{</div><div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    (*pvecdDataOut).clear();</div><div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordtype">int</span> nResult = 0;</div><div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    nResult = <a class="code" href="class_c_preprocessor.html#a0ecc6ebcfa0004ea81b419f5e052265a">__RMS</a>( parrdDataIn, pvecdDataOut, nLength, 3 );</div><div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordflow">if</span>( nResult == 0 )</div><div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    {</div><div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keywordflow">return</span> 0;</div><div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    }</div><div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordflow">else</span></div><div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    {</div><div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        cerr &lt;&lt; <span class="stringliteral">&quot;doPreprocess() error&quot;</span>;</div><div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="keywordflow">return</span> -1;</div><div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    }</div><div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;}</div><div class="ttc" id="class_c_preprocessor_html_ab669c61dd49b3533163393e3f2f5aba1"><div class="ttname"><a href="class_c_preprocessor.html#ab669c61dd49b3533163393e3f2f5aba1">CPreprocessor::~CPreprocessor</a></div><div class="ttdeci">~CPreprocessor()</div><div class="ttdef"><b>Definition:</b> <a href="_c_preprocessor_8cpp_source.html#l00019">CPreprocessor.cpp:19</a></div></div>
+<div class="ttc" id="class_c_preprocessor_html_ab3442e434eabf48db4bc6b86b915e985"><div class="ttname"><a href="class_c_preprocessor.html#ab3442e434eabf48db4bc6b86b915e985">CPreprocessor::doPreprocess</a></div><div class="ttdeci">int doPreprocess(double *parrdDataIn, vector&lt; double &gt; *pvecdDataOut, int nLength, string strAlgorithm)</div><div class="ttdoc">本函数主要是计算RMS </div><div class="ttdef"><b>Definition:</b> <a href="_c_preprocessor_8cpp_source.html#l00048">CPreprocessor.cpp:48</a></div></div>
+<div class="ttc" id="class_c_preprocessor_html_a0ecc6ebcfa0004ea81b419f5e052265a"><div class="ttname"><a href="class_c_preprocessor.html#a0ecc6ebcfa0004ea81b419f5e052265a">CPreprocessor::__RMS</a></div><div class="ttdeci">int __RMS(double *parrdDataIn, vector&lt; double &gt; *pvecdDataOut, int nLength, int nSubLength)</div><div class="ttdef"><b>Definition:</b> <a href="_c_preprocessor_8cpp_source.html#l00024">CPreprocessor.cpp:24</a></div></div>
+<div class="ttc" id="_c_preprocessor_8h_html"><div class="ttname"><a href="_c_preprocessor_8h.html">CPreprocessor.h</a></div><div class="ttdoc">the head file include class CPreprocessor, for data pre-processing </div></div>
+<div class="ttc" id="class_c_preprocessor_html_a717b5ebb25759e4b25a2caef6e8ebceb"><div class="ttname"><a href="class_c_preprocessor.html#a717b5ebb25759e4b25a2caef6e8ebceb">CPreprocessor::CPreprocessor</a></div><div class="ttdeci">CPreprocessor()</div><div class="ttdef"><b>Definition:</b> <a href="_c_preprocessor_8cpp_source.html#l00014">CPreprocessor.cpp:14</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+制作者 &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.13
+</small></address>
+</body>
+</html>

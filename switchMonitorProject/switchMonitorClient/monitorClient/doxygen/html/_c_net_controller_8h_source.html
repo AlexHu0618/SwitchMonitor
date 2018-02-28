@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.13"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>monitorClient: E:/Project/GZMetro/Switch/softwareDesign/switchMonitorProject/switchMonitorClient/monitorClient/include/CNetController.h 源文件</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">monitorClient
+   &#160;<span id="projectnumber">V1.0</span>
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.8.13 -->
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',false,false,'search.php','搜索');
+});
+</script>
+<div id="main-nav"></div>
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">CNetController.h</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="_c_net_controller_8h.html">浏览该文件的文档.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div><div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#ifndef CNETCONTROLLER_H</span></div><div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#define CNETCONTROLLER_H</span></div><div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;</div><div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div><div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &lt;winsock2.h&gt;</span></div><div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;</div><div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">using namespace </span><a class="code" href="namespacestd.html">std</a>;</div><div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="_c_net_controller_8h.html#a12f8ec8f0e7a4584b9fe481bb53fa60eab1a9738387c7ab2f722b4529d1887e4c">   16</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> <a class="code" href="_c_net_controller_8h.html#a12f8ec8f0e7a4584b9fe481bb53fa60e">eType</a>{<a class="code" href="_c_net_controller_8h.html#a12f8ec8f0e7a4584b9fe481bb53fa60eab1a9738387c7ab2f722b4529d1887e4c">server</a>, <a class="code" href="_c_net_controller_8h.html#a12f8ec8f0e7a4584b9fe481bb53fa60eaa86f52c0660de0ba0e16c95501853106">client</a>} <a class="code" href="_c_net_controller_8h.html#aa5667d9d3fb7d8d8f6293e70f99fd81d">eTypeCS</a>;</div><div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;</div><div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="class_c_net_controller.html">   23</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_c_net_controller.html">CNetController</a></div><div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;{</div><div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keyword">private</span>:</div><div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="class_c_net_controller.html#a526584cace9de3af7249af094c380da3">   26</a></span>&#160;    <span class="keywordtype">string</span> <a class="code" href="class_c_net_controller.html#a526584cace9de3af7249af094c380da3">m_strIPAddr</a>;</div><div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="class_c_net_controller.html#a00d4c1a5f4a0e9c3f9292e253f9d2617">   27</a></span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="class_c_net_controller.html#a00d4c1a5f4a0e9c3f9292e253f9d2617">m_nPort</a>;</div><div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="class_c_net_controller.html#a9f4de383cd91d024dfe0e89430d4384d">   28</a></span>&#160;    <a class="code" href="_c_net_controller_8h.html#aa5667d9d3fb7d8d8f6293e70f99fd81d">eTypeCS</a> <a class="code" href="class_c_net_controller.html#a9f4de383cd91d024dfe0e89430d4384d">m_eType</a>;</div><div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="class_c_net_controller.html#af29cf4fecb51308d282cdf6ef664144c">   29</a></span>&#160;    SOCKADDR_IN <a class="code" href="class_c_net_controller.html#af29cf4fecb51308d282cdf6ef664144c">m_addrClient</a>;</div><div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="class_c_net_controller.html#a99565a48431b9ecb2cd96e0107e87593">   30</a></span>&#160;    SOCKET <a class="code" href="class_c_net_controller.html#a99565a48431b9ecb2cd96e0107e87593">m_sock</a>;</div><div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="class_c_net_controller.html#a7d49308d38eac082f57ad3b52ca12eef">   31</a></span>&#160;    SOCKET <a class="code" href="class_c_net_controller.html#a7d49308d38eac082f57ad3b52ca12eef">m_sockConn</a>;</div><div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="class_c_net_controller.html#a815c57677b937b126963c6021e8b9ed2">   32</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="class_c_net_controller.html#a815c57677b937b126963c6021e8b9ed2">m_bConnected</a>;</div><div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div><div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordtype">bool</span> __GetLocalIP( WSADATA wsaData, <span class="keywordtype">char</span>* pszIP );</div><div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div><div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">public</span>:</div><div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="class_c_net_controller.html">CNetController</a>( <span class="keywordtype">string</span> strIPAddr, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> nPort, <a class="code" href="_c_net_controller_8h.html#aa5667d9d3fb7d8d8f6293e70f99fd81d">eTypeCS</a> <a class="code" href="_c_net_controller_8h.html#a12f8ec8f0e7a4584b9fe481bb53fa60e">eType</a> );</div><div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    ~<a class="code" href="class_c_net_controller.html">CNetController</a>();</div><div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div><div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordtype">int</span> Initial();</div><div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordtype">int</span> Send( <span class="keyword">const</span> <span class="keywordtype">char</span>* pszBuf, <span class="keywordtype">int</span> nLength );</div><div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordtype">int</span> Recv( <span class="keywordtype">char</span>* pszBuf, <span class="keywordtype">int</span> nLength );</div><div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;};</div><div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div><div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">#endif // CNETCONTROLLER_H</span></div><div class="ttc" id="class_c_net_controller_html_a99565a48431b9ecb2cd96e0107e87593"><div class="ttname"><a href="class_c_net_controller.html#a99565a48431b9ecb2cd96e0107e87593">CNetController::m_sock</a></div><div class="ttdeci">SOCKET m_sock</div><div class="ttdef"><b>Definition:</b> <a href="_c_net_controller_8h_source.html#l00030">CNetController.h:30</a></div></div>
+<div class="ttc" id="class_c_net_controller_html"><div class="ttname"><a href="class_c_net_controller.html">CNetController</a></div><div class="ttdoc">本类主要是负责TCP通信，包含功能为：连接初始化、发送、接收 </div><div class="ttdef"><b>Definition:</b> <a href="_c_net_controller_8h_source.html#l00023">CNetController.h:23</a></div></div>
+<div class="ttc" id="namespacestd_html"><div class="ttname"><a href="namespacestd.html">std</a></div></div>
+<div class="ttc" id="_c_net_controller_8h_html_a12f8ec8f0e7a4584b9fe481bb53fa60e"><div class="ttname"><a href="_c_net_controller_8h.html#a12f8ec8f0e7a4584b9fe481bb53fa60e">eType</a></div><div class="ttdeci">eType</div><div class="ttdef"><b>Definition:</b> <a href="_c_net_controller_8h_source.html#l00016">CNetController.h:16</a></div></div>
+<div class="ttc" id="class_c_net_controller_html_a7d49308d38eac082f57ad3b52ca12eef"><div class="ttname"><a href="class_c_net_controller.html#a7d49308d38eac082f57ad3b52ca12eef">CNetController::m_sockConn</a></div><div class="ttdeci">SOCKET m_sockConn</div><div class="ttdef"><b>Definition:</b> <a href="_c_net_controller_8h_source.html#l00031">CNetController.h:31</a></div></div>
+<div class="ttc" id="class_c_net_controller_html_a00d4c1a5f4a0e9c3f9292e253f9d2617"><div class="ttname"><a href="class_c_net_controller.html#a00d4c1a5f4a0e9c3f9292e253f9d2617">CNetController::m_nPort</a></div><div class="ttdeci">unsigned int m_nPort</div><div class="ttdef"><b>Definition:</b> <a href="_c_net_controller_8h_source.html#l00027">CNetController.h:27</a></div></div>
+<div class="ttc" id="class_c_net_controller_html_a526584cace9de3af7249af094c380da3"><div class="ttname"><a href="class_c_net_controller.html#a526584cace9de3af7249af094c380da3">CNetController::m_strIPAddr</a></div><div class="ttdeci">string m_strIPAddr</div><div class="ttdef"><b>Definition:</b> <a href="_c_net_controller_8h_source.html#l00026">CNetController.h:26</a></div></div>
+<div class="ttc" id="class_c_net_controller_html_a9f4de383cd91d024dfe0e89430d4384d"><div class="ttname"><a href="class_c_net_controller.html#a9f4de383cd91d024dfe0e89430d4384d">CNetController::m_eType</a></div><div class="ttdeci">eTypeCS m_eType</div><div class="ttdef"><b>Definition:</b> <a href="_c_net_controller_8h_source.html#l00028">CNetController.h:28</a></div></div>
+<div class="ttc" id="class_c_net_controller_html_af29cf4fecb51308d282cdf6ef664144c"><div class="ttname"><a href="class_c_net_controller.html#af29cf4fecb51308d282cdf6ef664144c">CNetController::m_addrClient</a></div><div class="ttdeci">SOCKADDR_IN m_addrClient</div><div class="ttdef"><b>Definition:</b> <a href="_c_net_controller_8h_source.html#l00029">CNetController.h:29</a></div></div>
+<div class="ttc" id="class_c_net_controller_html_a815c57677b937b126963c6021e8b9ed2"><div class="ttname"><a href="class_c_net_controller.html#a815c57677b937b126963c6021e8b9ed2">CNetController::m_bConnected</a></div><div class="ttdeci">bool m_bConnected</div><div class="ttdef"><b>Definition:</b> <a href="_c_net_controller_8h_source.html#l00032">CNetController.h:32</a></div></div>
+<div class="ttc" id="_c_net_controller_8h_html_aa5667d9d3fb7d8d8f6293e70f99fd81d"><div class="ttname"><a href="_c_net_controller_8h.html#aa5667d9d3fb7d8d8f6293e70f99fd81d">eTypeCS</a></div><div class="ttdeci">enum eType eTypeCS</div></div>
+<div class="ttc" id="_c_net_controller_8h_html_a12f8ec8f0e7a4584b9fe481bb53fa60eab1a9738387c7ab2f722b4529d1887e4c"><div class="ttname"><a href="_c_net_controller_8h.html#a12f8ec8f0e7a4584b9fe481bb53fa60eab1a9738387c7ab2f722b4529d1887e4c">server</a></div><div class="ttdef"><b>Definition:</b> <a href="_c_net_controller_8h_source.html#l00016">CNetController.h:16</a></div></div>
+<div class="ttc" id="_c_net_controller_8h_html_a12f8ec8f0e7a4584b9fe481bb53fa60eaa86f52c0660de0ba0e16c95501853106"><div class="ttname"><a href="_c_net_controller_8h.html#a12f8ec8f0e7a4584b9fe481bb53fa60eaa86f52c0660de0ba0e16c95501853106">client</a></div><div class="ttdef"><b>Definition:</b> <a href="_c_net_controller_8h_source.html#l00016">CNetController.h:16</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+制作者 &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.13
+</small></address>
+</body>
+</html>

@@ -1,0 +1,82 @@
+\hypertarget{_c_udp_server_8h}{}\section{E\+:/\+Project/\+G\+Z\+Metro/\+Switch/software\+Design/switch\+Monitor\+Project/switch\+Monitor\+Client/monitor\+Client/include/\+C\+Udp\+Server.h 文件参考}
+\label{_c_udp_server_8h}\index{E\+:/\+Project/\+G\+Z\+Metro/\+Switch/software\+Design/switch\+Monitor\+Project/switch\+Monitor\+Client/monitor\+Client/include/\+C\+Udp\+Server.\+h@{E\+:/\+Project/\+G\+Z\+Metro/\+Switch/software\+Design/switch\+Monitor\+Project/switch\+Monitor\+Client/monitor\+Client/include/\+C\+Udp\+Server.\+h}}
+
+
+the head file include class \hyperlink{class_c_udp_server}{C\+Udp\+Server}, for U\+DP communication  
+
+
+{\ttfamily \#include $<$W\+I\+N\+S\+O\+C\+K2.\+H$>$}\newline
+C\+Udp\+Server.\+h 的引用(Include)关系图\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=244pt]{_c_udp_server_8h__incl}
+\end{center}
+\end{figure}
+此图展示该文件直接或间接的被哪些文件引用了\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_c_udp_server_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{类}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{class_c_udp_server}{C\+Udp\+Server}
+\begin{DoxyCompactList}\small\item\em 本类主要是负责\+U\+D\+P通信，包含功能为：发送、接收、保存源数据、获取(/设置)接收缓冲区大小、获取下位机开始采集的时间 \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{枚举}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{_c_udp_server_8h_a41273fdeb63230b3a5c360d8c7c11b82}{S\+W\+I\+T\+C\+H\+\_\+\+T\+Y\+PE} \{ \hyperlink{_c_udp_server_8h_a41273fdeb63230b3a5c360d8c7c11b82a1877cae90821caed40fd69bf088d43d6}{Z\+D6}, 
+\hyperlink{_c_udp_server_8h_a41273fdeb63230b3a5c360d8c7c11b82a3032d40dc38b1c81290ce33664af1ff9}{S700K}, 
+\hyperlink{_c_udp_server_8h_a41273fdeb63230b3a5c360d8c7c11b82af7ec39528c8a1963ed7bcad17c647342}{Z\+Y\+J7}
+ \}\begin{DoxyCompactList}\small\item\em 本函数主要是等待接收下位机数据，一旦接收到数据就创建文件夹并保存数据到本地，通过\+T\+C\+P发送保存路径到服务器，把时间和路径写入数据库 \end{DoxyCompactList}
+\end{DoxyCompactItemize}
+
+
+\subsection{详细描述}
+the head file include class \hyperlink{class_c_udp_server}{C\+Udp\+Server}, for U\+DP communication 
+
+\begin{DoxyAuthor}{作者}
+by Alex, \href{mailto:jthu4alex@163.com}{\tt jthu4alex@163.\+com}, on 2017/11/14 
+\end{DoxyAuthor}
+
+
+\subsection{枚举类型说明}
+\mbox{\Hypertarget{_c_udp_server_8h_a41273fdeb63230b3a5c360d8c7c11b82}\label{_c_udp_server_8h_a41273fdeb63230b3a5c360d8c7c11b82}} 
+\index{C\+Udp\+Server.\+h@{C\+Udp\+Server.\+h}!S\+W\+I\+T\+C\+H\+\_\+\+T\+Y\+PE@{S\+W\+I\+T\+C\+H\+\_\+\+T\+Y\+PE}}
+\index{S\+W\+I\+T\+C\+H\+\_\+\+T\+Y\+PE@{S\+W\+I\+T\+C\+H\+\_\+\+T\+Y\+PE}!C\+Udp\+Server.\+h@{C\+Udp\+Server.\+h}}
+\subsubsection{\texorpdfstring{S\+W\+I\+T\+C\+H\+\_\+\+T\+Y\+PE}{SWITCH\_TYPE}}
+{\footnotesize\ttfamily enum \hyperlink{_c_udp_server_8h_a41273fdeb63230b3a5c360d8c7c11b82}{S\+W\+I\+T\+C\+H\+\_\+\+T\+Y\+PE}}
+
+
+
+本函数主要是等待接收下位机数据，一旦接收到数据就创建文件夹并保存数据到本地，通过\+T\+C\+P发送保存路径到服务器，把时间和路径写入数据库 
+
+
+\begin{DoxyParams}{参数}
+{\em typeof\+Switch} & S\+W\+I\+T\+C\+H\+\_\+\+T\+Y\+P\+E，被测设备类型\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{返回}
+int，成功返回0；不成功返回-\/1 
+\end{DoxyReturn}
+\begin{DoxyEnumFields}{枚举值}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Z\+D6@{Z\+D6}!C\+Udp\+Server.\+h@{C\+Udp\+Server.\+h}}\index{C\+Udp\+Server.\+h@{C\+Udp\+Server.\+h}!Z\+D6@{Z\+D6}}}\mbox{\Hypertarget{_c_udp_server_8h_a41273fdeb63230b3a5c360d8c7c11b82a1877cae90821caed40fd69bf088d43d6}\label{_c_udp_server_8h_a41273fdeb63230b3a5c360d8c7c11b82a1877cae90821caed40fd69bf088d43d6}} 
+Z\+D6&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{S700K@{S700K}!C\+Udp\+Server.\+h@{C\+Udp\+Server.\+h}}\index{C\+Udp\+Server.\+h@{C\+Udp\+Server.\+h}!S700K@{S700K}}}\mbox{\Hypertarget{_c_udp_server_8h_a41273fdeb63230b3a5c360d8c7c11b82a3032d40dc38b1c81290ce33664af1ff9}\label{_c_udp_server_8h_a41273fdeb63230b3a5c360d8c7c11b82a3032d40dc38b1c81290ce33664af1ff9}} 
+S700K&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Z\+Y\+J7@{Z\+Y\+J7}!C\+Udp\+Server.\+h@{C\+Udp\+Server.\+h}}\index{C\+Udp\+Server.\+h@{C\+Udp\+Server.\+h}!Z\+Y\+J7@{Z\+Y\+J7}}}\mbox{\Hypertarget{_c_udp_server_8h_a41273fdeb63230b3a5c360d8c7c11b82af7ec39528c8a1963ed7bcad17c647342}\label{_c_udp_server_8h_a41273fdeb63230b3a5c360d8c7c11b82af7ec39528c8a1963ed7bcad17c647342}} 
+Z\+Y\+J7&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+在文件 C\+Udp\+Server.\+h 第 14 行定义.
+

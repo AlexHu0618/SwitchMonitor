@@ -1,0 +1,80 @@
+\hypertarget{_c_net_controller_8h}{}\section{E\+:/\+Project/\+G\+Z\+Metro/\+Switch/software\+Design/switch\+Monitor\+Project/switch\+Monitor\+Client/monitor\+Client/include/\+C\+Net\+Controller.h 文件参考}
+\label{_c_net_controller_8h}\index{E\+:/\+Project/\+G\+Z\+Metro/\+Switch/software\+Design/switch\+Monitor\+Project/switch\+Monitor\+Client/monitor\+Client/include/\+C\+Net\+Controller.\+h@{E\+:/\+Project/\+G\+Z\+Metro/\+Switch/software\+Design/switch\+Monitor\+Project/switch\+Monitor\+Client/monitor\+Client/include/\+C\+Net\+Controller.\+h}}
+
+
+the head file include class \hyperlink{class_c_net_controller}{C\+Net\+Controller}, for T\+C\+P/\+IP communication  
+
+
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$winsock2.\+h$>$}\newline
+C\+Net\+Controller.\+h 的引用(Include)关系图\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=244pt]{_c_net_controller_8h__incl}
+\end{center}
+\end{figure}
+此图展示该文件直接或间接的被哪些文件引用了\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_c_net_controller_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{类}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{class_c_net_controller}{C\+Net\+Controller}
+\begin{DoxyCompactList}\small\item\em 本类主要是负责\+T\+C\+P通信，包含功能为：连接初始化、发送、接收 \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{类型定义}
+\begin{DoxyCompactItemize}
+\item 
+typedef enum \hyperlink{_c_net_controller_8h_a12f8ec8f0e7a4584b9fe481bb53fa60e}{e\+Type} \hyperlink{_c_net_controller_8h_aa5667d9d3fb7d8d8f6293e70f99fd81d}{e\+Type\+CS}
+\end{DoxyCompactItemize}
+\subsection*{枚举}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{_c_net_controller_8h_a12f8ec8f0e7a4584b9fe481bb53fa60e}{e\+Type} \{ \hyperlink{_c_net_controller_8h_a12f8ec8f0e7a4584b9fe481bb53fa60eab1a9738387c7ab2f722b4529d1887e4c}{server}, 
+\hyperlink{_c_net_controller_8h_a12f8ec8f0e7a4584b9fe481bb53fa60eaa86f52c0660de0ba0e16c95501853106}{client}
+ \}
+\end{DoxyCompactItemize}
+
+
+\subsection{详细描述}
+the head file include class \hyperlink{class_c_net_controller}{C\+Net\+Controller}, for T\+C\+P/\+IP communication 
+
+\begin{DoxyAuthor}{作者}
+by Alex, \href{mailto:jthu4alex@163.com}{\tt jthu4alex@163.\+com}, on 2017/11/14 
+\end{DoxyAuthor}
+
+
+\subsection{类型定义说明}
+\mbox{\Hypertarget{_c_net_controller_8h_aa5667d9d3fb7d8d8f6293e70f99fd81d}\label{_c_net_controller_8h_aa5667d9d3fb7d8d8f6293e70f99fd81d}} 
+\index{C\+Net\+Controller.\+h@{C\+Net\+Controller.\+h}!e\+Type\+CS@{e\+Type\+CS}}
+\index{e\+Type\+CS@{e\+Type\+CS}!C\+Net\+Controller.\+h@{C\+Net\+Controller.\+h}}
+\subsubsection{\texorpdfstring{e\+Type\+CS}{eTypeCS}}
+{\footnotesize\ttfamily typedef enum \hyperlink{_c_net_controller_8h_a12f8ec8f0e7a4584b9fe481bb53fa60e}{e\+Type}  \hyperlink{_c_net_controller_8h_aa5667d9d3fb7d8d8f6293e70f99fd81d}{e\+Type\+CS}}
+
+
+
+\subsection{枚举类型说明}
+\mbox{\Hypertarget{_c_net_controller_8h_a12f8ec8f0e7a4584b9fe481bb53fa60e}\label{_c_net_controller_8h_a12f8ec8f0e7a4584b9fe481bb53fa60e}} 
+\index{C\+Net\+Controller.\+h@{C\+Net\+Controller.\+h}!e\+Type@{e\+Type}}
+\index{e\+Type@{e\+Type}!C\+Net\+Controller.\+h@{C\+Net\+Controller.\+h}}
+\subsubsection{\texorpdfstring{e\+Type}{eType}}
+{\footnotesize\ttfamily enum \hyperlink{_c_net_controller_8h_a12f8ec8f0e7a4584b9fe481bb53fa60e}{e\+Type}}
+
+\begin{DoxyEnumFields}{枚举值}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{server@{server}!C\+Net\+Controller.\+h@{C\+Net\+Controller.\+h}}\index{C\+Net\+Controller.\+h@{C\+Net\+Controller.\+h}!server@{server}}}\mbox{\Hypertarget{_c_net_controller_8h_a12f8ec8f0e7a4584b9fe481bb53fa60eab1a9738387c7ab2f722b4529d1887e4c}\label{_c_net_controller_8h_a12f8ec8f0e7a4584b9fe481bb53fa60eab1a9738387c7ab2f722b4529d1887e4c}} 
+server&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{client@{client}!C\+Net\+Controller.\+h@{C\+Net\+Controller.\+h}}\index{C\+Net\+Controller.\+h@{C\+Net\+Controller.\+h}!client@{client}}}\mbox{\Hypertarget{_c_net_controller_8h_a12f8ec8f0e7a4584b9fe481bb53fa60eaa86f52c0660de0ba0e16c95501853106}\label{_c_net_controller_8h_a12f8ec8f0e7a4584b9fe481bb53fa60eaa86f52c0660de0ba0e16c95501853106}} 
+client&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+在文件 C\+Net\+Controller.\+h 第 16 行定义.
+

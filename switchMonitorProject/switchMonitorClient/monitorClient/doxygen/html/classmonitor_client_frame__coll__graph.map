@@ -1,0 +1,5 @@
+<map id="monitorClientFrame" name="monitorClientFrame">
+<area shape="rect" id="node3" href="$class_c_udp_server.html" title="本类主要是负责UDP通信，包含功能为：发送、接收、保存源数据、获取(/设置)接收缓冲区大小、获取下位机开始�..." alt="" coords="105,5,327,391"/>
+<area shape="rect" id="node4" href="$class_c_sql_controller.html" title="本类主要是负责MySQL数据库通信，包含功能为：连接初始化、插入数据 " alt="" coords="352,93,485,303"/>
+<area shape="rect" id="node5" href="$class_c_net_controller.html" title="本类主要是负责TCP通信，包含功能为：连接初始化、发送、接收 " alt="" coords="510,79,645,317"/>
+</map>

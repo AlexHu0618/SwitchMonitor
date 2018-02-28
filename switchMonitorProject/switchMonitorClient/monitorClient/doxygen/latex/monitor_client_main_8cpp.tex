@@ -1,0 +1,77 @@
+\hypertarget{monitor_client_main_8cpp}{}\section{E\+:/\+Project/\+G\+Z\+Metro/\+Switch/software\+Design/switch\+Monitor\+Project/switch\+Monitor\+Client/monitor\+Client/monitor\+Client\+Main.cpp 文件参考}
+\label{monitor_client_main_8cpp}\index{E\+:/\+Project/\+G\+Z\+Metro/\+Switch/software\+Design/switch\+Monitor\+Project/switch\+Monitor\+Client/monitor\+Client/monitor\+Client\+Main.\+cpp@{E\+:/\+Project/\+G\+Z\+Metro/\+Switch/software\+Design/switch\+Monitor\+Project/switch\+Monitor\+Client/monitor\+Client/monitor\+Client\+Main.\+cpp}}
+{\ttfamily \#include \char`\"{}monitor\+Client\+Main.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$wx/timer.\+h$>$}\newline
+{\ttfamily \#include $<$wx/filename.\+h$>$}\newline
+{\ttfamily \#include $<$wx/string.\+h$>$}\newline
+{\ttfamily \#include $<$windows.\+h$>$}\newline
+{\ttfamily \#include $<$shellapi.\+h$>$}\newline
+monitor\+Client\+Main.\+cpp 的引用(Include)关系图\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{monitor_client_main_8cpp__incl}
+\end{center}
+\end{figure}
+\subsection*{枚举}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{monitor_client_main_8cpp_ad6438f1e9a52a97d8c47b461a64b837f}{wxbuildinfoformat} \{ \hyperlink{monitor_client_main_8cpp_ad6438f1e9a52a97d8c47b461a64b837faf34cf4880b9e5e417182a04ea274043c}{short\+\_\+f}, 
+\hyperlink{monitor_client_main_8cpp_ad6438f1e9a52a97d8c47b461a64b837fa7ed9aefb554be1a3e8b51f0d58c60c18}{long\+\_\+f}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{函数}
+\begin{DoxyCompactItemize}
+\item 
+wx\+String \hyperlink{monitor_client_main_8cpp_afdd094b13f51c9d282a71d71dd0595ab}{wxbuildinfo} (\hyperlink{monitor_client_main_8cpp_ad6438f1e9a52a97d8c47b461a64b837f}{wxbuildinfoformat} format)
+\end{DoxyCompactItemize}
+
+
+\subsection{枚举类型说明}
+\mbox{\Hypertarget{monitor_client_main_8cpp_ad6438f1e9a52a97d8c47b461a64b837f}\label{monitor_client_main_8cpp_ad6438f1e9a52a97d8c47b461a64b837f}} 
+\index{monitor\+Client\+Main.\+cpp@{monitor\+Client\+Main.\+cpp}!wxbuildinfoformat@{wxbuildinfoformat}}
+\index{wxbuildinfoformat@{wxbuildinfoformat}!monitor\+Client\+Main.\+cpp@{monitor\+Client\+Main.\+cpp}}
+\subsubsection{\texorpdfstring{wxbuildinfoformat}{wxbuildinfoformat}}
+{\footnotesize\ttfamily enum \hyperlink{monitor_client_main_8cpp_ad6438f1e9a52a97d8c47b461a64b837f}{wxbuildinfoformat}}
+
+\begin{DoxyEnumFields}{枚举值}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{short\+\_\+f@{short\+\_\+f}!monitor\+Client\+Main.\+cpp@{monitor\+Client\+Main.\+cpp}}\index{monitor\+Client\+Main.\+cpp@{monitor\+Client\+Main.\+cpp}!short\+\_\+f@{short\+\_\+f}}}\mbox{\Hypertarget{monitor_client_main_8cpp_ad6438f1e9a52a97d8c47b461a64b837faf34cf4880b9e5e417182a04ea274043c}\label{monitor_client_main_8cpp_ad6438f1e9a52a97d8c47b461a64b837faf34cf4880b9e5e417182a04ea274043c}} 
+short\+\_\+f&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{long\+\_\+f@{long\+\_\+f}!monitor\+Client\+Main.\+cpp@{monitor\+Client\+Main.\+cpp}}\index{monitor\+Client\+Main.\+cpp@{monitor\+Client\+Main.\+cpp}!long\+\_\+f@{long\+\_\+f}}}\mbox{\Hypertarget{monitor_client_main_8cpp_ad6438f1e9a52a97d8c47b461a64b837fa7ed9aefb554be1a3e8b51f0d58c60c18}\label{monitor_client_main_8cpp_ad6438f1e9a52a97d8c47b461a64b837fa7ed9aefb554be1a3e8b51f0d58c60c18}} 
+long\+\_\+f&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+在文件 monitor\+Client\+Main.\+cpp 第 28 行定义.
+
+
+
+\subsection{函数说明}
+\mbox{\Hypertarget{monitor_client_main_8cpp_afdd094b13f51c9d282a71d71dd0595ab}\label{monitor_client_main_8cpp_afdd094b13f51c9d282a71d71dd0595ab}} 
+\index{monitor\+Client\+Main.\+cpp@{monitor\+Client\+Main.\+cpp}!wxbuildinfo@{wxbuildinfo}}
+\index{wxbuildinfo@{wxbuildinfo}!monitor\+Client\+Main.\+cpp@{monitor\+Client\+Main.\+cpp}}
+\subsubsection{\texorpdfstring{wxbuildinfo()}{wxbuildinfo()}}
+{\footnotesize\ttfamily wx\+String wxbuildinfo (\begin{DoxyParamCaption}\item[{\hyperlink{monitor_client_main_8cpp_ad6438f1e9a52a97d8c47b461a64b837f}{wxbuildinfoformat}}]{format }\end{DoxyParamCaption})}
+
+
+
+在文件 monitor\+Client\+Main.\+cpp 第 31 行定义.
+
+函数调用图\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=281pt]{monitor_client_main_8cpp_afdd094b13f51c9d282a71d71dd0595ab_cgraph}
+\end{center}
+\end{figure}
+这是这个函数的调用关系图\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=287pt]{monitor_client_main_8cpp_afdd094b13f51c9d282a71d71dd0595ab_icgraph}
+\end{center}
+\end{figure}

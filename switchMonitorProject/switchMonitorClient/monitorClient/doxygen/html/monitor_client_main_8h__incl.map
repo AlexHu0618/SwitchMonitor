@@ -1,0 +1,6 @@
+<map id="E:/Project/GZMetro/Switch/softwareDesign/switchMonitorProject/switchMonitorClient/monitorClient/monitorClientMain.h" name="E:/Project/GZMetro/Switch/softwareDesign/switchMonitorProject/switchMonitorClient/monitorClient/monitorClientMain.h">
+<area shape="rect" id="node3" href="$monitor_client_app_8h.html" title="monitorClientApp.h" alt="" coords="99,139,231,165"/>
+<area shape="rect" id="node5" href="$_c_net_controller_8h.html" title="the head file include class CNetController, for TCP/IP communication " alt="" coords="256,139,373,165"/>
+<area shape="rect" id="node8" href="$_c_sql_controller_8h.html" title="the head file include class CSqlController, for MySQL database communication " alt="" coords="398,139,514,165"/>
+<area shape="rect" id="node12" href="$_c_udp_server_8h.html" title="the head file include class CUdpServer, for UDP communication " alt="" coords="617,139,719,165"/>
+</map>

@@ -1,0 +1,735 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.13"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>monitorClient: monitorClientFrame类 参考</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">monitorClient
+   &#160;<span id="projectnumber">V1.0</span>
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.8.13 -->
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',false,false,'search.php','搜索');
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public 成员函数</a> &#124;
+<a href="#pri-types">Private 类型</a> &#124;
+<a href="#pri-methods">Private 成员函数</a> &#124;
+<a href="#pri-attribs">Private 属性</a> &#124;
+<a href="classmonitor_client_frame-members.html">所有成员列表</a>  </div>
+  <div class="headertitle">
+<div class="title">monitorClientFrame类 参考</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>本类主要负责采集客户端的数据前处理和保存，并与分析服务端通信  
+ <a href="classmonitor_client_frame.html#details">更多...</a></p>
+
+<p><code>#include &lt;<a class="el" href="monitor_client_main_8h_source.html">monitorClientMain.h</a>&gt;</code></p>
+<div class="dynheader">
+类 monitorClientFrame 继承关系图:</div>
+<div class="dyncontent">
+<div class="center"><img src="classmonitor_client_frame__inherit__graph.png" border="0" usemap="#monitor_client_frame_inherit__map" alt="Inheritance graph"/></div>
+</div>
+<div class="dynheader">
+monitorClientFrame 的协作图:</div>
+<div class="dyncontent">
+<div class="center"><img src="classmonitor_client_frame__coll__graph.png" border="0" usemap="#monitor_client_frame_coll__map" alt="Collaboration graph"/></div>
+<map name="monitor_client_frame_coll__map" id="monitor_client_frame_coll__map">
+<area shape="rect" id="node3" href="class_c_udp_server.html" title="本类主要是负责UDP通信，包含功能为：发送、接收、保存源数据、获取(/设置)接收缓冲区大小、获取下位机开始�..." alt="" coords="105,5,327,391"/>
+<area shape="rect" id="node4" href="class_c_sql_controller.html" title="本类主要是负责MySQL数据库通信，包含功能为：连接初始化、插入数据 " alt="" coords="352,93,485,303"/>
+<area shape="rect" id="node5" href="class_c_net_controller.html" title="本类主要是负责TCP通信，包含功能为：连接初始化、发送、接收 " alt="" coords="510,79,645,317"/>
+</map>
+</div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public 成员函数</h2></td></tr>
+<tr class="memitem:ae98aa8b084a50fa578e1a648d125a85b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmonitor_client_frame.html#ae98aa8b084a50fa578e1a648d125a85b">monitorClientFrame</a> (wxFrame *frame, const wxString &amp;title)</td></tr>
+<tr class="memdesc:ae98aa8b084a50fa578e1a648d125a85b"><td class="mdescLeft">&#160;</td><td class="mdescRight">主窗体构造函数，负责窗体创建，通信连接初始化，并发送指令到下位机开始触发采集  <a href="#ae98aa8b084a50fa578e1a648d125a85b">更多...</a><br /></td></tr>
+<tr class="separator:ae98aa8b084a50fa578e1a648d125a85b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2cae380d4d48325c2c9de20e67efc74a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmonitor_client_frame.html#a2cae380d4d48325c2c9de20e67efc74a">~monitorClientFrame</a> ()</td></tr>
+<tr class="separator:a2cae380d4d48325c2c9de20e67efc74a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-types"></a>
+Private 类型</h2></td></tr>
+<tr class="memitem:a06fc87d81c62e9abb8790b6e5713c55b"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <br />
+&#160;&#160;<a class="el" href="classmonitor_client_frame.html#a06fc87d81c62e9abb8790b6e5713c55ba36b0ac076d9b564b352f2553f7ef1d7b">idMenuQuit</a> = 1000, 
+<a class="el" href="classmonitor_client_frame.html#a06fc87d81c62e9abb8790b6e5713c55ba437046a5ae2fed1c4c7280150d6a4e65">idMenuZD6</a>, 
+<a class="el" href="classmonitor_client_frame.html#a06fc87d81c62e9abb8790b6e5713c55ba9f79c10983afed571c6d00e84ee74a19">idMenuS700K</a>, 
+<a class="el" href="classmonitor_client_frame.html#a06fc87d81c62e9abb8790b6e5713c55ba3d5c723e654a5ef4f3eb5c7ceeffdead">idMenuZYJ7</a>, 
+<br />
+&#160;&#160;<a class="el" href="classmonitor_client_frame.html#a06fc87d81c62e9abb8790b6e5713c55ba7dc2fd7f86d8ef6bed6b3eadcefae015">idMenuDefault</a>
+<br />
+ }</td></tr>
+<tr class="separator:a06fc87d81c62e9abb8790b6e5713c55b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private 成员函数</h2></td></tr>
+<tr class="memitem:aa744f336117172b7ab41864141a1ed2d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmonitor_client_frame.html#aa744f336117172b7ab41864141a1ed2d">OnClose</a> (wxCloseEvent &amp;event)</td></tr>
+<tr class="separator:aa744f336117172b7ab41864141a1ed2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62c5559e9a3d4da08a0d6705baa47b95"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmonitor_client_frame.html#a62c5559e9a3d4da08a0d6705baa47b95">OnQuit</a> (wxCommandEvent &amp;event)</td></tr>
+<tr class="separator:a62c5559e9a3d4da08a0d6705baa47b95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ceeffc68f5f33c6fd97bba9bfbea284"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmonitor_client_frame.html#a9ceeffc68f5f33c6fd97bba9bfbea284">OnZD6</a> (wxCommandEvent &amp;event)</td></tr>
+<tr class="separator:a9ceeffc68f5f33c6fd97bba9bfbea284"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a566bd9bdaa3933a188c130b6d6a166b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmonitor_client_frame.html#a566bd9bdaa3933a188c130b6d6a166b5">OnS700K</a> (wxCommandEvent &amp;event)</td></tr>
+<tr class="separator:a566bd9bdaa3933a188c130b6d6a166b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77801fb08b609cf2a5521906f1ced65f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmonitor_client_frame.html#a77801fb08b609cf2a5521906f1ced65f">OnZYJ7</a> (wxCommandEvent &amp;event)</td></tr>
+<tr class="separator:a77801fb08b609cf2a5521906f1ced65f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06d8b6cb7153736934b17fca7fd5c715"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmonitor_client_frame.html#a06d8b6cb7153736934b17fca7fd5c715">InitializeAll</a> (void)</td></tr>
+<tr class="memdesc:a06d8b6cb7153736934b17fca7fd5c715"><td class="mdescLeft">&#160;</td><td class="mdescRight">本函数主要是读取注册表参数值，创建TCP连接，创建MySQL数据库连接  <a href="#a06d8b6cb7153736934b17fca7fd5c715">更多...</a><br /></td></tr>
+<tr class="separator:a06d8b6cb7153736934b17fca7fd5c715"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adbc6a4d0a12ea3ab300eb9c9f8c0126b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmonitor_client_frame.html#adbc6a4d0a12ea3ab300eb9c9f8c0126b">MakeDir</a> (wxString *pstr4dataDir)</td></tr>
+<tr class="memdesc:adbc6a4d0a12ea3ab300eb9c9f8c0126b"><td class="mdescLeft">&#160;</td><td class="mdescRight">本函数主要是创建文件夹，用于保存数据  <a href="#adbc6a4d0a12ea3ab300eb9c9f8c0126b">更多...</a><br /></td></tr>
+<tr class="separator:adbc6a4d0a12ea3ab300eb9c9f8c0126b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a182446582639b75bd7eba0eb0133ca57"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmonitor_client_frame.html#a182446582639b75bd7eba0eb0133ca57">Acquire</a> (<a class="el" href="_c_udp_server_8h.html#a41273fdeb63230b3a5c360d8c7c11b82">SWITCH_TYPE</a> typeofSwitch)</td></tr>
+<tr class="separator:a182446582639b75bd7eba0eb0133ca57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad67e14332e85cc8058e45d73778d6491"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmonitor_client_frame.html#ad67e14332e85cc8058e45d73778d6491">ZD6Work</a> (void)</td></tr>
+<tr class="memdesc:ad67e14332e85cc8058e45d73778d6491"><td class="mdescLeft">&#160;</td><td class="mdescRight">本函数主要是读取注册表中的参数值，UDP连接下位机并发送开始采集指令，进入循环等待接收数据  <a href="#ad67e14332e85cc8058e45d73778d6491">更多...</a><br /></td></tr>
+<tr class="separator:ad67e14332e85cc8058e45d73778d6491"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private 属性</h2></td></tr>
+<tr class="memitem:afce4d0e6dc1121b650a15ef810ea569f"><td class="memItemLeft" align="right" valign="top">wxMenuItem *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmonitor_client_frame.html#afce4d0e6dc1121b650a15ef810ea569f">m_MenuItemDefault</a></td></tr>
+<tr class="separator:afce4d0e6dc1121b650a15ef810ea569f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a67dbea121b75a1235f016f0019e0c174"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_net_controller.html">CNetController</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmonitor_client_frame.html#a67dbea121b75a1235f016f0019e0c174">m_pTcpClient</a></td></tr>
+<tr class="separator:a67dbea121b75a1235f016f0019e0c174"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abee9f88b2c57eb945d0f9e65e0efbd43"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_sql_controller.html">CSqlController</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmonitor_client_frame.html#abee9f88b2c57eb945d0f9e65e0efbd43">m_pDBCtrler</a></td></tr>
+<tr class="separator:abee9f88b2c57eb945d0f9e65e0efbd43"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab309fd5f3ceaece3a9991aa37c2d72f9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_udp_server.html">CUdpServer</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmonitor_client_frame.html#ab309fd5f3ceaece3a9991aa37c2d72f9">m_pUDPServer</a></td></tr>
+<tr class="separator:ab309fd5f3ceaece3a9991aa37c2d72f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb2ac15cd3081e92a5b2aae52b809d5d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmonitor_client_frame.html#adb2ac15cd3081e92a5b2aae52b809d5d">m_nAcqCounter</a></td></tr>
+<tr class="separator:adb2ac15cd3081e92a5b2aae52b809d5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a287627229fcd6d4cbb96b4ad0e6d1497"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmonitor_client_frame.html#a287627229fcd6d4cbb96b4ad0e6d1497">m_bIsConnUDP</a></td></tr>
+<tr class="separator:a287627229fcd6d4cbb96b4ad0e6d1497"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">详细描述</h2>
+<div class="textblock"><p>本类主要负责采集客户端的数据前处理和保存，并与分析服务端通信 </p>
+
+<p class="definition">在文件 <a class="el" href="monitor_client_main_8h_source.html">monitorClientMain.h</a> 第 <a class="el" href="monitor_client_main_8h_source.html#l00024">24</a> 行定义.</p>
+</div><h2 class="groupheader">成员枚举类型说明</h2>
+<a id="a06fc87d81c62e9abb8790b6e5713c55b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06fc87d81c62e9abb8790b6e5713c55b">&#9670;&nbsp;</a></span>anonymous enum</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">anonymous enum</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">枚举值</th></tr><tr><td class="fieldname"><a id="a06fc87d81c62e9abb8790b6e5713c55ba36b0ac076d9b564b352f2553f7ef1d7b"></a>idMenuQuit&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a06fc87d81c62e9abb8790b6e5713c55ba437046a5ae2fed1c4c7280150d6a4e65"></a>idMenuZD6&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a06fc87d81c62e9abb8790b6e5713c55ba9f79c10983afed571c6d00e84ee74a19"></a>idMenuS700K&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a06fc87d81c62e9abb8790b6e5713c55ba3d5c723e654a5ef4f3eb5c7ceeffdead"></a>idMenuZYJ7&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a06fc87d81c62e9abb8790b6e5713c55ba7dc2fd7f86d8ef6bed6b3eadcefae015"></a>idMenuDefault&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+<p class="definition">在文件 <a class="el" href="monitor_client_main_8h_source.html">monitorClientMain.h</a> 第 <a class="el" href="monitor_client_main_8h_source.html#l00031">31</a> 行定义.</p>
+
+</div>
+</div>
+<h2 class="groupheader">构造及析构函数说明</h2>
+<a id="ae98aa8b084a50fa578e1a648d125a85b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae98aa8b084a50fa578e1a648d125a85b">&#9670;&nbsp;</a></span>monitorClientFrame()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classmonitor_client_frame.html">monitorClientFrame</a> </td>
+          <td>(</td>
+          <td class="paramtype">wxFrame *&#160;</td>
+          <td class="paramname"><em>frame</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const wxString &amp;&#160;</td>
+          <td class="paramname"><em>title</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>主窗体构造函数，负责窗体创建，通信连接初始化，并发送指令到下位机开始触发采集 </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">frame</td><td>wxFrame* </td></tr>
+    <tr><td class="paramname">title</td><td>const wxString&amp; </td></tr>
+  </table>
+  </dd>
+</dl>
+<p>&lt; initial config </p>
+
+<p class="definition">在文件 <a class="el" href="monitor_client_main_8cpp_source.html">monitorClientMain.cpp</a> 第 <a class="el" href="monitor_client_main_8cpp_source.html#l00069">69</a> 行定义.</p>
+<div class="dynheader">
+函数调用图:</div>
+<div class="dyncontent">
+<div class="center"><img src="classmonitor_client_frame_ae98aa8b084a50fa578e1a648d125a85b_cgraph.png" border="0" usemap="#classmonitor_client_frame_ae98aa8b084a50fa578e1a648d125a85b_cgraph" alt=""/></div>
+<map name="classmonitor_client_frame_ae98aa8b084a50fa578e1a648d125a85b_cgraph" id="classmonitor_client_frame_ae98aa8b084a50fa578e1a648d125a85b_cgraph">
+<area shape="rect" id="node2" href="monitor_client_main_8cpp.html#afdd094b13f51c9d282a71d71dd0595ab" title="wxbuildinfo" alt="" coords="188,107,273,133"/>
+<area shape="rect" id="node3" href="classmonitor_client_frame.html#aa744f336117172b7ab41864141a1ed2d" title="OnClose" alt="" coords="325,5,397,32"/>
+<area shape="rect" id="node4" href="classmonitor_client_frame.html#a62c5559e9a3d4da08a0d6705baa47b95" title="OnQuit" alt="" coords="329,56,392,83"/>
+<area shape="rect" id="node5" href="classmonitor_client_frame.html#a9ceeffc68f5f33c6fd97bba9bfbea284" title="OnZD6" alt="" coords="329,107,392,133"/>
+<area shape="rect" id="node6" href="classmonitor_client_frame.html#a566bd9bdaa3933a188c130b6d6a166b5" title="OnS700K" alt="" coords="321,157,400,184"/>
+<area shape="rect" id="node7" href="classmonitor_client_frame.html#a77801fb08b609cf2a5521906f1ced65f" title="OnZYJ7" alt="" coords="327,208,395,235"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a2cae380d4d48325c2c9de20e67efc74a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2cae380d4d48325c2c9de20e67efc74a">&#9670;&nbsp;</a></span>~monitorClientFrame()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">~<a class="el" href="classmonitor_client_frame.html">monitorClientFrame</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="monitor_client_main_8cpp_source.html">monitorClientMain.cpp</a> 第 <a class="el" href="monitor_client_main_8cpp_source.html#l00112">112</a> 行定义.</p>
+
+</div>
+</div>
+<h2 class="groupheader">成员函数说明</h2>
+<a id="a182446582639b75bd7eba0eb0133ca57"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a182446582639b75bd7eba0eb0133ca57">&#9670;&nbsp;</a></span>Acquire()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Acquire </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="_c_udp_server_8h.html#a41273fdeb63230b3a5c360d8c7c11b82">SWITCH_TYPE</a>&#160;</td>
+          <td class="paramname"><em>typeofSwitch</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>&lt; directly acquire or wait for triggering</p>
+<p>&lt; stop acquiring while received data or till to time up</p>
+<p>&lt; stop acquiring</p>
+<p>&lt; mkdir with datetime</p>
+<p>&lt; send the path to TCP server for analyzing</p>
+<p>&lt; insert to DB </p>
+
+<p class="definition">在文件 <a class="el" href="monitor_client_main_8cpp_source.html">monitorClientMain.cpp</a> 第 <a class="el" href="monitor_client_main_8cpp_source.html#l00175">175</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a06d8b6cb7153736934b17fca7fd5c715"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06d8b6cb7153736934b17fca7fd5c715">&#9670;&nbsp;</a></span>InitializeAll()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int InitializeAll </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>本函数主要是读取注册表参数值，创建TCP连接，创建MySQL数据库连接 </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">void</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd>int，成功返回0；不成功返回-1 </dd></dl>
+<p>&lt; initial TCP </p>
+
+<p class="definition">在文件 <a class="el" href="monitor_client_main_8cpp_source.html">monitorClientMain.cpp</a> 第 <a class="el" href="monitor_client_main_8cpp_source.html#l00468">468</a> 行定义.</p>
+
+</div>
+</div>
+<a id="adbc6a4d0a12ea3ab300eb9c9f8c0126b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adbc6a4d0a12ea3ab300eb9c9f8c0126b">&#9670;&nbsp;</a></span>MakeDir()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int MakeDir </td>
+          <td>(</td>
+          <td class="paramtype">wxString *&#160;</td>
+          <td class="paramname"><em>pstr4dataDir</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>本函数主要是创建文件夹，用于保存数据 </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pstr4dataDir</td><td>wxString*，创建后的文件夹路径名 </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd>int，成功返回0；不成功返回-1 </dd></dl>
+
+<p class="definition">在文件 <a class="el" href="monitor_client_main_8cpp_source.html">monitorClientMain.cpp</a> 第 <a class="el" href="monitor_client_main_8cpp_source.html#l00290">290</a> 行定义.</p>
+
+</div>
+</div>
+<a id="aa744f336117172b7ab41864141a1ed2d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa744f336117172b7ab41864141a1ed2d">&#9670;&nbsp;</a></span>OnClose()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void OnClose </td>
+          <td>(</td>
+          <td class="paramtype">wxCloseEvent &amp;&#160;</td>
+          <td class="paramname"><em>event</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="monitor_client_main_8cpp_source.html">monitorClientMain.cpp</a> 第 <a class="el" href="monitor_client_main_8cpp_source.html#l00125">125</a> 行定义.</p>
+<div class="dynheader">
+这是这个函数的调用关系图:</div>
+<div class="dyncontent">
+<div class="center"><img src="classmonitor_client_frame_aa744f336117172b7ab41864141a1ed2d_icgraph.png" border="0" usemap="#classmonitor_client_frame_aa744f336117172b7ab41864141a1ed2d_icgraph" alt=""/></div>
+<map name="classmonitor_client_frame_aa744f336117172b7ab41864141a1ed2d_icgraph" id="classmonitor_client_frame_aa744f336117172b7ab41864141a1ed2d_icgraph">
+<area shape="rect" id="node2" href="monitor_client_main_8cpp.html#afdd094b13f51c9d282a71d71dd0595ab" title="wxbuildinfo" alt="" coords="125,5,211,32"/>
+<area shape="rect" id="node3" href="classmonitor_client_frame.html#ae98aa8b084a50fa578e1a648d125a85b" title="主窗体构造函数，负责窗体创建，通信连接初始化，并发送指令到下位机开始触发采集 " alt="" coords="259,5,393,32"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a62c5559e9a3d4da08a0d6705baa47b95"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62c5559e9a3d4da08a0d6705baa47b95">&#9670;&nbsp;</a></span>OnQuit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void OnQuit </td>
+          <td>(</td>
+          <td class="paramtype">wxCommandEvent &amp;&#160;</td>
+          <td class="paramname"><em>event</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="monitor_client_main_8cpp_source.html">monitorClientMain.cpp</a> 第 <a class="el" href="monitor_client_main_8cpp_source.html#l00130">130</a> 行定义.</p>
+<div class="dynheader">
+这是这个函数的调用关系图:</div>
+<div class="dyncontent">
+<div class="center"><img src="classmonitor_client_frame_a62c5559e9a3d4da08a0d6705baa47b95_icgraph.png" border="0" usemap="#classmonitor_client_frame_a62c5559e9a3d4da08a0d6705baa47b95_icgraph" alt=""/></div>
+<map name="classmonitor_client_frame_a62c5559e9a3d4da08a0d6705baa47b95_icgraph" id="classmonitor_client_frame_a62c5559e9a3d4da08a0d6705baa47b95_icgraph">
+<area shape="rect" id="node2" href="monitor_client_main_8cpp.html#afdd094b13f51c9d282a71d71dd0595ab" title="wxbuildinfo" alt="" coords="116,5,201,32"/>
+<area shape="rect" id="node3" href="classmonitor_client_frame.html#ae98aa8b084a50fa578e1a648d125a85b" title="主窗体构造函数，负责窗体创建，通信连接初始化，并发送指令到下位机开始触发采集 " alt="" coords="249,5,384,32"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a566bd9bdaa3933a188c130b6d6a166b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a566bd9bdaa3933a188c130b6d6a166b5">&#9670;&nbsp;</a></span>OnS700K()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void OnS700K </td>
+          <td>(</td>
+          <td class="paramtype">wxCommandEvent &amp;&#160;</td>
+          <td class="paramname"><em>event</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>&lt; connect to UDP client </p>
+
+<p class="definition">在文件 <a class="el" href="monitor_client_main_8cpp_source.html">monitorClientMain.cpp</a> 第 <a class="el" href="monitor_client_main_8cpp_source.html#l00140">140</a> 行定义.</p>
+<div class="dynheader">
+这是这个函数的调用关系图:</div>
+<div class="dyncontent">
+<div class="center"><img src="classmonitor_client_frame_a566bd9bdaa3933a188c130b6d6a166b5_icgraph.png" border="0" usemap="#classmonitor_client_frame_a566bd9bdaa3933a188c130b6d6a166b5_icgraph" alt=""/></div>
+<map name="classmonitor_client_frame_a566bd9bdaa3933a188c130b6d6a166b5_icgraph" id="classmonitor_client_frame_a566bd9bdaa3933a188c130b6d6a166b5_icgraph">
+<area shape="rect" id="node2" href="monitor_client_main_8cpp.html#afdd094b13f51c9d282a71d71dd0595ab" title="wxbuildinfo" alt="" coords="132,5,217,32"/>
+<area shape="rect" id="node3" href="classmonitor_client_frame.html#ae98aa8b084a50fa578e1a648d125a85b" title="主窗体构造函数，负责窗体创建，通信连接初始化，并发送指令到下位机开始触发采集 " alt="" coords="265,5,400,32"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a9ceeffc68f5f33c6fd97bba9bfbea284"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9ceeffc68f5f33c6fd97bba9bfbea284">&#9670;&nbsp;</a></span>OnZD6()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void OnZD6 </td>
+          <td>(</td>
+          <td class="paramtype">wxCommandEvent &amp;&#160;</td>
+          <td class="paramname"><em>event</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="monitor_client_main_8cpp_source.html">monitorClientMain.cpp</a> 第 <a class="el" href="monitor_client_main_8cpp_source.html#l00135">135</a> 行定义.</p>
+<div class="dynheader">
+这是这个函数的调用关系图:</div>
+<div class="dyncontent">
+<div class="center"><img src="classmonitor_client_frame_a9ceeffc68f5f33c6fd97bba9bfbea284_icgraph.png" border="0" usemap="#classmonitor_client_frame_a9ceeffc68f5f33c6fd97bba9bfbea284_icgraph" alt=""/></div>
+<map name="classmonitor_client_frame_a9ceeffc68f5f33c6fd97bba9bfbea284_icgraph" id="classmonitor_client_frame_a9ceeffc68f5f33c6fd97bba9bfbea284_icgraph">
+<area shape="rect" id="node2" href="monitor_client_main_8cpp.html#afdd094b13f51c9d282a71d71dd0595ab" title="wxbuildinfo" alt="" coords="116,5,201,32"/>
+<area shape="rect" id="node3" href="classmonitor_client_frame.html#ae98aa8b084a50fa578e1a648d125a85b" title="主窗体构造函数，负责窗体创建，通信连接初始化，并发送指令到下位机开始触发采集 " alt="" coords="249,5,384,32"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a77801fb08b609cf2a5521906f1ced65f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a77801fb08b609cf2a5521906f1ced65f">&#9670;&nbsp;</a></span>OnZYJ7()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void OnZYJ7 </td>
+          <td>(</td>
+          <td class="paramtype">wxCommandEvent &amp;&#160;</td>
+          <td class="paramname"><em>event</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>&lt; connect to UDP client </p>
+
+<p class="definition">在文件 <a class="el" href="monitor_client_main_8cpp_source.html">monitorClientMain.cpp</a> 第 <a class="el" href="monitor_client_main_8cpp_source.html#l00154">154</a> 行定义.</p>
+<div class="dynheader">
+这是这个函数的调用关系图:</div>
+<div class="dyncontent">
+<div class="center"><img src="classmonitor_client_frame_a77801fb08b609cf2a5521906f1ced65f_icgraph.png" border="0" usemap="#classmonitor_client_frame_a77801fb08b609cf2a5521906f1ced65f_icgraph" alt=""/></div>
+<map name="classmonitor_client_frame_a77801fb08b609cf2a5521906f1ced65f_icgraph" id="classmonitor_client_frame_a77801fb08b609cf2a5521906f1ced65f_icgraph">
+<area shape="rect" id="node2" href="monitor_client_main_8cpp.html#afdd094b13f51c9d282a71d71dd0595ab" title="wxbuildinfo" alt="" coords="121,5,207,32"/>
+<area shape="rect" id="node3" href="classmonitor_client_frame.html#ae98aa8b084a50fa578e1a648d125a85b" title="主窗体构造函数，负责窗体创建，通信连接初始化，并发送指令到下位机开始触发采集 " alt="" coords="255,5,389,32"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="ad67e14332e85cc8058e45d73778d6491"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad67e14332e85cc8058e45d73778d6491">&#9670;&nbsp;</a></span>ZD6Work()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ZD6Work </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>本函数主要是读取注册表中的参数值，UDP连接下位机并发送开始采集指令，进入循环等待接收数据 </p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">void</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd>void </dd></dl>
+<p>&lt; connect to UDP client</p>
+<p>&lt; send command to start acquiring</p>
+<p>&lt; set the console text color </p>
+
+<p class="definition">在文件 <a class="el" href="monitor_client_main_8cpp_source.html">monitorClientMain.cpp</a> 第 <a class="el" href="monitor_client_main_8cpp_source.html#l00334">334</a> 行定义.</p>
+
+</div>
+</div>
+<h2 class="groupheader">类成员变量说明</h2>
+<a id="a287627229fcd6d4cbb96b4ad0e6d1497"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a287627229fcd6d4cbb96b4ad0e6d1497">&#9670;&nbsp;</a></span>m_bIsConnUDP</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool m_bIsConnUDP</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="monitor_client_main_8h_source.html">monitorClientMain.h</a> 第 <a class="el" href="monitor_client_main_8h_source.html#l00044">44</a> 行定义.</p>
+
+</div>
+</div>
+<a id="afce4d0e6dc1121b650a15ef810ea569f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afce4d0e6dc1121b650a15ef810ea569f">&#9670;&nbsp;</a></span>m_MenuItemDefault</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">wxMenuItem* m_MenuItemDefault</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="monitor_client_main_8h_source.html">monitorClientMain.h</a> 第 <a class="el" href="monitor_client_main_8h_source.html#l00039">39</a> 行定义.</p>
+
+</div>
+</div>
+<a id="adb2ac15cd3081e92a5b2aae52b809d5d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb2ac15cd3081e92a5b2aae52b809d5d">&#9670;&nbsp;</a></span>m_nAcqCounter</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int m_nAcqCounter</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="monitor_client_main_8h_source.html">monitorClientMain.h</a> 第 <a class="el" href="monitor_client_main_8h_source.html#l00043">43</a> 行定义.</p>
+
+</div>
+</div>
+<a id="abee9f88b2c57eb945d0f9e65e0efbd43"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abee9f88b2c57eb945d0f9e65e0efbd43">&#9670;&nbsp;</a></span>m_pDBCtrler</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_c_sql_controller.html">CSqlController</a>* m_pDBCtrler</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="monitor_client_main_8h_source.html">monitorClientMain.h</a> 第 <a class="el" href="monitor_client_main_8h_source.html#l00041">41</a> 行定义.</p>
+
+</div>
+</div>
+<a id="a67dbea121b75a1235f016f0019e0c174"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a67dbea121b75a1235f016f0019e0c174">&#9670;&nbsp;</a></span>m_pTcpClient</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_c_net_controller.html">CNetController</a>* m_pTcpClient</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="monitor_client_main_8h_source.html">monitorClientMain.h</a> 第 <a class="el" href="monitor_client_main_8h_source.html#l00040">40</a> 行定义.</p>
+
+</div>
+</div>
+<a id="ab309fd5f3ceaece3a9991aa37c2d72f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab309fd5f3ceaece3a9991aa37c2d72f9">&#9670;&nbsp;</a></span>m_pUDPServer</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_c_udp_server.html">CUdpServer</a>* m_pUDPServer</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">在文件 <a class="el" href="monitor_client_main_8h_source.html">monitorClientMain.h</a> 第 <a class="el" href="monitor_client_main_8h_source.html#l00042">42</a> 行定义.</p>
+
+</div>
+</div>
+<hr/>该类的文档由以下文件生成:<ul>
+<li>E:/Project/GZMetro/Switch/softwareDesign/switchMonitorProject/switchMonitorClient/monitorClient/<a class="el" href="monitor_client_main_8h_source.html">monitorClientMain.h</a></li>
+<li>E:/Project/GZMetro/Switch/softwareDesign/switchMonitorProject/switchMonitorClient/monitorClient/<a class="el" href="monitor_client_main_8cpp_source.html">monitorClientMain.cpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+制作者 &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.13
+</small></address>
+</body>
+</html>

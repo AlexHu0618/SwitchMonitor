@@ -1,0 +1,412 @@
+\hypertarget{classmonitor_client_frame}{}\section{monitor\+Client\+Frame类 参考}
+\label{classmonitor_client_frame}\index{monitor\+Client\+Frame@{monitor\+Client\+Frame}}
+
+
+本类主要负责采集客户端的数据前处理和保存，并与分析服务端通信  
+
+
+
+
+{\ttfamily \#include $<$monitor\+Client\+Main.\+h$>$}
+
+
+
+类 monitor\+Client\+Frame 继承关系图\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=202pt]{classmonitor_client_frame__inherit__graph}
+\end{center}
+\end{figure}
+
+
+monitor\+Client\+Frame 的协作图\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classmonitor_client_frame__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public 成员函数}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classmonitor_client_frame_ae98aa8b084a50fa578e1a648d125a85b}{monitor\+Client\+Frame} (wx\+Frame $\ast$frame, const wx\+String \&title)
+\begin{DoxyCompactList}\small\item\em 主窗体构造函数，负责窗体创建，通信连接初始化，并发送指令到下位机开始触发采集 \end{DoxyCompactList}\item 
+\hyperlink{classmonitor_client_frame_a2cae380d4d48325c2c9de20e67efc74a}{$\sim$monitor\+Client\+Frame} ()
+\end{DoxyCompactItemize}
+\subsection*{Private 类型}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \newline
+\hyperlink{classmonitor_client_frame_a06fc87d81c62e9abb8790b6e5713c55ba36b0ac076d9b564b352f2553f7ef1d7b}{id\+Menu\+Quit} = 1000, 
+\hyperlink{classmonitor_client_frame_a06fc87d81c62e9abb8790b6e5713c55ba437046a5ae2fed1c4c7280150d6a4e65}{id\+Menu\+Z\+D6}, 
+\hyperlink{classmonitor_client_frame_a06fc87d81c62e9abb8790b6e5713c55ba9f79c10983afed571c6d00e84ee74a19}{id\+Menu\+S700K}, 
+\hyperlink{classmonitor_client_frame_a06fc87d81c62e9abb8790b6e5713c55ba3d5c723e654a5ef4f3eb5c7ceeffdead}{id\+Menu\+Z\+Y\+J7}, 
+\newline
+\hyperlink{classmonitor_client_frame_a06fc87d81c62e9abb8790b6e5713c55ba7dc2fd7f86d8ef6bed6b3eadcefae015}{id\+Menu\+Default}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Private 成员函数}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classmonitor_client_frame_aa744f336117172b7ab41864141a1ed2d}{On\+Close} (wx\+Close\+Event \&event)
+\item 
+void \hyperlink{classmonitor_client_frame_a62c5559e9a3d4da08a0d6705baa47b95}{On\+Quit} (wx\+Command\+Event \&event)
+\item 
+void \hyperlink{classmonitor_client_frame_a9ceeffc68f5f33c6fd97bba9bfbea284}{On\+Z\+D6} (wx\+Command\+Event \&event)
+\item 
+void \hyperlink{classmonitor_client_frame_a566bd9bdaa3933a188c130b6d6a166b5}{On\+S700K} (wx\+Command\+Event \&event)
+\item 
+void \hyperlink{classmonitor_client_frame_a77801fb08b609cf2a5521906f1ced65f}{On\+Z\+Y\+J7} (wx\+Command\+Event \&event)
+\item 
+int \hyperlink{classmonitor_client_frame_a06d8b6cb7153736934b17fca7fd5c715}{Initialize\+All} (void)
+\begin{DoxyCompactList}\small\item\em 本函数主要是读取注册表参数值，创建\+T\+C\+P连接，创建\+My\+S\+Q\+L数据库连接 \end{DoxyCompactList}\item 
+int \hyperlink{classmonitor_client_frame_adbc6a4d0a12ea3ab300eb9c9f8c0126b}{Make\+Dir} (wx\+String $\ast$pstr4data\+Dir)
+\begin{DoxyCompactList}\small\item\em 本函数主要是创建文件夹，用于保存数据 \end{DoxyCompactList}\item 
+int \hyperlink{classmonitor_client_frame_a182446582639b75bd7eba0eb0133ca57}{Acquire} (\hyperlink{_c_udp_server_8h_a41273fdeb63230b3a5c360d8c7c11b82}{S\+W\+I\+T\+C\+H\+\_\+\+T\+Y\+PE} typeof\+Switch)
+\item 
+void \hyperlink{classmonitor_client_frame_ad67e14332e85cc8058e45d73778d6491}{Z\+D6\+Work} (void)
+\begin{DoxyCompactList}\small\item\em 本函数主要是读取注册表中的参数值，\+U\+D\+P连接下位机并发送开始采集指令，进入循环等待接收数据 \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private 属性}
+\begin{DoxyCompactItemize}
+\item 
+wx\+Menu\+Item $\ast$ \hyperlink{classmonitor_client_frame_afce4d0e6dc1121b650a15ef810ea569f}{m\+\_\+\+Menu\+Item\+Default}
+\item 
+\hyperlink{class_c_net_controller}{C\+Net\+Controller} $\ast$ \hyperlink{classmonitor_client_frame_a67dbea121b75a1235f016f0019e0c174}{m\+\_\+p\+Tcp\+Client}
+\item 
+\hyperlink{class_c_sql_controller}{C\+Sql\+Controller} $\ast$ \hyperlink{classmonitor_client_frame_abee9f88b2c57eb945d0f9e65e0efbd43}{m\+\_\+p\+D\+B\+Ctrler}
+\item 
+\hyperlink{class_c_udp_server}{C\+Udp\+Server} $\ast$ \hyperlink{classmonitor_client_frame_ab309fd5f3ceaece3a9991aa37c2d72f9}{m\+\_\+p\+U\+D\+P\+Server}
+\item 
+int \hyperlink{classmonitor_client_frame_adb2ac15cd3081e92a5b2aae52b809d5d}{m\+\_\+n\+Acq\+Counter}
+\item 
+bool \hyperlink{classmonitor_client_frame_a287627229fcd6d4cbb96b4ad0e6d1497}{m\+\_\+b\+Is\+Conn\+U\+DP}
+\end{DoxyCompactItemize}
+
+
+\subsection{详细描述}
+本类主要负责采集客户端的数据前处理和保存，并与分析服务端通信 
+
+在文件 monitor\+Client\+Main.\+h 第 24 行定义.
+
+
+
+\subsection{成员枚举类型说明}
+\mbox{\Hypertarget{classmonitor_client_frame_a06fc87d81c62e9abb8790b6e5713c55b}\label{classmonitor_client_frame_a06fc87d81c62e9abb8790b6e5713c55b}} 
+\subsubsection{\texorpdfstring{anonymous enum}{anonymous enum}}
+{\footnotesize\ttfamily anonymous enum\hspace{0.3cm}{\ttfamily [private]}}
+
+\begin{DoxyEnumFields}{枚举值}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{id\+Menu\+Quit@{id\+Menu\+Quit}!monitor\+Client\+Frame@{monitor\+Client\+Frame}}\index{monitor\+Client\+Frame@{monitor\+Client\+Frame}!id\+Menu\+Quit@{id\+Menu\+Quit}}}\mbox{\Hypertarget{classmonitor_client_frame_a06fc87d81c62e9abb8790b6e5713c55ba36b0ac076d9b564b352f2553f7ef1d7b}\label{classmonitor_client_frame_a06fc87d81c62e9abb8790b6e5713c55ba36b0ac076d9b564b352f2553f7ef1d7b}} 
+id\+Menu\+Quit&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{id\+Menu\+Z\+D6@{id\+Menu\+Z\+D6}!monitor\+Client\+Frame@{monitor\+Client\+Frame}}\index{monitor\+Client\+Frame@{monitor\+Client\+Frame}!id\+Menu\+Z\+D6@{id\+Menu\+Z\+D6}}}\mbox{\Hypertarget{classmonitor_client_frame_a06fc87d81c62e9abb8790b6e5713c55ba437046a5ae2fed1c4c7280150d6a4e65}\label{classmonitor_client_frame_a06fc87d81c62e9abb8790b6e5713c55ba437046a5ae2fed1c4c7280150d6a4e65}} 
+id\+Menu\+Z\+D6&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{id\+Menu\+S700K@{id\+Menu\+S700K}!monitor\+Client\+Frame@{monitor\+Client\+Frame}}\index{monitor\+Client\+Frame@{monitor\+Client\+Frame}!id\+Menu\+S700K@{id\+Menu\+S700K}}}\mbox{\Hypertarget{classmonitor_client_frame_a06fc87d81c62e9abb8790b6e5713c55ba9f79c10983afed571c6d00e84ee74a19}\label{classmonitor_client_frame_a06fc87d81c62e9abb8790b6e5713c55ba9f79c10983afed571c6d00e84ee74a19}} 
+id\+Menu\+S700K&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{id\+Menu\+Z\+Y\+J7@{id\+Menu\+Z\+Y\+J7}!monitor\+Client\+Frame@{monitor\+Client\+Frame}}\index{monitor\+Client\+Frame@{monitor\+Client\+Frame}!id\+Menu\+Z\+Y\+J7@{id\+Menu\+Z\+Y\+J7}}}\mbox{\Hypertarget{classmonitor_client_frame_a06fc87d81c62e9abb8790b6e5713c55ba3d5c723e654a5ef4f3eb5c7ceeffdead}\label{classmonitor_client_frame_a06fc87d81c62e9abb8790b6e5713c55ba3d5c723e654a5ef4f3eb5c7ceeffdead}} 
+id\+Menu\+Z\+Y\+J7&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{id\+Menu\+Default@{id\+Menu\+Default}!monitor\+Client\+Frame@{monitor\+Client\+Frame}}\index{monitor\+Client\+Frame@{monitor\+Client\+Frame}!id\+Menu\+Default@{id\+Menu\+Default}}}\mbox{\Hypertarget{classmonitor_client_frame_a06fc87d81c62e9abb8790b6e5713c55ba7dc2fd7f86d8ef6bed6b3eadcefae015}\label{classmonitor_client_frame_a06fc87d81c62e9abb8790b6e5713c55ba7dc2fd7f86d8ef6bed6b3eadcefae015}} 
+id\+Menu\+Default&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+在文件 monitor\+Client\+Main.\+h 第 31 行定义.
+
+
+
+\subsection{构造及析构函数说明}
+\mbox{\Hypertarget{classmonitor_client_frame_ae98aa8b084a50fa578e1a648d125a85b}\label{classmonitor_client_frame_ae98aa8b084a50fa578e1a648d125a85b}} 
+\index{monitor\+Client\+Frame@{monitor\+Client\+Frame}!monitor\+Client\+Frame@{monitor\+Client\+Frame}}
+\index{monitor\+Client\+Frame@{monitor\+Client\+Frame}!monitor\+Client\+Frame@{monitor\+Client\+Frame}}
+\subsubsection{\texorpdfstring{monitor\+Client\+Frame()}{monitorClientFrame()}}
+{\footnotesize\ttfamily \hyperlink{classmonitor_client_frame}{monitor\+Client\+Frame} (\begin{DoxyParamCaption}\item[{wx\+Frame $\ast$}]{frame,  }\item[{const wx\+String \&}]{title }\end{DoxyParamCaption})}
+
+
+
+主窗体构造函数，负责窗体创建，通信连接初始化，并发送指令到下位机开始触发采集 
+
+
+\begin{DoxyParams}{参数}
+{\em frame} & wx\+Frame$\ast$ \\
+\hline
+{\em title} & const wx\+String\& \\
+\hline
+\end{DoxyParams}
+$<$ initial config 
+
+在文件 monitor\+Client\+Main.\+cpp 第 69 行定义.
+
+函数调用图\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classmonitor_client_frame_ae98aa8b084a50fa578e1a648d125a85b_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{classmonitor_client_frame_a2cae380d4d48325c2c9de20e67efc74a}\label{classmonitor_client_frame_a2cae380d4d48325c2c9de20e67efc74a}} 
+\index{monitor\+Client\+Frame@{monitor\+Client\+Frame}!````~monitor\+Client\+Frame@{$\sim$monitor\+Client\+Frame}}
+\index{````~monitor\+Client\+Frame@{$\sim$monitor\+Client\+Frame}!monitor\+Client\+Frame@{monitor\+Client\+Frame}}
+\subsubsection{\texorpdfstring{$\sim$monitor\+Client\+Frame()}{~monitorClientFrame()}}
+{\footnotesize\ttfamily $\sim$\hyperlink{classmonitor_client_frame}{monitor\+Client\+Frame} (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+在文件 monitor\+Client\+Main.\+cpp 第 112 行定义.
+
+
+
+\subsection{成员函数说明}
+\mbox{\Hypertarget{classmonitor_client_frame_a182446582639b75bd7eba0eb0133ca57}\label{classmonitor_client_frame_a182446582639b75bd7eba0eb0133ca57}} 
+\index{monitor\+Client\+Frame@{monitor\+Client\+Frame}!Acquire@{Acquire}}
+\index{Acquire@{Acquire}!monitor\+Client\+Frame@{monitor\+Client\+Frame}}
+\subsubsection{\texorpdfstring{Acquire()}{Acquire()}}
+{\footnotesize\ttfamily int Acquire (\begin{DoxyParamCaption}\item[{\hyperlink{_c_udp_server_8h_a41273fdeb63230b3a5c360d8c7c11b82}{S\+W\+I\+T\+C\+H\+\_\+\+T\+Y\+PE}}]{typeof\+Switch }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+$<$ directly acquire or wait for triggering
+
+$<$ stop acquiring while received data or till to time up
+
+$<$ stop acquiring
+
+$<$ mkdir with datetime
+
+$<$ send the path to T\+CP server for analyzing
+
+$<$ insert to DB 
+
+在文件 monitor\+Client\+Main.\+cpp 第 175 行定义.
+
+\mbox{\Hypertarget{classmonitor_client_frame_a06d8b6cb7153736934b17fca7fd5c715}\label{classmonitor_client_frame_a06d8b6cb7153736934b17fca7fd5c715}} 
+\index{monitor\+Client\+Frame@{monitor\+Client\+Frame}!Initialize\+All@{Initialize\+All}}
+\index{Initialize\+All@{Initialize\+All}!monitor\+Client\+Frame@{monitor\+Client\+Frame}}
+\subsubsection{\texorpdfstring{Initialize\+All()}{InitializeAll()}}
+{\footnotesize\ttfamily int Initialize\+All (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+本函数主要是读取注册表参数值，创建\+T\+C\+P连接，创建\+My\+S\+Q\+L数据库连接 
+
+
+\begin{DoxyParams}{参数}
+{\em void} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{返回}
+int，成功返回0；不成功返回-\/1 
+\end{DoxyReturn}
+$<$ initial T\+CP 
+
+在文件 monitor\+Client\+Main.\+cpp 第 468 行定义.
+
+\mbox{\Hypertarget{classmonitor_client_frame_adbc6a4d0a12ea3ab300eb9c9f8c0126b}\label{classmonitor_client_frame_adbc6a4d0a12ea3ab300eb9c9f8c0126b}} 
+\index{monitor\+Client\+Frame@{monitor\+Client\+Frame}!Make\+Dir@{Make\+Dir}}
+\index{Make\+Dir@{Make\+Dir}!monitor\+Client\+Frame@{monitor\+Client\+Frame}}
+\subsubsection{\texorpdfstring{Make\+Dir()}{MakeDir()}}
+{\footnotesize\ttfamily int Make\+Dir (\begin{DoxyParamCaption}\item[{wx\+String $\ast$}]{pstr4data\+Dir }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+本函数主要是创建文件夹，用于保存数据 
+
+
+\begin{DoxyParams}{参数}
+{\em pstr4data\+Dir} & wx\+String$\ast$，创建后的文件夹路径名 \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{返回}
+int，成功返回0；不成功返回-\/1 
+\end{DoxyReturn}
+
+
+在文件 monitor\+Client\+Main.\+cpp 第 290 行定义.
+
+\mbox{\Hypertarget{classmonitor_client_frame_aa744f336117172b7ab41864141a1ed2d}\label{classmonitor_client_frame_aa744f336117172b7ab41864141a1ed2d}} 
+\index{monitor\+Client\+Frame@{monitor\+Client\+Frame}!On\+Close@{On\+Close}}
+\index{On\+Close@{On\+Close}!monitor\+Client\+Frame@{monitor\+Client\+Frame}}
+\subsubsection{\texorpdfstring{On\+Close()}{OnClose()}}
+{\footnotesize\ttfamily void On\+Close (\begin{DoxyParamCaption}\item[{wx\+Close\+Event \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 monitor\+Client\+Main.\+cpp 第 125 行定义.
+
+这是这个函数的调用关系图\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classmonitor_client_frame_aa744f336117172b7ab41864141a1ed2d_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{classmonitor_client_frame_a62c5559e9a3d4da08a0d6705baa47b95}\label{classmonitor_client_frame_a62c5559e9a3d4da08a0d6705baa47b95}} 
+\index{monitor\+Client\+Frame@{monitor\+Client\+Frame}!On\+Quit@{On\+Quit}}
+\index{On\+Quit@{On\+Quit}!monitor\+Client\+Frame@{monitor\+Client\+Frame}}
+\subsubsection{\texorpdfstring{On\+Quit()}{OnQuit()}}
+{\footnotesize\ttfamily void On\+Quit (\begin{DoxyParamCaption}\item[{wx\+Command\+Event \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 monitor\+Client\+Main.\+cpp 第 130 行定义.
+
+这是这个函数的调用关系图\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classmonitor_client_frame_a62c5559e9a3d4da08a0d6705baa47b95_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{classmonitor_client_frame_a566bd9bdaa3933a188c130b6d6a166b5}\label{classmonitor_client_frame_a566bd9bdaa3933a188c130b6d6a166b5}} 
+\index{monitor\+Client\+Frame@{monitor\+Client\+Frame}!On\+S700K@{On\+S700K}}
+\index{On\+S700K@{On\+S700K}!monitor\+Client\+Frame@{monitor\+Client\+Frame}}
+\subsubsection{\texorpdfstring{On\+S700\+K()}{OnS700K()}}
+{\footnotesize\ttfamily void On\+S700K (\begin{DoxyParamCaption}\item[{wx\+Command\+Event \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+$<$ connect to U\+DP client 
+
+在文件 monitor\+Client\+Main.\+cpp 第 140 行定义.
+
+这是这个函数的调用关系图\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classmonitor_client_frame_a566bd9bdaa3933a188c130b6d6a166b5_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{classmonitor_client_frame_a9ceeffc68f5f33c6fd97bba9bfbea284}\label{classmonitor_client_frame_a9ceeffc68f5f33c6fd97bba9bfbea284}} 
+\index{monitor\+Client\+Frame@{monitor\+Client\+Frame}!On\+Z\+D6@{On\+Z\+D6}}
+\index{On\+Z\+D6@{On\+Z\+D6}!monitor\+Client\+Frame@{monitor\+Client\+Frame}}
+\subsubsection{\texorpdfstring{On\+Z\+D6()}{OnZD6()}}
+{\footnotesize\ttfamily void On\+Z\+D6 (\begin{DoxyParamCaption}\item[{wx\+Command\+Event \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 monitor\+Client\+Main.\+cpp 第 135 行定义.
+
+这是这个函数的调用关系图\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classmonitor_client_frame_a9ceeffc68f5f33c6fd97bba9bfbea284_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{classmonitor_client_frame_a77801fb08b609cf2a5521906f1ced65f}\label{classmonitor_client_frame_a77801fb08b609cf2a5521906f1ced65f}} 
+\index{monitor\+Client\+Frame@{monitor\+Client\+Frame}!On\+Z\+Y\+J7@{On\+Z\+Y\+J7}}
+\index{On\+Z\+Y\+J7@{On\+Z\+Y\+J7}!monitor\+Client\+Frame@{monitor\+Client\+Frame}}
+\subsubsection{\texorpdfstring{On\+Z\+Y\+J7()}{OnZYJ7()}}
+{\footnotesize\ttfamily void On\+Z\+Y\+J7 (\begin{DoxyParamCaption}\item[{wx\+Command\+Event \&}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+$<$ connect to U\+DP client 
+
+在文件 monitor\+Client\+Main.\+cpp 第 154 行定义.
+
+这是这个函数的调用关系图\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classmonitor_client_frame_a77801fb08b609cf2a5521906f1ced65f_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{classmonitor_client_frame_ad67e14332e85cc8058e45d73778d6491}\label{classmonitor_client_frame_ad67e14332e85cc8058e45d73778d6491}} 
+\index{monitor\+Client\+Frame@{monitor\+Client\+Frame}!Z\+D6\+Work@{Z\+D6\+Work}}
+\index{Z\+D6\+Work@{Z\+D6\+Work}!monitor\+Client\+Frame@{monitor\+Client\+Frame}}
+\subsubsection{\texorpdfstring{Z\+D6\+Work()}{ZD6Work()}}
+{\footnotesize\ttfamily void Z\+D6\+Work (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+本函数主要是读取注册表中的参数值，\+U\+D\+P连接下位机并发送开始采集指令，进入循环等待接收数据 
+
+
+\begin{DoxyParams}{参数}
+{\em void} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{返回}
+void 
+\end{DoxyReturn}
+$<$ connect to U\+DP client
+
+$<$ send command to start acquiring
+
+$<$ set the console text color 
+
+在文件 monitor\+Client\+Main.\+cpp 第 334 行定义.
+
+
+
+\subsection{类成员变量说明}
+\mbox{\Hypertarget{classmonitor_client_frame_a287627229fcd6d4cbb96b4ad0e6d1497}\label{classmonitor_client_frame_a287627229fcd6d4cbb96b4ad0e6d1497}} 
+\index{monitor\+Client\+Frame@{monitor\+Client\+Frame}!m\+\_\+b\+Is\+Conn\+U\+DP@{m\+\_\+b\+Is\+Conn\+U\+DP}}
+\index{m\+\_\+b\+Is\+Conn\+U\+DP@{m\+\_\+b\+Is\+Conn\+U\+DP}!monitor\+Client\+Frame@{monitor\+Client\+Frame}}
+\subsubsection{\texorpdfstring{m\+\_\+b\+Is\+Conn\+U\+DP}{m\_bIsConnUDP}}
+{\footnotesize\ttfamily bool m\+\_\+b\+Is\+Conn\+U\+DP\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 monitor\+Client\+Main.\+h 第 44 行定义.
+
+\mbox{\Hypertarget{classmonitor_client_frame_afce4d0e6dc1121b650a15ef810ea569f}\label{classmonitor_client_frame_afce4d0e6dc1121b650a15ef810ea569f}} 
+\index{monitor\+Client\+Frame@{monitor\+Client\+Frame}!m\+\_\+\+Menu\+Item\+Default@{m\+\_\+\+Menu\+Item\+Default}}
+\index{m\+\_\+\+Menu\+Item\+Default@{m\+\_\+\+Menu\+Item\+Default}!monitor\+Client\+Frame@{monitor\+Client\+Frame}}
+\subsubsection{\texorpdfstring{m\+\_\+\+Menu\+Item\+Default}{m\_MenuItemDefault}}
+{\footnotesize\ttfamily wx\+Menu\+Item$\ast$ m\+\_\+\+Menu\+Item\+Default\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 monitor\+Client\+Main.\+h 第 39 行定义.
+
+\mbox{\Hypertarget{classmonitor_client_frame_adb2ac15cd3081e92a5b2aae52b809d5d}\label{classmonitor_client_frame_adb2ac15cd3081e92a5b2aae52b809d5d}} 
+\index{monitor\+Client\+Frame@{monitor\+Client\+Frame}!m\+\_\+n\+Acq\+Counter@{m\+\_\+n\+Acq\+Counter}}
+\index{m\+\_\+n\+Acq\+Counter@{m\+\_\+n\+Acq\+Counter}!monitor\+Client\+Frame@{monitor\+Client\+Frame}}
+\subsubsection{\texorpdfstring{m\+\_\+n\+Acq\+Counter}{m\_nAcqCounter}}
+{\footnotesize\ttfamily int m\+\_\+n\+Acq\+Counter\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 monitor\+Client\+Main.\+h 第 43 行定义.
+
+\mbox{\Hypertarget{classmonitor_client_frame_abee9f88b2c57eb945d0f9e65e0efbd43}\label{classmonitor_client_frame_abee9f88b2c57eb945d0f9e65e0efbd43}} 
+\index{monitor\+Client\+Frame@{monitor\+Client\+Frame}!m\+\_\+p\+D\+B\+Ctrler@{m\+\_\+p\+D\+B\+Ctrler}}
+\index{m\+\_\+p\+D\+B\+Ctrler@{m\+\_\+p\+D\+B\+Ctrler}!monitor\+Client\+Frame@{monitor\+Client\+Frame}}
+\subsubsection{\texorpdfstring{m\+\_\+p\+D\+B\+Ctrler}{m\_pDBCtrler}}
+{\footnotesize\ttfamily \hyperlink{class_c_sql_controller}{C\+Sql\+Controller}$\ast$ m\+\_\+p\+D\+B\+Ctrler\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 monitor\+Client\+Main.\+h 第 41 行定义.
+
+\mbox{\Hypertarget{classmonitor_client_frame_a67dbea121b75a1235f016f0019e0c174}\label{classmonitor_client_frame_a67dbea121b75a1235f016f0019e0c174}} 
+\index{monitor\+Client\+Frame@{monitor\+Client\+Frame}!m\+\_\+p\+Tcp\+Client@{m\+\_\+p\+Tcp\+Client}}
+\index{m\+\_\+p\+Tcp\+Client@{m\+\_\+p\+Tcp\+Client}!monitor\+Client\+Frame@{monitor\+Client\+Frame}}
+\subsubsection{\texorpdfstring{m\+\_\+p\+Tcp\+Client}{m\_pTcpClient}}
+{\footnotesize\ttfamily \hyperlink{class_c_net_controller}{C\+Net\+Controller}$\ast$ m\+\_\+p\+Tcp\+Client\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 monitor\+Client\+Main.\+h 第 40 行定义.
+
+\mbox{\Hypertarget{classmonitor_client_frame_ab309fd5f3ceaece3a9991aa37c2d72f9}\label{classmonitor_client_frame_ab309fd5f3ceaece3a9991aa37c2d72f9}} 
+\index{monitor\+Client\+Frame@{monitor\+Client\+Frame}!m\+\_\+p\+U\+D\+P\+Server@{m\+\_\+p\+U\+D\+P\+Server}}
+\index{m\+\_\+p\+U\+D\+P\+Server@{m\+\_\+p\+U\+D\+P\+Server}!monitor\+Client\+Frame@{monitor\+Client\+Frame}}
+\subsubsection{\texorpdfstring{m\+\_\+p\+U\+D\+P\+Server}{m\_pUDPServer}}
+{\footnotesize\ttfamily \hyperlink{class_c_udp_server}{C\+Udp\+Server}$\ast$ m\+\_\+p\+U\+D\+P\+Server\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+在文件 monitor\+Client\+Main.\+h 第 42 行定义.
+
+
+
+该类的文档由以下文件生成\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Project/\+G\+Z\+Metro/\+Switch/software\+Design/switch\+Monitor\+Project/switch\+Monitor\+Client/monitor\+Client/\hyperlink{monitor_client_main_8h}{monitor\+Client\+Main.\+h}\item 
+E\+:/\+Project/\+G\+Z\+Metro/\+Switch/software\+Design/switch\+Monitor\+Project/switch\+Monitor\+Client/monitor\+Client/\hyperlink{monitor_client_main_8cpp}{monitor\+Client\+Main.\+cpp}\end{DoxyCompactItemize}
